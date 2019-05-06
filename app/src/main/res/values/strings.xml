@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">IES Master</string>
+    <string-array name="subject">
+        <item>Electromagnetics Engineering</item>
+        <item>Integrated Circuits and Applications</item>
+        <item>Microprocessor and Computer Architecture</item>
+        <item>Digital Communication</item>
+        <item>Fiber Optic Communication</item>
+        <item>Wireless Communications</item>
+        <item>Satellite Communication</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="next">NEXT</string>
+    <string name="previous">Previous</string>
+
+
+    <string name="start"> Login </string>
+
+    <string name="slide_1_title">Hello User!</string>
+    <string name="slide_1_desc"> Welcome to Ies Master!</string>
+
+    <string name="slide_2_title">About Ies Master</string>
+    <string name="slide_2_desc">IES Master, an institute for engineers, offers 360 o learning environment to prepare for top engineering competitive exams such as ESE, GATE, and PSUs.</string>
+
+    <string name="slide_3_title">User Login</string>
+    <string name="slide_3_desc"> Register </string>
+
+    <string name="play_again_desc">To see the welcome slider again, goto Settings -> apps -> welcome slider -> clear data</string>
+    <string name="play_again">Play Again</string>
+
+    <dimen name="txtSize8">8sp</dimen>
+</resources>
