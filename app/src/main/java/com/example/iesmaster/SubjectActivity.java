@@ -35,7 +35,6 @@ public class SubjectActivity extends AppCompatActivity {
     int selectedSubjectType;
 
     TextView txtUniversity,txtCollege,txtStream,txtyear,txtMessage;
-
     Profile myProfile;
 
     @Override

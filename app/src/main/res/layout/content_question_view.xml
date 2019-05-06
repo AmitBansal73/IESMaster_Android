@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ScrollView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        >
 <android.support.constraint.ConstraintLayout
     android:layout_height="match_parent"
     android:layout_width="match_parent"
@@ -8,18 +13,28 @@
     <WebView
         android:id="@+id/webQuestion"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginBottom="100dp"
         android:textAlignment="gravity"
         android:background="#c9c9c9"
       />
+    <ImageView
+        android:id="@+id/questionImage"
+        android:layout_width="250dp"
+        android:layout_height="150dp"
+        android:src="@drawable/ques"
+        app:layout_constraintTop_toBottomOf="@id/webQuestion"
+        app:layout_constraintStart_toStartOf="@id/webQuestion"
+        app:layout_constraintEnd_toEndOf="@id/webQuestion"
+
+        />
     <TextView
         android:id="@+id/txtMarks"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/webQuestion"
+        app:layout_constraintTop_toBottomOf="@id/questionImage"
         app:layout_constraintStart_toStartOf="parent"
         android:text="10 Marks"
         android:textColor="@color/colorPrimary"
@@ -32,10 +47,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Show Answer"
-        app:layout_constraintTop_toBottomOf="@+id/webQuestion"
+        app:layout_constraintTop_toBottomOf="@id/questionImage"
         app:layout_constraintEnd_toEndOf="parent"
         android:textColor="@color/colorPrimary"
         android:textSize="12sp"
         />
 </android.support.constraint.ConstraintLayout>
+    </ScrollView>
 </merge>

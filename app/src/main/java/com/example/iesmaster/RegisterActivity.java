@@ -17,8 +17,11 @@ public class RegisterActivity extends AppCompatActivity {
 
     ImageView profileImage;
     EditText txtMobile,txtParentName,txtAddress,txtPassword,txtName,txtEmail;
-    TextView attachedFile;
+    TextView attachedID;
     Button btnSubmit;
+
+    static final int REQUEST_IMAGE_GET = 1;
+    static final int REQUEST_IMAGE_CROP = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +38,7 @@ public class RegisterActivity extends AppCompatActivity {
         actionBar.show();
 
         btnSubmit= findViewById(R.id.btnSubmit);
-        attachedFile = findViewById(R.id.btnSubmit);
+        attachedID = findViewById(R.id.attachedID);
         profileImage = findViewById(R.id.profileImage);
         txtAddress = findViewById(R.id.txtAddress);
         txtEmail = findViewById(R.id.txtEmail);
@@ -43,11 +46,24 @@ public class RegisterActivity extends AppCompatActivity {
         txtName = findViewById(R.id.txtName);
         txtParentName = findViewById(R.id.txtParentName);
         txtPassword = findViewById(R.id.txtPassword);
+
+        attachedID.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(intent, REQUEST_IMAGE_GET);
+                }
+            }
+        });
+
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
                 startActivity(intent);
+                RegisterActivity.this.finish();
             }
         });
         Intent intent = getIntent();
@@ -57,6 +73,8 @@ public class RegisterActivity extends AppCompatActivity {
         txtName.setText(Name);
         txtEmail.setText(Email);
         Glide.with(this).load(img_url).into(profileImage);
-       // profileImage.setText(Name);
+
     }
+
+
 }

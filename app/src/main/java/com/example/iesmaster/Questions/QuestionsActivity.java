@@ -1,14 +1,19 @@
 package com.example.iesmaster.Questions;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -17,6 +22,7 @@ import java.util.List;
 
 
 import com.example.iesmaster.Object.Questions;
+import com.example.iesmaster.PapersActivity;
 import com.example.iesmaster.R;
 
 
@@ -24,6 +30,7 @@ public class QuestionsActivity extends AppCompatActivity implements QuestionFrag
     ViewPager viewPager;
     FragmentStatePagerAdapter fragmentAdapter;
     List<Questions> listQuestion;
+    private Object view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,6 +150,39 @@ public class QuestionsActivity extends AppCompatActivity implements QuestionFrag
     public void onFragmentInteraction(Uri uri) {
         String str = uri.getFragment();
         int i=1;
+
+    }
+
+
+    @Override
+    public void onBackPressed() {
+
+
+            // setup the alert builder
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            //builder.setTitle("Alert");
+            builder.setMessage("Are you sure to close Test ?");
+
+            // add the buttons
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent = new Intent(QuestionsActivity.this, PapersActivity.class);
+                    startActivity(intent);
+                    QuestionsActivity.this.finish();
+                }
+            });
+
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+
+            // create and show the alert dialog
+            AlertDialog dialog = builder.create();
+            dialog.show();
 
     }
 }

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +25,7 @@ import com.example.iesmaster.R;
 public class QuestionFragment extends Fragment {
     TextView Question,lblQuestion,txtMarks,Answer;
     WebView webQuestion, webAnswer;
+    ImageView questionImage;
     ProgressBar progressBar;
     private static Questions questionData;
     private int mPageNumber;
@@ -53,6 +55,7 @@ public class QuestionFragment extends Fragment {
          //Question = fragmentView.findViewById(R.id.webViewQuestion);
           lblQuestion = fragmentView.findViewById(R.id.lblQuestion);
         txtMarks = fragmentView.findViewById(R.id.txtMarks);
+        questionImage = fragmentView.findViewById(R.id.questionImage);
         //Answer = fragmentView.findViewById(R.id.Answer);
         lblQuestion.setText("Question " + Integer.toString(QNo) );
 

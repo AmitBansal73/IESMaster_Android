@@ -82,6 +82,7 @@ public class ProfileActivity extends AppCompatActivity  {
 
                 Intent i = new Intent(ProfileActivity.this, SubjectAndTestActivity.class);
                 startActivity(i);
+                ProfileActivity.this.finish();
 
             }
         });
@@ -94,7 +95,7 @@ public class ProfileActivity extends AppCompatActivity  {
         });
 
         //spinnerUniversity = findViewById(R.id.spinnerUniversity);
-        adapterUniversity = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, universityList);
+        adapterUniversity = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, universityList);
         adapterUniversity.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         listViewUniversity.setAdapter(adapterUniversity);
 
@@ -136,7 +137,7 @@ public class ProfileActivity extends AppCompatActivity  {
 
 
 
-        adapterCollege = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, collegeList);
+        adapterCollege = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, collegeList);
         adapterCollege.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         listViewCollage.setAdapter(adapterCollege);
 
@@ -179,7 +180,7 @@ public class ProfileActivity extends AppCompatActivity  {
 
 
         //spinnerStream = findViewById(R.id.spinnerStream);
-        adapterStream = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, streamList);
+        adapterStream = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, streamList);
         adapterStream.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         listViewStream.setAdapter(adapterStream);
         txtStream.addTextChangedListener(new TextWatcher() {
@@ -293,7 +294,7 @@ public class ProfileActivity extends AppCompatActivity  {
 
     private class ViewHolder
     {
-        TextView txtCollage,txtCity,txtState,txtPincode,txtIntercom,txtSociety,txtFlatNumber;
+        TextView txtCollage;
     }
 
     class MyAdapterClg extends ArrayAdapter<college>{
@@ -323,10 +324,7 @@ public class ProfileActivity extends AppCompatActivity  {
                 college row = getItem(position);
                 // Log.d("Dish Name", row.complaint_type);
                 holder.txtCollage.setText(row.CollegeName);
-                //  holder.txtFloor.setText(row.Floor);
-                //  holder.txtBlock.setText(row.Block);
-                //  holder.txtArea.setText(row.FlatArea);
-                // holder.txtIntercom.setText(row.IntercomNumber);
+
                 return convertView;
             }
 

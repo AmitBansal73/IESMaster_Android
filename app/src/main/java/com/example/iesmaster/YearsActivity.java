@@ -63,6 +63,7 @@ public class YearsActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(YearsActivity.this,PapersActivity.class);
                 startActivity(intent);
+                YearsActivity.this.finish();
             }
         });
 

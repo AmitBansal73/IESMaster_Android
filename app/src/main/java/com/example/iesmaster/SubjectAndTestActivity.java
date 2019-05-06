@@ -48,6 +48,7 @@ public class SubjectAndTestActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(SubjectAndTestActivity.this,YearsActivity.class);
                 startActivity(intent);
+                SubjectAndTestActivity.this.finish();
             }
         });
         gridViewUniversity = findViewById(R.id.gridViewUniversity);
@@ -87,6 +88,7 @@ public class SubjectAndTestActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(SubjectAndTestActivity.this,YearsActivity.class);
                 startActivity(intent);
+                SubjectAndTestActivity.this.finish();
             }
         });
     }

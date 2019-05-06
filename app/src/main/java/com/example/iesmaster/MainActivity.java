@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     SignInButton signIn;
     GoogleApiClient googleApiClient;
     private static final int REQ_CODE = 9001;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -185,7 +186,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.signIn:
                 SignIn();
                 break;
-
+            case R.id.signOut:
+                SignOut();
+                break;
         }
     }
 
@@ -219,6 +222,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
            // txtEmail.setText(Email);
            // Glide.with(this).load(img_url).into(profileImg);
            // UpdateUI(true);
+
             Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
             intent.putExtra("name", Name);
             intent.putExtra("email", Email);
@@ -226,6 +230,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);
 
         }else {
+
             UpdateUI(false);
         }
     }
@@ -233,8 +238,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void UpdateUI(boolean isLogin){
 
         if (isLogin){
-          //  profile_sec.setVisibility(View.VISIBLE);
-         //   Login_sec.setVisibility(View.GONE);
+            profile_sec.setVisibility(View.VISIBLE);
+            Login_sec.setVisibility(View.GONE);
 
         }else {
             profile_sec.setVisibility(View.GONE);

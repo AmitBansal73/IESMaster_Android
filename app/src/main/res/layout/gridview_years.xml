@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/backgraund_grid"
+    android:background="@drawable/gradient_years"
     android:textAlignment="center"
     >
 
@@ -14,11 +14,12 @@
         android:layout_height="50dp"
         android:textSize="18sp"
         android:gravity="center"
+        android:text="2019"
         android:textAlignment="center"
-        android:drawableLeft="@drawable/ic_launcher_foreground"
+        android:drawableLeft="@drawable/ic_perm_calendar"
         android:textColor="#fff"
+        android:drawablePadding="5dp"
         android:elevation="5dp"
         android:layout_margin="8dp"
-
         />
 </LinearLayout>

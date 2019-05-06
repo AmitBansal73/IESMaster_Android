@@ -51,7 +51,7 @@ public class PapersActivity extends AppCompatActivity {
         paperList.add(new Subject("Unit 10", R.drawable.a));
         paperList.add(new Subject("Unit 11", R.drawable.b));
         paperList.add(new Subject("Unit 12", R.drawable.a));
-        testPaper=new TestPaper(this, R.layout.gridview_years, paperList) {
+        testPaper=new TestPaper(this, R.layout.grid_papers, paperList) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 return super.getView(position, convertView, parent);
@@ -64,6 +64,7 @@ public class PapersActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(PapersActivity.this, QuestionsActivity.class);
                 startActivity(intent);
+                PapersActivity.this.finish();
             }
         });
     }
@@ -87,8 +88,8 @@ public class PapersActivity extends AppCompatActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
 
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.gridview_years, null);
-            TextView textView = convertView.findViewById(R.id.testYear);
+            convertView = inflater.inflate(R.layout.grid_papers, null);
+            TextView textView = convertView.findViewById(R.id.testPapers);
             Subject tempSubject = (Subject) paperList.get(position);
             textView.setText(tempSubject.getsubName());
             return convertView;
