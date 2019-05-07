@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background_white"
     tools:context=".Questions.QuestionsActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -22,6 +23,7 @@
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/background_white"
         android:layout_marginTop="60dp"
         >
     </android.support.v4.view.ViewPager>

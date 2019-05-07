@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background_white"
     android:orientation="vertical"
     tools:context=".RegisterActivity">
     <android.support.design.widget.AppBarLayout
@@ -35,7 +36,7 @@
             android:id="@+id/profileImage"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:src="@drawable/user_image"
+            android:src="@drawable/b"
             android:layout_gravity="center"
             />
         <EditText
@@ -43,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Name "
-            android:inputType="text"
+            android:inputType="none"
             android:drawablePadding="5dp"
             android:drawableLeft="@drawable/ic_perm_identity"
             android:layout_marginTop="20dp"
@@ -53,6 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Email "
+            android:editable="false"
             android:inputType="textEmailAddress"
             android:drawablePadding="5dp"
             android:drawableLeft="@drawable/ic_email_black_24dp"

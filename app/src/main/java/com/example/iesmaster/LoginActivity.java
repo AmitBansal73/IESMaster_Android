@@ -26,7 +26,6 @@ public class LoginActivity extends AppCompatActivity {
         actionBar.setTitle(" IES Master ");
         actionBar.show();
 
-        editUserName = findViewById(R.id.editUserName);
-        editUserName = findViewById(R.id.editUserName);
+
     }
 }

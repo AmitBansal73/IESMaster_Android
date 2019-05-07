@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background_white"
     android:orientation="vertical"
 
     tools:context=".YearsActivity">
@@ -24,12 +25,12 @@
         android:id="@+id/gridViewYr"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/background_white"
         android:numColumns="3"
         android:horizontalSpacing="20dp"
         android:verticalSpacing="20dp"
         android:layout_gravity="center"
-        android:layout_margin="16dp"
-        android:elevation="5dp"
+        android:layout_margin="10dp"
 
         >
     </GridView>

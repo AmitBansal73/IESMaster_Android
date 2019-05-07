@@ -67,9 +67,9 @@ public class SubjectAndTestActivity extends AppCompatActivity {
         gridViewUniversity.setAdapter(universityAdpter);
 
         gridView = findViewById(R.id.gridView);
-        subList.add(new Subject("Math", R.drawable.a));
-        subList.add(new Subject("Physics", R.drawable.b));
-        subList.add(new Subject("Chemistry", R.drawable.a));
+        subList.add(new Subject("Math", R.drawable.gradient_1));
+        subList.add(new Subject("Physics", R.drawable.gradient_2));
+        subList.add(new Subject("Chemistry", R.drawable.gradient_3));
         subList.add(new Subject("ThermoDynamics", R.drawable.b));
         subList.add(new Subject("Signal Processing", R.drawable.a));
         subList.add(new Subject("Engg Drawing", R.drawable.b));

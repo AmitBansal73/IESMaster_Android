@@ -1,5 +1,6 @@
 package com.example.iesmaster;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +36,7 @@ import javax.security.auth.AuthPermission;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
-    Button LoginMannual,btnNext;
+    Button LoginMannual,btnNext,btnSkip;
     TextView txtUserName,txtPassword,btnRegister;
 
     LinearLayout profile_sec,Login_sec;
@@ -44,7 +46,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     SignInButton signIn;
     GoogleApiClient googleApiClient;
     private static final int REQ_CODE = 9001;
-
+    ProgressBar progressBar;
+    ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,17 +61,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         actionBar.setTitle(" IES Master ");
         actionBar.show();
 
-
+        progressBar = findViewById(R.id.progressBar);
         userName = findViewById(R.id.userName);
         profileImg = findViewById(R.id.profileImg);
         txtEmail = findViewById(R.id.txtEmail);
         profile_sec = findViewById(R.id.profile_sec);
         signIn = findViewById(R.id.signIn);
+        signOut = findViewById(R.id.signOut);
         profile_sec.setVisibility(View.GONE);
         signIn.setOnClickListener(this);
-
+        signOut.setOnClickListener(this);
         Login_sec = findViewById(R.id.Login_sec);
         Login_sec.setVisibility(View.VISIBLE);
+
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -84,13 +89,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(testActivity);
             }
         });
+        btnSkip = findViewById(R.id.btnSkip);
+        btnSkip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent testActivity = new Intent(MainActivity.this, ProfileActivity.class);
+                startActivity(testActivity);
+            }
+        });
         btnRegister= findViewById(R.id.btnRegister);
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent testActivity = new Intent(MainActivity.this, RegisterActivity.class);
                 startActivity(testActivity);
-
             }
         });
 
@@ -111,7 +123,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     startActivity(testActivity);
                     MainActivity.this.finish();
                 }
-
 
                 Intent testActivity = new Intent(MainActivity.this, ProfileActivity.class);
                 startActivity(testActivity);
@@ -175,10 +186,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         txtPassword = findViewById(R.id.txtPassword);
     }
 
-
-
-
-
     @Override
     public void onClick(View v) {
         switch (v.getId())
@@ -198,6 +205,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void SignIn(){
+    progressBar.setVisibility(View.VISIBLE);
         Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
         startActivityForResult(intent,REQ_CODE);
     }
@@ -208,17 +216,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onResult(@NonNull Status status) {
                 UpdateUI(false);
-                Toast.makeText(MainActivity.this, "You are Sucessfully SignOut", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "You are Successfully SignOut", Toast.LENGTH_SHORT).show();
             }
         });
     }
     private void handleResult(GoogleSignInResult result){
         if(result.isSuccess()){
+            progressBar.setVisibility(View.GONE);
             GoogleSignInAccount account = result.getSignInAccount();
             String Name = account.getDisplayName();
             String Email = account.getEmail();
             String img_url = account.getPhotoUrl().toString();
-            //txtUserName.setText(Name);
+           // userName.setText(Name);
            // txtEmail.setText(Email);
            // Glide.with(this).load(img_url).into(profileImg);
            // UpdateUI(true);
@@ -228,14 +237,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             intent.putExtra("email", Email);
             intent.putExtra("img", img_url);
             startActivity(intent);
-
         }else {
-
             UpdateUI(false);
         }
     }
 
-    private void UpdateUI(boolean isLogin){
+    public void UpdateUI(boolean isLogin){
 
         if (isLogin){
             profile_sec.setVisibility(View.VISIBLE);

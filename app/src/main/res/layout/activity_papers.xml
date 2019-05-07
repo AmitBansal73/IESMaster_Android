@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background_white"
     android:orientation="vertical"
     tools:context=".PapersActivity">
     <android.support.design.widget.AppBarLayout
@@ -21,13 +22,13 @@
     <GridView
         android:id="@+id/gridViewPaper"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/background_white"
         android:numColumns="3"
-        android:horizontalSpacing="20dp"
-        android:verticalSpacing="20dp"
+        android:horizontalSpacing="16dp"
+        android:verticalSpacing="16dp"
         android:layout_gravity="center"
-        android:layout_margin="16dp"
-        android:elevation="5dp"
+        android:layout_margin="10dp"
         >
     </GridView>
 

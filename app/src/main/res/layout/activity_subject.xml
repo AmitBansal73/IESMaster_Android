@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background_white"
     tools:context=".SubjectActivity">
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBar"
@@ -97,7 +98,6 @@
                 android:textSize="14sp"
                 android:textColor="#232323"
                 />
-
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"

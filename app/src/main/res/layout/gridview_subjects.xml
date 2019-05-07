@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:layout_margin="5dp"
     android:background="@drawable/gradient"
     >
     <TextView
@@ -17,6 +18,7 @@
         android:drawablePadding="5dp"
         android:textColor="#fff"
         android:elevation="5dp"
+        android:gravity="center"
         android:layout_margin="8dp"
-        android:layout_marginTop="10dp" />
+        />
 </LinearLayout>
