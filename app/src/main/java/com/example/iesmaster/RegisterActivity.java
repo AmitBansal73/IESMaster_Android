@@ -15,9 +15,8 @@ import com.bumptech.glide.Glide;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    ImageView profileImage;
-    EditText txtMobile,txtParentName,txtAddress,txtPassword,txtName,txtEmail;
-    TextView attachedID;
+    ImageView profileImage,addImage;
+    EditText txtMobile,txtAddress,txtPassword,txtName,txtEmail;
     Button btnSubmit;
 
     static final int REQUEST_IMAGE_GET = 1;
@@ -38,16 +37,15 @@ public class RegisterActivity extends AppCompatActivity {
         actionBar.show();
 
         btnSubmit= findViewById(R.id.btnSubmit);
-        attachedID = findViewById(R.id.attachedID);
         profileImage = findViewById(R.id.profileImage);
         txtAddress = findViewById(R.id.txtAddress);
         txtEmail = findViewById(R.id.txtEmail);
         txtMobile = findViewById(R.id.txtMobile);
         txtName = findViewById(R.id.txtName);
-        txtParentName = findViewById(R.id.txtParentName);
+        addImage = findViewById(R.id.addImage);
         txtPassword = findViewById(R.id.txtPassword);
 
-        attachedID.setOnClickListener(new View.OnClickListener() {
+        addImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -74,8 +72,5 @@ public class RegisterActivity extends AppCompatActivity {
         txtName.setText(Name);
         txtEmail.setText(Email);
         Glide.with(this).load(img_url).into(profileImage);
-
     }
-
-
 }

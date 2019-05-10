@@ -9,17 +9,19 @@
         android:roundIcon="@drawable/ies"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".TopicActivity"></activity>
-        <activity android:name=".RegisterActivity" />
+        <activity android:name=".TopicActivity"
+            android:parentActivityName=".PapersActivity"
+            ></activity>
+        <activity android:name=".RegisterActivity"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".PapersActivity"
-            android:parentActivityName=".YearsActivity" />
+            android:parentActivityName=".SubjectAndTestActivity" />
         <activity
             android:name=".YearsActivity"
             android:parentActivityName=".SubjectAndTestActivity" />
         <activity
-            android:name=".SubjectAndTestActivity"
-            android:parentActivityName=".MainActivity" />
+            android:name=".SubjectAndTestActivity" />
         <activity android:name=".WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,7 +38,7 @@
         <activity android:name=".LoginActivity" />
         <activity
             android:name=".ProfileActivity"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".SubjectAndTestActivity" />
         <activity android:name=".MainActivity" />
     </application>
 

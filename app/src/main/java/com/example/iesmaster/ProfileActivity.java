@@ -1,5 +1,6 @@
 package com.example.iesmaster;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
@@ -9,8 +10,10 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -24,11 +27,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.example.iesmaster.RegisterActivity.REQUEST_IMAGE_GET;
+
 public class ProfileActivity extends AppCompatActivity  {
     Button btnSave;
     EditText txtUniversity,txtCollage,txtStream;
     ListView listViewUniversity,listViewCollage,listViewStream;
-    Spinner spinnerUniversity,spinnerCollege,spinnerStream,spinnerSemester;
+    Spinner spinnerSemester;
+    TextView attachedID;
 
     ArrayAdapter<String> adapterUniversity;
    // ArrayAdapter<String> adapterClg;
@@ -49,6 +55,7 @@ public class ProfileActivity extends AppCompatActivity  {
 
     boolean IsResult = false;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +69,7 @@ public class ProfileActivity extends AppCompatActivity  {
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setTitle("Academic Profile");
         actionBar.show();
+        closeKeyboard();
 
        Intent intent = getIntent();
         IsResult = intent.getBooleanExtra("IsResult", false);
@@ -70,6 +78,7 @@ public class ProfileActivity extends AppCompatActivity  {
         setStreamData();
         setSemesterData();
 
+        attachedID = findViewById(R.id.attachedID);
         txtUniversity = findViewById(R.id.txtUniversity);
         txtStream = findViewById(R.id.txtStream);
         txtCollage = findViewById(R.id.txtCollage);
@@ -78,7 +87,16 @@ public class ProfileActivity extends AppCompatActivity  {
         listViewStream = findViewById(R.id.listViewStream);
         btnSave = findViewById(R.id.btnSave);
 
-
+        attachedID.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(intent, REQUEST_IMAGE_GET);
+                }
+            }
+        });
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,7 +136,6 @@ public class ProfileActivity extends AppCompatActivity  {
 
     private void setUniversitySpinner()
     {
-        //spinnerUniversity = findViewById(R.id.spinnerUniversity);
         adapterUniversity = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, universityList);
         adapterUniversity.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         listViewUniversity.setAdapter(adapterUniversity);
@@ -126,6 +143,8 @@ public class ProfileActivity extends AppCompatActivity  {
         txtUniversity.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
+                closeKeyboard();
+
                 if(hasFocus)
                 {
                     listViewUniversity.setVisibility(View.VISIBLE);
@@ -134,6 +153,7 @@ public class ProfileActivity extends AppCompatActivity  {
                 {
                     listViewUniversity.setVisibility(View.GONE);
                 }
+
             }
         });
 
@@ -181,6 +201,7 @@ public class ProfileActivity extends AppCompatActivity  {
         txtCollage.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
+                closeKeyboard();
                 if(hasFocus)
                 {
                     listViewCollage.setVisibility(View.VISIBLE);
@@ -235,6 +256,7 @@ public class ProfileActivity extends AppCompatActivity  {
         txtStream.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
+
                 if(hasFocus)
                 {
                     listViewStream.setVisibility(View.VISIBLE);
@@ -405,6 +427,14 @@ public class ProfileActivity extends AppCompatActivity  {
 
     public class college{
         String CollegeName;
+    }
+
+    private void closeKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+        }
     }
 
 }

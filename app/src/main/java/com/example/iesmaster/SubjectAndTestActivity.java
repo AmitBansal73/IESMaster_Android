@@ -2,6 +2,7 @@ package com.example.iesmaster;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.iesmaster.model.Subject;
 
@@ -29,6 +31,8 @@ public class SubjectAndTestActivity extends AppCompatActivity {
     UniversityAdpter universityAdpter;
     Button btnNext;
     TextView txtAddProfile;
+    private Integer ClickCount=0;
+    private long prevTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,6 +184,37 @@ public class SubjectAndTestActivity extends AppCompatActivity {
             Subject tempSubject = (Subject) univList.get(position);
             textView.setText(tempSubject.getsubName());
             return convertView;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        try {
+            long time = SystemClock.currentThreadTimeMillis();
+
+            if (prevTime == 0) {
+                prevTime = SystemClock.currentThreadTimeMillis();
+            }
+
+            if (time - prevTime > 1000) {
+                prevTime = time;
+                ClickCount=0;
+            }
+            if (time - prevTime < 1000 && time > prevTime) {
+                ClickCount++;
+                if (ClickCount == 2) {
+
+                    SubjectAndTestActivity.this.finish();
+                } else {
+                    prevTime = time;
+                    String msg = "double click to close";
+                    Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 }

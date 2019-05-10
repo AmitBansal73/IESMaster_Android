@@ -224,13 +224,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
            // userName.setText(Name);
            // txtEmail.setText(Email);
            // Glide.with(this).load(img_url).into(profileImg);
-           // UpdateUI(true);
+            UpdateUI(true);
 
-            Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+           Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
             intent.putExtra("name", Name);
             intent.putExtra("email", Email);
             intent.putExtra("img", img_url);
             startActivity(intent);
+            MainActivity.this.finish();
         }else {
             UpdateUI(false);
         }
@@ -239,8 +240,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void UpdateUI(boolean isLogin){
 
         if (isLogin){
-            profile_sec.setVisibility(View.VISIBLE);
-            Login_sec.setVisibility(View.GONE);
+
+            Intent intent = new Intent(MainActivity.this,SubjectAndTestActivity.class);
+            startActivity(intent);
+            MainActivity.this.finish();
+          //  profile_sec.setVisibility(View.VISIBLE);
+           // Login_sec.setVisibility(View.GONE);
 
         }else {
             profile_sec.setVisibility(View.GONE);
