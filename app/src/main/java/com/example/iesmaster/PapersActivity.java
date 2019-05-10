@@ -34,7 +34,7 @@ public class PapersActivity extends AppCompatActivity {
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(false);
-        actionBar.setTitle("Unit");
+        actionBar.setTitle("Unit of Electrical");
         actionBar.show();
 
         gridViewPaper = findViewById(R.id.gridViewPaper);

@@ -37,7 +37,7 @@ public class TopicActivity extends AppCompatActivity {
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(false);
-        actionBar.setTitle("Topics");
+        actionBar.setTitle("Topics of Building Material");
         actionBar.show();
 
         gridViewTopic = findViewById(R.id.gridViewTopic);

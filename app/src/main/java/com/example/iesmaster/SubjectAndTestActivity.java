@@ -18,15 +18,17 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.iesmaster.model.AcademicProfile;
 import com.example.iesmaster.model.Subject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SubjectAndTestActivity extends AppCompatActivity {
 
     GridView gridView,gridViewUniversity;
     ArrayList subList=new ArrayList<>();
-    ArrayList univList =new ArrayList<>();
+    List<AcademicProfile> univList =new ArrayList<>();
     TestSubject myAdapter;
     UniversityAdpter universityAdpter;
     Button btnNext;
@@ -59,7 +61,7 @@ public class SubjectAndTestActivity extends AppCompatActivity {
 
         txtAddProfile = findViewById(R.id.txtAddProfile);
 
-        txtAddProfile.setText("Reccomended : Add other semester to get more Test papers.");
+        txtAddProfile.setText("Recommended : Add other semester to get more Test papers.");
 
         txtAddProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,20 +85,23 @@ public class SubjectAndTestActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(requestCode == 100)
         {
-            String newProfile = data.getStringExtra("Profile");
-            univList.add(new Subject(newProfile, R.drawable.a));
-
+            AcademicProfile newProfile = data.getParcelableExtra("Profile");
+            univList.add(newProfile);
         }
     }
 
     private void setProfileGrid()
     {
-        univList.add(new Subject("UPTU", R.drawable.a));
+        AcademicProfile myAcademicProfile = new AcademicProfile();
+        myAcademicProfile.UniversityName = "UPTU";
+        myAcademicProfile.Stream = "Civil";
+        myAcademicProfile.Semester = "3rd";
+        univList.add(myAcademicProfile);
         /*univList.add(new Subject("Punjab University", R.drawable.b));
         univList.add(new Subject("Amity University", R.drawable.a));
         univList.add(new Subject("CCS University", R.drawable.b));*/
 
-        universityAdpter=new UniversityAdpter(this, R.layout.grid_university, univList) {
+        universityAdpter=new UniversityAdpter(this, R.layout.grid_item_profile, univList) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 return super.getView(position, convertView, parent);
@@ -162,9 +167,9 @@ public class SubjectAndTestActivity extends AppCompatActivity {
 
     public class UniversityAdpter extends ArrayAdapter {
 
-        ArrayList univList = new ArrayList<>();
+        List<AcademicProfile>  univList = new ArrayList<>();
 
-        public UniversityAdpter(Context context, int textViewResourceId, ArrayList objects) {
+        public UniversityAdpter(Context context, int textViewResourceId, List<AcademicProfile> objects) {
             super(context, textViewResourceId, objects);
             univList = objects;
         }
@@ -178,11 +183,13 @@ public class SubjectAndTestActivity extends AppCompatActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
 
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.grid_university, null);
+            convertView = inflater.inflate(R.layout.grid_item_profile, null);
             TextView textView = convertView.findViewById(R.id.univName);
+            TextView txtStream = convertView.findViewById(R.id.txtStream);
 
-            Subject tempSubject = (Subject) univList.get(position);
-            textView.setText(tempSubject.getsubName());
+            AcademicProfile tempProfile = (AcademicProfile) univList.get(position);
+            textView.setText(tempProfile.UniversityName);
+            txtStream.setText(tempProfile.Stream + " ( Sem:" + tempProfile.Semester + ")");
             return convertView;
         }
     }
