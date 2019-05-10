@@ -62,6 +62,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                intent.putExtra("IsResult", false);
                 startActivity(intent);
                 RegisterActivity.this.finish();
             }

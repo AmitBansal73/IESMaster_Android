@@ -2,7 +2,7 @@ package com.example.iesmaster;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,10 +14,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.iesmaster.Object.Subject;
+import com.example.iesmaster.model.Subject;
 
 import java.util.ArrayList;
 
@@ -29,6 +28,7 @@ public class SubjectAndTestActivity extends AppCompatActivity {
     TestSubject myAdapter;
     UniversityAdpter universityAdpter;
     Button btnNext;
+    TextView txtAddProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,7 @@ public class SubjectAndTestActivity extends AppCompatActivity {
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(false);
-        actionBar.setTitle(" IES Master ");
+        actionBar.setTitle("Subjects");
         actionBar.show();
         btnNext = findViewById(R.id.btnNext);
         btnNext.setOnClickListener(new View.OnClickListener() {
@@ -51,12 +51,46 @@ public class SubjectAndTestActivity extends AppCompatActivity {
                 SubjectAndTestActivity.this.finish();
             }
         });
-        gridViewUniversity = findViewById(R.id.gridViewUniversity);
 
+
+        txtAddProfile = findViewById(R.id.txtAddProfile);
+
+        txtAddProfile.setText("Reccomended : Add other semester to get more Test papers.");
+
+        txtAddProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent profileActivity = new Intent(SubjectAndTestActivity.this,ProfileActivity.class );
+                profileActivity.putExtra("IsResult", true);
+                startActivityForResult(profileActivity,100);
+            }
+        });
+
+        gridViewUniversity = findViewById(R.id.gridViewUniversity);
+        setProfileGrid();
+
+        gridView = findViewById(R.id.gridView);
+        setSubjectGrid();
+
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(requestCode == 100)
+        {
+            String newProfile = data.getStringExtra("Profile");
+            univList.add(new Subject(newProfile, R.drawable.a));
+
+        }
+    }
+
+    private void setProfileGrid()
+    {
         univList.add(new Subject("UPTU", R.drawable.a));
-        univList.add(new Subject("Punjab University", R.drawable.b));
+        /*univList.add(new Subject("Punjab University", R.drawable.b));
         univList.add(new Subject("Amity University", R.drawable.a));
-        univList.add(new Subject("CCS University", R.drawable.b));
+        univList.add(new Subject("CCS University", R.drawable.b));*/
 
         universityAdpter=new UniversityAdpter(this, R.layout.grid_university, univList) {
             @Override
@@ -65,8 +99,10 @@ public class SubjectAndTestActivity extends AppCompatActivity {
             }
         };
         gridViewUniversity.setAdapter(universityAdpter);
+    }
 
-        gridView = findViewById(R.id.gridView);
+    private void setSubjectGrid()
+    {
         subList.add(new Subject("Math", R.drawable.gradient_1));
         subList.add(new Subject("Physics", R.drawable.gradient_2));
         subList.add(new Subject("Chemistry", R.drawable.gradient_3));

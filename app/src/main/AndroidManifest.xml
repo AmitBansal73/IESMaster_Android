@@ -9,15 +9,17 @@
         android:roundIcon="@drawable/ies"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".RegisterActivity"></activity>
-        <activity android:name=".PapersActivity"
-            android:parentActivityName=".YearsActivity"
-            />
-        <activity android:name=".YearsActivity"
-            android:parentActivityName=".SubjectAndTestActivity"/>
-        <activity android:name=".SubjectAndTestActivity"
-            android:parentActivityName=".MainActivity"
-            />
+        <activity android:name=".TopicActivity"></activity>
+        <activity android:name=".RegisterActivity" />
+        <activity
+            android:name=".PapersActivity"
+            android:parentActivityName=".YearsActivity" />
+        <activity
+            android:name=".YearsActivity"
+            android:parentActivityName=".SubjectAndTestActivity" />
+        <activity
+            android:name=".SubjectAndTestActivity"
+            android:parentActivityName=".MainActivity" />
         <activity android:name=".WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,13 +28,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".PaymentActivity" />
-        <activity android:name=".Questions.QuestionsActivity"
-            android:parentActivityName=".PapersActivity"/>
+        <activity
+            android:name=".Questions.QuestionsActivity"
+            android:parentActivityName=".PapersActivity" />
         <activity android:name=".SubjectActivity" />
         <activity android:name=".TestPaperActivity" />
         <activity android:name=".LoginActivity" />
-        <activity android:name=".ProfileActivity"
-            android:parentActivityName=".MainActivity"/>
+        <activity
+            android:name=".ProfileActivity"
+            android:parentActivityName=".MainActivity" />
         <activity android:name=".MainActivity" />
     </application>
 

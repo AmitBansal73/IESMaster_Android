@@ -18,8 +18,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.iesmaster.Common.Session;
-import com.example.iesmaster.Object.Profile;
-import com.example.iesmaster.Object.Subjects;
+import com.example.iesmaster.model.Profile;
+import com.example.iesmaster.model.Subjects;
 
 import java.util.ArrayList;
 import java.util.HashMap;

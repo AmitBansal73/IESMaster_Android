@@ -23,7 +23,7 @@ public class LoginActivity extends AppCompatActivity {
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(false);
-        actionBar.setTitle(" IES Master ");
+        actionBar.setTitle("Login");
         actionBar.show();
 
 

@@ -15,69 +15,68 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.example.iesmaster.model.Subject;
+import com.example.iesmaster.Questions.QuestionsActivity;
+import com.example.iesmaster.model.Topic;
 
 import java.util.ArrayList;
 
-public class YearsActivity extends AppCompatActivity {
-    GridView gridViewYr;
-    ArrayList yearList=new ArrayList<>();
-    TestYear testYear;
+public class TopicActivity extends AppCompatActivity {
+
+    ArrayList topicList=new ArrayList<>();
+    GridView gridViewTopic;
+    TopicAdapter myTopicAdaptor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_years);
+        setContentView(R.layout.activity_topic);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(false);
-        actionBar.setTitle(" Years ");
+        actionBar.setTitle("Topics");
         actionBar.show();
 
-        gridViewYr = findViewById(R.id.gridViewYr);
-        yearList.add(new Subject("2008", R.drawable.a));
-        yearList.add(new Subject("2009", R.drawable.b));
-        yearList.add(new Subject("2010", R.drawable.a));
-        yearList.add(new Subject("2011", R.drawable.b));
-        yearList.add(new Subject("2012", R.drawable.a));
-        yearList.add(new Subject("2013", R.drawable.b));
-        yearList.add(new Subject("2014", R.drawable.a));
-        yearList.add(new Subject("2015", R.drawable.a));
-        yearList.add(new Subject("2016", R.drawable.b));
-        yearList.add(new Subject("2017", R.drawable.a));
-        yearList.add(new Subject("2018", R.drawable.b));
-        yearList.add(new Subject("2019", R.drawable.a));
+        gridViewTopic = findViewById(R.id.gridViewTopic);
+        topicList.add(new Topic(1,"Introduction", "Soil"));
+        topicList.add(new Topic(2,"Formation of Soils", "Soil"));
+        topicList.add(new Topic(3,"Soil Types", "Soil"));
+        topicList.add(new Topic(4,"Soil Classification", "Soil"));
+        topicList.add(new Topic(5,"Seepage in Soil", "Soil"));
 
-        testYear=new TestYear(this, R.layout.gridview_years, yearList) {
+
+        myTopicAdaptor=new TopicAdapter(this, R.layout.grid_item_topic, topicList) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 return super.getView(position, convertView, parent);
             }
         };
-        gridViewYr.setAdapter(testYear);
-        gridViewYr.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        gridViewTopic.setAdapter(myTopicAdaptor);
+        gridViewTopic.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Intent intent = new Intent(YearsActivity.this,PapersActivity.class);
+                Intent intent = new Intent(TopicActivity.this, QuestionsActivity.class);
                 startActivity(intent);
-                YearsActivity.this.finish();
+                TopicActivity.this.finish();
             }
         });
+
+
 
     }
 
 
-
-    public class TestYear extends ArrayAdapter {
+    public class TopicAdapter extends ArrayAdapter {
 
         ArrayList yearList = new ArrayList<>();
 
-        public TestYear(Context context, int textViewResourceId, ArrayList objects) {
+        public TopicAdapter(Context context, int textViewResourceId, ArrayList objects) {
             super(context, textViewResourceId, objects);
-            yearList = objects;
+            topicList = objects;
         }
 
         @Override
@@ -89,11 +88,11 @@ public class YearsActivity extends AppCompatActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
 
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.gridview_years, null);
-            TextView textView = convertView.findViewById(R.id.testYear);
+            convertView = inflater.inflate(R.layout.grid_item_topic, null);
+            TextView textView = convertView.findViewById(R.id.txtTopic);
 
-            Subject tempSubject = (Subject) yearList.get(position);
-            textView.setText( tempSubject.getsubName());
+            Topic tempTopic = (Topic) topicList.get(position);
+            textView.setText( tempTopic.TopicName);
             return convertView;
         }
     }

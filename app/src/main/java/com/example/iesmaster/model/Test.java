@@ -1,4 +1,4 @@
-package com.example.iesmaster.Object;
+package com.example.iesmaster.model;
 
 public class Test {
 

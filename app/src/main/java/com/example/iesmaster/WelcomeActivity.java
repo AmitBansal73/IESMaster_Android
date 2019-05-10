@@ -26,7 +26,7 @@ public class WelcomeActivity extends AppCompatActivity {
     LinearLayout dotsLayout;
     TextView[] dots;
     int[] layouts;
-    Button btnSkip, btnNext;
+    Button btn_previous, btnNext;
     PrefManeger prefManeger;
 
     @Override
@@ -50,7 +50,8 @@ public class WelcomeActivity extends AppCompatActivity {
 
         viewPager = findViewById(R.id.view_pager);
         dotsLayout =  findViewById(R.id.layoutDots);
-        btnSkip =  findViewById(R.id.btn_skip);
+        btn_previous =  findViewById(R.id.btn_previous);
+        btn_previous.setVisibility(View.GONE);
         btnNext = findViewById(R.id.btn_next);
 
 
@@ -72,10 +73,15 @@ public class WelcomeActivity extends AppCompatActivity {
         viewPager.setAdapter(myViewPagerAdapter);
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
 
-        btnSkip.setOnClickListener(new View.OnClickListener() {
+        btn_previous.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                launchHomeScreen();
+                int current = viewPager.getCurrentItem();
+                if(current != 0)
+                {
+                    viewPager.setCurrentItem(current-1);
+                }
+
             }
         });
 
@@ -131,16 +137,20 @@ public class WelcomeActivity extends AppCompatActivity {
         public void onPageSelected(int position) {
             addBottomDots(position);
 
+            if(position == 0)
+            {
+                btnNext.setText(getString(R.string.next));
+                btn_previous.setVisibility(View.GONE);
+              }
             // changing the next button text 'NEXT' / 'GOT IT'
-            if (position == layouts.length - 1) {
+            else if (position == layouts.length - 1) {
                 // last page. make button text to GOT IT
                 btnNext.setText(getString(R.string.start));
-                //btnNext.setVisibility(View.GONE);
-                btnSkip.setVisibility(View.GONE);
+                btn_previous.setVisibility(View.VISIBLE);
             } else {
                 // still pages are left
                 btnNext.setText(getString(R.string.next));
-                btnSkip.setVisibility(View.VISIBLE);
+                btn_previous.setVisibility(View.VISIBLE);
             }
         }
 

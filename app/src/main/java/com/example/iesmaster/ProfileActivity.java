@@ -20,9 +20,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.iesmaster.Common.Session;
-import com.example.iesmaster.Object.Profile;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +29,7 @@ public class ProfileActivity extends AppCompatActivity  {
     EditText txtUniversity,txtCollage,txtStream;
     ListView listViewUniversity,listViewCollage,listViewStream;
     Spinner spinnerUniversity,spinnerCollege,spinnerStream,spinnerSemester;
+
     ArrayAdapter<String> adapterUniversity;
    // ArrayAdapter<String> adapterClg;
     List<String> universityList= new ArrayList<>();
@@ -49,6 +47,8 @@ public class ProfileActivity extends AppCompatActivity  {
     ArrayList<college> arraylistcollage = new ArrayList<>();
     ArrayAdapter<String> adapterCollege,adapterStream, adapterSemester;
 
+    boolean IsResult = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,9 +60,11 @@ public class ProfileActivity extends AppCompatActivity  {
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(false);
-        actionBar.setTitle("Profile");
+        actionBar.setTitle("Academic Profile");
         actionBar.show();
 
+       Intent intent = getIntent();
+        IsResult = intent.getBooleanExtra("IsResult", false);
         setUniversityData();
         setCollegeData();
         setStreamData();
@@ -75,43 +77,74 @@ public class ProfileActivity extends AppCompatActivity  {
         listViewCollage = findViewById(R.id.listViewCollage);
         listViewStream = findViewById(R.id.listViewStream);
         btnSave = findViewById(R.id.btnSave);
+
+
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-
-                Intent i = new Intent(ProfileActivity.this, SubjectAndTestActivity.class);
-                startActivity(i);
-                ProfileActivity.this.finish();
+                if(!IsResult) {
+                    Intent i = new Intent(ProfileActivity.this, SubjectAndTestActivity.class);
+                    startActivity(i);
+                    ProfileActivity.this.finish();
+                }
+                else {
+                    Intent intent = new Intent();
+                    intent.putExtra("Profile", "Additional Profile");
+                    setResult(100, intent);
+                    finish();//finishing activity
+                }
 
             }
         });
 
-        txtUniversity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        setUniversitySpinner();
+        setCollegeSpinner();
+        setStreamSpinner();
 
-            }
-        });
 
+        //spinnerStream = findViewById(R.id.spinnerStream);
+
+
+        spinnerSemester = findViewById(R.id.spinnerSemester);
+        adapterSemester = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, semesterList);
+        adapterSemester.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerSemester.setAdapter(adapterSemester);
+
+
+    }
+
+
+
+    private void setUniversitySpinner()
+    {
         //spinnerUniversity = findViewById(R.id.spinnerUniversity);
         adapterUniversity = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, universityList);
         adapterUniversity.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         listViewUniversity.setAdapter(adapterUniversity);
 
-        txtUniversity.addTextChangedListener(new TextWatcher() {
-
+        txtUniversity.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
-                // When user changed the Text
-                if(cs.length()<2)
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus)
+                {
+                    listViewUniversity.setVisibility(View.VISIBLE);
+                }
+                else
                 {
                     listViewUniversity.setVisibility(View.GONE);
                 }
-                else {
-                    adapterUniversity.getFilter().filter(cs);
-                    listViewUniversity.setVisibility(View.VISIBLE);
-                }
+            }
+        });
+
+        txtUniversity.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+                // When user changed the Text
+
+                adapterUniversity.getFilter().filter(cs);
+                listViewUniversity.setVisibility(View.VISIBLE);
+
             }
 
             @Override
@@ -136,10 +169,28 @@ public class ProfileActivity extends AppCompatActivity  {
         });
 
 
+    }
+
+    private void setCollegeSpinner()
+    {
 
         adapterCollege = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, collegeList);
         adapterCollege.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         listViewCollage.setAdapter(adapterCollege);
+
+        txtCollage.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus)
+                {
+                    listViewCollage.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    listViewCollage.setVisibility(View.GONE);
+                }
+            }
+        });
 
         txtCollage.addTextChangedListener(new TextWatcher() {
 
@@ -147,14 +198,9 @@ public class ProfileActivity extends AppCompatActivity  {
             public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
                 // When user changed the Text
 
-                if(cs.length()<2)
-                {
-                    listViewCollage.setVisibility(View.GONE);
-                }
-                else {
-                    ProfileActivity.this.adapterCollege.getFilter().filter(cs);
-                    listViewCollage.setVisibility(View.VISIBLE);
-                }
+                ProfileActivity.this.adapterCollege.getFilter().filter(cs);
+                listViewCollage.setVisibility(View.VISIBLE);
+
             }
 
             @Override
@@ -177,12 +223,29 @@ public class ProfileActivity extends AppCompatActivity  {
                 listViewCollage.setVisibility(View.GONE);
             }
         });
+    }
 
 
-        //spinnerStream = findViewById(R.id.spinnerStream);
+    private void setStreamSpinner()
+    {
         adapterStream = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, streamList);
         adapterStream.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         listViewStream.setAdapter(adapterStream);
+
+        txtStream.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus)
+                {
+                    listViewStream.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    listViewStream.setVisibility(View.GONE);
+                }
+            }
+        });
+
         txtStream.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -217,13 +280,6 @@ public class ProfileActivity extends AppCompatActivity  {
                 listViewStream.setVisibility(View.GONE);
             }
         });
-
-
-        spinnerSemester = findViewById(R.id.spinnerSemester);
-        adapterSemester = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, semesterList);
-        adapterSemester.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerSemester.setAdapter(adapterSemester);
-
 
     }
 
@@ -275,19 +331,19 @@ public class ProfileActivity extends AppCompatActivity  {
         semesterHashMap.put("1st Year (Sem I)",1);
         semesterList.add("1st Year (Sem II)");
         semesterHashMap.put("1st Year (Sem II)",2);
-        semesterList.add("2nd Year (Sem I)");
-        semesterHashMap.put("2nd Year (Sem I)",3);
-        semesterList.add("2nd Year (Sem II)");
-        semesterHashMap.put("2nd Year (Sem II)",4);
+        semesterList.add("2nd Year (Sem III)");
+        semesterHashMap.put("2nd Year (Sem III)",3);
+        semesterList.add("2nd Year (Sem IV)");
+        semesterHashMap.put("2nd Year (Sem IV)",4);
 
-        semesterList.add("3rd Year (Sem I)");
-        semesterHashMap.put("3rd Year (Sem I)",5);
-        semesterList.add("3rd Year (Sem II)");
-        semesterHashMap.put("3rd Year (Sem II)",6);
-        semesterList.add("Final Year (Sem I)");
-        semesterHashMap.put("Final Year (Sem I)",7);
-        semesterList.add("Final Year (Sem II)");
-        semesterHashMap.put("Final Year (Sem II)",8);
+        semesterList.add("3rd Year (Sem V)");
+        semesterHashMap.put("3rd Year (Sem V)",5);
+        semesterList.add("3rd Year (Sem VI)");
+        semesterHashMap.put("3rd Year (Sem VI)",6);
+        semesterList.add("Final Year (Sem VII)");
+        semesterHashMap.put("Final Year (Sem VII)",7);
+        semesterList.add("Final Year (Sem VIII)");
+        semesterHashMap.put("Final Year (Sem VIII)",8);
 
     }
 

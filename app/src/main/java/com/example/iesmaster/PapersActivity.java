@@ -14,8 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
 
-import com.example.iesmaster.Object.Subject;
-import com.example.iesmaster.Questions.QuestionsActivity;
+import com.example.iesmaster.model.Subject;
 
 import java.util.ArrayList;
 
@@ -35,7 +34,7 @@ public class PapersActivity extends AppCompatActivity {
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(false);
-        actionBar.setTitle(" Papers ");
+        actionBar.setTitle("Unit");
         actionBar.show();
 
         gridViewPaper = findViewById(R.id.gridViewPaper);
@@ -62,7 +61,7 @@ public class PapersActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Intent intent = new Intent(PapersActivity.this, QuestionsActivity.class);
+                Intent intent = new Intent(PapersActivity.this, TopicActivity.class);
                 startActivity(intent);
                 PapersActivity.this.finish();
             }

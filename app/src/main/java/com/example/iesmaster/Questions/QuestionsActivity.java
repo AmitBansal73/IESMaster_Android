@@ -3,7 +3,6 @@ package com.example.iesmaster.Questions;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -13,7 +12,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -21,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import com.example.iesmaster.Object.Questions;
+import com.example.iesmaster.model.Questions;
 import com.example.iesmaster.PapersActivity;
 import com.example.iesmaster.R;
 
@@ -161,7 +159,7 @@ public class QuestionsActivity extends AppCompatActivity implements QuestionFrag
             // setup the alert builder
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             //builder.setTitle("Alert");
-            builder.setMessage("Are you sure to close Test ?");
+            builder.setMessage("Exit from this Page");
 
             // add the buttons
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {

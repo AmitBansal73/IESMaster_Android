@@ -12,14 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
-import com.example.iesmaster.Object.Questions;
+import com.example.iesmaster.model.Questions;
 import com.example.iesmaster.R;
 
 public class QuestionFragment extends Fragment {
