@@ -20,9 +20,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.iesmaster.model.AcademicProfile;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import javax.xml.datatype.Duration;
 
 public class ProfileActivity extends AppCompatActivity  {
     Button btnSave;
@@ -83,14 +87,27 @@ public class ProfileActivity extends AppCompatActivity  {
             @Override
             public void onClick(View v) {
 
+                if(txtUniversity.getText().toString()== null ||
+                   txtStream.getText().toString() == null ||
+                   spinnerSemester.getSelectedItem().toString()== null)
+                {
+                    Toast.makeText(getApplicationContext(), "Empty Field", Toast.LENGTH_LONG);
+                    return;
+                }
+
                 if(!IsResult) {
                     Intent i = new Intent(ProfileActivity.this, SubjectAndTestActivity.class);
                     startActivity(i);
                     ProfileActivity.this.finish();
                 }
                 else {
+
+                    AcademicProfile profile = new AcademicProfile();
+                    profile.UniversityName = txtUniversity.getText().toString();
+                    profile.Stream = txtStream.getText().toString();
+                    profile.Semester = spinnerSemester.getSelectedItem().toString();
                     Intent intent = new Intent();
-                    intent.putExtra("Profile", "Additional Profile");
+                    intent.putExtra("Profile", profile);
                     setResult(100, intent);
                     finish();//finishing activity
                 }

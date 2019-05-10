@@ -18,7 +18,26 @@
             android:layout_height="56dp"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
     </android.support.design.widget.AppBarLayout>
-
+    <TextView
+        android:id="@+id/txtSubject"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Soil Mechanics , Unit 2"
+        android:textSize="14dp"
+        android:textStyle="bold"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center_horizontal"
+        />
+    <TextView
+        android:id="@+id/txtStream"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Civil (Sem IV)"
+        android:textSize="14dp"
+        android:textStyle="bold"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center_horizontal"
+        />
     <GridView
         android:id="@+id/gridViewTopic"
         android:layout_width="match_parent"

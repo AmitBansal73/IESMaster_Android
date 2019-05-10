@@ -18,7 +18,26 @@
             android:layout_height="56dp"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
     </android.support.design.widget.AppBarLayout>
-
+    <TextView
+        android:id="@+id/txtCollage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ITS College, JJ University"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center_horizontal"
+        />
+    <TextView
+        android:id="@+id/txtStream"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Electrical (Sem IV)"
+        android:textSize="14dp"
+        android:textStyle="bold"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center_horizontal"
+        />
     <GridView
         android:id="@+id/gridViewPaper"
         android:layout_width="match_parent"
@@ -28,7 +47,7 @@
         android:horizontalSpacing="16dp"
         android:verticalSpacing="16dp"
         android:layout_gravity="center"
-        android:layout_margin="10dp"
+        android:layout_margin="30dp"
         >
     </GridView>
 
