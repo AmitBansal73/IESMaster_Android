@@ -1,7 +1,6 @@
 package com.example.iesmaster.Questions;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,7 +19,6 @@ import java.util.List;
 
 
 import com.example.iesmaster.model.Questions;
-import com.example.iesmaster.PapersActivity;
 import com.example.iesmaster.R;
 
 
@@ -165,8 +163,8 @@ public class QuestionsActivity extends AppCompatActivity implements QuestionFrag
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Intent intent = new Intent(QuestionsActivity.this, PapersActivity.class);
-                    startActivity(intent);
+                    //Intent intent = new Intent(QuestionsActivity.this, UnitActivity.class);
+                    //startActivity(intent);
                     QuestionsActivity.this.finish();
                 }
             });

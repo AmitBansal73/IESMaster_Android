@@ -45,11 +45,12 @@
                 android:layout_height="wrap_content"
                 android:hint="User name"
                 android:layout_marginTop="20dp"
-                android:textColor="@color/White"
+                android:textColor="@color/Black"
 
                 />
             <EditText
                 android:id="@+id/txtPassword"
+                android:inputType="textPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Password"
@@ -110,72 +111,5 @@
         android:visibility="gone"
         />
 
-    <LinearLayout
-        android:id="@+id/profile_sec"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginTop="70dp"
-        android:background="@color/White"
-        android:visibility="gone"
-        >
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="20dp"
-            android:padding="20dp"
-            >
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profileImg"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@drawable/ies"
-                android:layout_gravity="center"
-                />
-            <TextView
-                android:id="@+id/userName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:padding="5dp"
-                />
-            <TextView
-                android:id="@+id/txtEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Email"
-                android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:padding="5dp"
-                />
-            <Button
-                android:id="@+id/signOut"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/blue"
-                android:text="SignOut"
-                android:background="@color/White"
-                android:layout_marginTop="15dp"
-                />
-            <android.support.constraint.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                >
-                <Button
-                    android:id="@+id/btnSkip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/blue"
-                    android:text="Skip"
-                    android:background="@color/White"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    />
-            </android.support.constraint.ConstraintLayout>
-        </LinearLayout>
-    </LinearLayout>
+
 </android.support.design.widget.CoordinatorLayout>

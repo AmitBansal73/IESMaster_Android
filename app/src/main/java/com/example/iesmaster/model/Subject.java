@@ -2,20 +2,22 @@ package com.example.iesmaster.model;
 
 public class Subject {
 
-    String subListName;
-    int subListImage;
+    String SubjectName;
+    int SubjectImage;
+
+    public Subject(){}
 
     public Subject(String subName,int subImage)
     {
-        this.subListImage=subImage;
-        this.subListName=subName;
+        this.SubjectName=subName;
+        this.SubjectImage=subImage;
     }
     public String getsubName()
     {
-        return subListName;
+        return SubjectName;
     }
     public int getSubImage()
     {
-        return subListImage;
+        return SubjectImage;
     }
 }

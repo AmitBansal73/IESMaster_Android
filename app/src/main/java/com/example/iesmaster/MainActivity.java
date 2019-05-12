@@ -57,15 +57,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         actionBar.show();
 
         progressBar = findViewById(R.id.progressBar);
-        userName = findViewById(R.id.userName);
-        profileImg = findViewById(R.id.profileImg);
-        txtEmail = findViewById(R.id.txtEmail);
-        profile_sec = findViewById(R.id.profile_sec);
+        userName = findViewById(R.id.txtUserName);
+        txtPassword = findViewById(R.id.txtPassword);
+
         signIn = findViewById(R.id.signIn);
-        signOut = findViewById(R.id.signOut);
-        profile_sec.setVisibility(View.GONE);
+
         signIn.setOnClickListener(this);
-        signOut.setOnClickListener(this);
+
         Login_sec = findViewById(R.id.Login_sec);
         Login_sec.setVisibility(View.VISIBLE);
 
@@ -73,24 +71,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
+
         googleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this,this).addApi(Auth.GOOGLE_SIGN_IN_API,gso).build();
+
 
         btnNext= findViewById(R.id.btnNext);
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent testActivity = new Intent(MainActivity.this, ProfileActivity.class);
+                Intent testActivity = new Intent(MainActivity.this, AcademicProfileActivity.class);
                 startActivity(testActivity);
             }
         });
-        btnSkip = findViewById(R.id.btnSkip);
-        btnSkip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent testActivity = new Intent(MainActivity.this, ProfileActivity.class);
-                startActivity(testActivity);
-            }
-        });
+
         btnRegister= findViewById(R.id.btnRegister);
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,48 +93,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-       // LoginWithGoogle = findViewById(R.id.LoginWithGoogle);
-       // LoginWithGoogle.setOnClickListener(new View.OnClickListener() {
-        //    @Override
-       //     public void onClick(View v) {
-
-           /*    Profile academicProfile = Session.GetAcademicProfile(getApplicationContext());
-                if(academicProfile== null || academicProfile.UniversityID ==0) {
-                    Intent profileActivity = new Intent(MainActivity.this, ProfileActivity.class);
-                    startActivity(profileActivity);
-                    MainActivity.this.finish();
-                }
-                else
-                {
-                    Intent testActivity = new Intent(MainActivity.this, SubjectActivity.class);
-                    startActivity(testActivity);
-                    MainActivity.this.finish();
-                }
-
-                Intent testActivity = new Intent(MainActivity.this, ProfileActivity.class);
-                startActivity(testActivity);
-
-            }
-        });*/
-
-        Profile myProfile = Session.GetLogin(getApplicationContext());
-
-        if(!myProfile.UserLogin.matches(""))
-        {
-            Profile academicProfile = Session.GetAcademicProfile(getApplicationContext());
-
-            if(academicProfile== null || academicProfile.UniversityID ==0) {
-                Intent profileActivity = new Intent(MainActivity.this, ProfileActivity.class);
-                startActivity(profileActivity);
-                MainActivity.this.finish();
-            }
-            else
-            {
-                Intent testActivity = new Intent(MainActivity.this, SubjectActivity.class);
-                startActivity(testActivity);
-                MainActivity.this.finish();
-            }
-        }
 
         LoginMannual = findViewById(R.id.LoginMannual);
         LoginMannual.setOnClickListener(new View.OnClickListener() {
@@ -154,13 +105,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 else
                 {
-                    String login = txtUserName.getText().toString();
-                    String Password = txtPassword.getText().toString();
-                    boolean loginResult = Session.AddLogin(getApplicationContext(), login, Password);
+                    Profile myProfile = new Profile();
+                    myProfile.UserName = txtUserName.getText().toString();
+                    myProfile.UserPassword = txtPassword.getText().toString();
+                    myProfile.UserLogin = txtUserName.getText().toString();
+                    myProfile.MobileNumber = "";
+                    myProfile.ProfileImage = "";
+                    myProfile.UserID ="0";
+;                    boolean loginResult = Session.AddProfile(getApplicationContext(), myProfile);
 
                     if(loginResult)
                     {
-                        Intent profileActivity = new Intent(MainActivity.this, ProfileActivity.class);
+                        Intent profileActivity = new Intent(MainActivity.this, AcademicProfileActivity.class);
                         startActivity(profileActivity);
                         MainActivity.this.finish();
                     }
@@ -187,9 +143,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.signIn:
                 SignIn();
                 break;
-            case R.id.signOut:
-                SignOut();
-                break;
+
         }
     }
 
@@ -218,18 +172,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(result.isSuccess()){
             progressBar.setVisibility(View.GONE);
             GoogleSignInAccount account = result.getSignInAccount();
-            String Name = account.getDisplayName();
-            String Email = account.getEmail();
-            String img_url = account.getPhotoUrl().toString();
-           // userName.setText(Name);
-           // txtEmail.setText(Email);
-           // Glide.with(this).load(img_url).into(profileImg);
-            UpdateUI(true);
 
-           Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
-            intent.putExtra("name", Name);
-            intent.putExtra("email", Email);
-            intent.putExtra("img", img_url);
+
+            Profile myProfile = new Profile();
+            myProfile.UserName = account.getDisplayName();
+            myProfile.UserLogin = account.getEmail();
+            myProfile.ProfileImage = account.getPhotoUrl().toString();
+            myProfile.MobileNumber = "";
+            myProfile.UserID = "";
+            myProfile.UserPassword = "Google";
+
+           // UpdateUI(true);
+            Session.AddProfile(getApplicationContext(),myProfile);
+
+            Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
             startActivity(intent);
             MainActivity.this.finish();
         }else {
@@ -241,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (isLogin){
 
-            Intent intent = new Intent(MainActivity.this,SubjectAndTestActivity.class);
+            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
             startActivity(intent);
             MainActivity.this.finish();
           //  profile_sec.setVisibility(View.VISIBLE);

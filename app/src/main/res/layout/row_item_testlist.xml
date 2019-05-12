@@ -19,18 +19,19 @@
             android:padding="5dp"
             >
             <TextView
+                android:id="@+id/label1"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="Difficulty Level: "
+                android:text="label 1"
                 android:textColor="@color/Black"
                 />
             <TextView
-                android:id="@+id/txtDifficulty"
+                android:id="@+id/text1"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="High"
+                android:text="text 1"
                 />
         </LinearLayout>
         <LinearLayout
@@ -40,18 +41,19 @@
             android:padding="5dp"
             >
             <TextView
+                android:id="@+id/label2"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="StreamID: "
+                android:text="label 2"
                 android:textColor="@color/Black"
                 />
             <TextView
-                android:id="@+id/txtStreamID"
+                android:id="@+id/text2"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="#1001"
+                android:text="text 2"
                 />
         </LinearLayout>
         <LinearLayout
@@ -61,7 +63,29 @@
             android:padding="5dp"
             >
             <TextView
-                android:id="@+id/cost"
+                android:id="@+id/label3"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="label 3"
+                android:textColor="@color/Black"
+                />
+            <TextView
+                android:id="@+id/text3"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="text 3"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            >
+            <TextView
+                android:id="@+id/label4"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
@@ -69,33 +93,11 @@
                 android:textColor="@color/Black"
                 />
             <TextView
-                android:id="@+id/txtCost"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="Rs.20"
-                />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp"
-            >
-            <TextView
-                android:id="@+id/Ques"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="Cost: "
-                android:textColor="@color/Black"
-                />
-            <TextView
-                android:id="@+id/txtQuestion"
+                android:id="@+id/text4"
                 android:layout_width="0dp"
                 android:layout_weight="0.5"
                 android:layout_height="wrap_content"
-                android:text="50"
+                android:text="text 4"
                 />
             <Button
                 android:id="@+id/btnBuy"

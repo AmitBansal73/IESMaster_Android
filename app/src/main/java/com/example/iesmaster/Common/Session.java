@@ -3,6 +3,7 @@ package com.example.iesmaster.Common;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.example.iesmaster.model.AcademicProfile;
 import com.example.iesmaster.model.Profile;
 
 public class Session {
@@ -10,13 +11,17 @@ public class Session {
 
 
 
-    public static boolean AddLogin(Context context, String UserLogin, String UserPassword )
+    public static boolean AddProfile(Context context, Profile UserProfile)
     {
         try {
             SharedPreferences prefs = context.getSharedPreferences("IESMaster", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
-            editor.putString("UserLogin", UserLogin);
-            editor.putString("UserPassword", UserPassword);
+            editor.putString("UserLogin", UserProfile.UserLogin);
+            editor.putString("UserName", UserProfile.UserName);
+            editor.putString("MobileNumber", UserProfile.MobileNumber);
+            editor.putString("ProfileImage", UserProfile.ProfileImage);
+            editor.putString("UserID", UserProfile.UserID.toString());
+            editor.putString("UserPassword", UserProfile.UserPassword);
             editor.commit();
             return true;
         }
@@ -26,12 +31,16 @@ public class Session {
         }
     }
 
-    public static Profile GetLogin(Context context)
+    public static Profile GetProfile(Context context)
     {
         Profile mProfile = new Profile();
         try {
             SharedPreferences prefs = context.getSharedPreferences("IESMaster", Context.MODE_PRIVATE);
             mProfile.UserLogin =  prefs.getString("UserLogin","");
+            mProfile.UserName = prefs.getString("UserName","");
+            mProfile.MobileNumber =  prefs.getString("MobileNumber","");
+            mProfile.ProfileImage = prefs.getString("ProfileImage","");
+            mProfile.UserID =  prefs.getString("UserID","");
             mProfile.UserPassword = prefs.getString("UserPassword","");
 
             return mProfile;
@@ -45,16 +54,16 @@ public class Session {
 
 
 
-    public static boolean AddAcademicProfile(Context context, Profile myProfile)
+    public static boolean AddAcademicProfile(Context context, AcademicProfile myProfile)
     {
         try {
             SharedPreferences prefs = context.getSharedPreferences("IESMaster", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString("UserID", myProfile.UserID);
             editor.putInt("UniversityID",myProfile.UniversityID);
-            editor.putString("University", myProfile.University);
+            editor.putString("University", myProfile.UniversityName);
             editor.putInt("CollegeID", myProfile.CollegeID);
-            editor.putString("College",myProfile.College);
+            editor.putString("College",myProfile.CollegeName);
             editor.putInt("StreamID",myProfile.StreamID);
             editor.putString("Stream",myProfile.Stream);
             editor.putInt("SemesterID",myProfile.SemesterID);
@@ -68,16 +77,16 @@ public class Session {
         }
     }
 
-    public static Profile GetAcademicProfile(Context context)
+    public static AcademicProfile GetAcademicProfile(Context context)
     {
-        Profile mProfile = new Profile();
+        AcademicProfile mProfile = new AcademicProfile();
         try {
             SharedPreferences prefs = context.getSharedPreferences("IESMaster", Context.MODE_PRIVATE);
             mProfile.UserID =  prefs.getString("UserID","");
             mProfile.UniversityID = prefs.getInt("UniversityID",0);
-            mProfile.University =  prefs.getString("University","");
+            mProfile.UniversityName =  prefs.getString("University","");
             mProfile.CollegeID =  prefs.getInt("CollegeID",0);
-            mProfile.College = prefs.getString("College","");
+            mProfile.CollegeName = prefs.getString("College","");
             mProfile.StreamID = prefs.getInt("StreamID",0);
             mProfile.Stream = prefs.getString("Stream","");
             mProfile.SemesterID= prefs.getInt("SemesterID",0);

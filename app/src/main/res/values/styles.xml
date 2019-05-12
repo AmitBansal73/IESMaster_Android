@@ -10,6 +10,7 @@
 
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -28,6 +29,11 @@
         <item name="colorControlNormal">#c5c5c5</item>
         <item name="colorControlActivated">@color/White</item>
         <item name="colorControlHighlight">@color/White</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
 

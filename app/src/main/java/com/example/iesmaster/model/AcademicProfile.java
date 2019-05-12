@@ -5,7 +5,9 @@ import android.os.Parcelable;
 
 public class AcademicProfile implements Parcelable {
 
-    public  String UniversityName,Stream,Semester;
+    public int ProfileId;
+    public  int  UniversityID,CollegeID,StreamID,SemesterID;
+    public  String UserID,UniversityName,Stream,Semester, CollegeName;
 
     public AcademicProfile() {
     }

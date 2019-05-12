@@ -2,6 +2,7 @@ package com.example.iesmaster;
 
 import android.content.Context;
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,15 +15,18 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.example.iesmaster.Common.DataAccess;
 import com.example.iesmaster.model.Subject;
 import com.example.iesmaster.Questions.QuestionsActivity;
 import com.example.iesmaster.model.Topic;
+import com.example.iesmaster.model.mock_data;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TopicActivity extends AppCompatActivity {
 
-    ArrayList topicList=new ArrayList<>();
+    List<Topic> topicList=new ArrayList<>();
     GridView gridViewTopic;
     TopicAdapter myTopicAdaptor;
 
@@ -41,11 +45,7 @@ public class TopicActivity extends AppCompatActivity {
         actionBar.show();
 
         gridViewTopic = findViewById(R.id.gridViewTopic);
-        topicList.add(new Topic(1,"Introduction", "Soil"));
-        topicList.add(new Topic(2,"Formation of Soils", "Soil"));
-        topicList.add(new Topic(3,"Soil Types", "Soil"));
-        topicList.add(new Topic(4,"Soil Classification", "Soil"));
-        topicList.add(new Topic(5,"Seepage in Soil", "Soil"));
+        topicList = mock_data.GetTopics();
 
 
         myTopicAdaptor=new TopicAdapter(this, R.layout.grid_item_topic, topicList) {
@@ -59,13 +59,16 @@ public class TopicActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Intent intent = new Intent(TopicActivity.this, QuestionsActivity.class);
+                Topic selectedTopic = topicList.get(position);
+                DataAccess dataAccess = new DataAccess(getApplicationContext());
+                dataAccess.open();
+                dataAccess.InsertFavourite(selectedTopic);
+
+                Intent intent = new Intent(TopicActivity.this, TestPaperActivity.class);
                 startActivity(intent);
                 TopicActivity.this.finish();
             }
         });
-
-
 
     }
 
@@ -74,7 +77,7 @@ public class TopicActivity extends AppCompatActivity {
 
         ArrayList yearList = new ArrayList<>();
 
-        public TopicAdapter(Context context, int textViewResourceId, ArrayList objects) {
+        public TopicAdapter(Context context, int textViewResourceId, List<Topic> objects) {
             super(context, textViewResourceId, objects);
             topicList = objects;
         }

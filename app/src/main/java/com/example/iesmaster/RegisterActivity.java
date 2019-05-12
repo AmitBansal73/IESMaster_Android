@@ -9,15 +9,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.iesmaster.Common.Session;
+import com.example.iesmaster.model.Profile;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    ImageView profileImage,addImage;
+    ImageView profileImage;
     EditText txtMobile,txtAddress,txtPassword,txtName,txtEmail;
     Button btnSubmit;
+    Profile myProfile;
 
     static final int REQUEST_IMAGE_GET = 1;
     static final int REQUEST_IMAGE_CROP = 2;
@@ -33,8 +35,19 @@ public class RegisterActivity extends AppCompatActivity {
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(false);
-        actionBar.setTitle(" IES Master ");
+        actionBar.setTitle("User Registration");
         actionBar.show();
+
+        myProfile = Session.GetProfile(getApplicationContext());
+
+        if(myProfile.UserLogin!= null)
+        {
+            txtName.setText(myProfile.UserName);
+            txtEmail.setText(myProfile.UserLogin);
+            txtName.setEnabled(false);
+            txtEmail.setEnabled(false);
+            Glide.with(this).load(myProfile.ProfileImage).into(profileImage);
+        }
 
         btnSubmit= findViewById(R.id.btnSubmit);
         profileImage = findViewById(R.id.profileImage);
@@ -42,35 +55,27 @@ public class RegisterActivity extends AppCompatActivity {
         txtEmail = findViewById(R.id.txtEmail);
         txtMobile = findViewById(R.id.txtMobile);
         txtName = findViewById(R.id.txtName);
-        addImage = findViewById(R.id.addImage);
+
         txtPassword = findViewById(R.id.txtPassword);
 
-        addImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(intent, REQUEST_IMAGE_GET);
-                }
-            }
-        });
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
-                intent.putExtra("IsResult", false);
-                startActivity(intent);
-                RegisterActivity.this.finish();
+                SaveProfile();
             }
         });
-        Intent intent = getIntent();
-        String Name = intent.getStringExtra("name");
-        String Email= intent.getStringExtra("email");
-        String img_url = intent.getStringExtra("img");
-        txtName.setText(Name);
-        txtEmail.setText(Email);
-        Glide.with(this).load(img_url).into(profileImage);
+
+    }
+
+
+
+    private void SaveProfile()
+    {
+        Intent intent = new Intent(getApplicationContext(), AcademicProfileActivity.class);
+        intent.putExtra("IsResult", false);
+        startActivity(intent);
+        RegisterActivity.this.finish();
+
     }
 }

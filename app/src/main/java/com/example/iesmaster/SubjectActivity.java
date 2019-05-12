@@ -18,24 +18,27 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.iesmaster.Common.Session;
-import com.example.iesmaster.model.Profile;
-import com.example.iesmaster.model.Subjects;
+import com.example.iesmaster.model.AcademicProfile;
+import com.example.iesmaster.model.Subject;
+import com.example.iesmaster.model.mock_data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.example.iesmaster.model.Subject;
+
 public class SubjectActivity extends AppCompatActivity {
 
     Button btnNext;
-    Spinner Subject;
-    ArrayAdapter<String> adapterSubjectType;
-    List<String> listSubjectType= new ArrayList<>();
+    Spinner spinnerSubject;
+    ArrayAdapter<Subject> adapterSubjectType;
+    List<Subject> listSubjectType= new ArrayList<>();
     HashMap<String,Integer> hashSubjectType = new HashMap<>();
     int selectedSubjectType;
 
     TextView txtUniversity,txtCollege,txtStream,txtyear,txtMessage;
-    Profile myProfile;
+    AcademicProfile myProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +63,7 @@ public class SubjectActivity extends AppCompatActivity {
             }
         });
 
-         SetSubjectData();
+        listSubjectType = mock_data.GetSubjects();
 
         txtUniversity = findViewById(R.id.txtUniversity);
         txtCollege = findViewById(R.id.txtCollege);
@@ -71,8 +74,8 @@ public class SubjectActivity extends AppCompatActivity {
          if(myProfile.UniversityID != 0)
          {
              txtMessage.setText("Please select the subject from below list to see the available papers");
-             txtUniversity.setText(myProfile.University);
-             txtCollege.setText(myProfile.College);
+             txtUniversity.setText(myProfile.UniversityName);
+             txtCollege.setText(myProfile.CollegeName);
              txtStream.setText(myProfile.Stream);
              txtyear.setText(myProfile.Semester);
 
@@ -80,16 +83,16 @@ public class SubjectActivity extends AppCompatActivity {
 
 
 
-        Subject = findViewById(R.id.Subject);
-        adapterSubjectType = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, listSubjectType);
+        spinnerSubject = findViewById(R.id.Subject);
+        adapterSubjectType = new ArrayAdapter<Subject>(this, android.R.layout.simple_spinner_item, listSubjectType);
         adapterSubjectType.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Subject.setAdapter(adapterSubjectType);
+        spinnerSubject.setAdapter(adapterSubjectType);
 
-        Subject.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinnerSubject.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String strSubject = Subject.getSelectedItem().toString();
-                selectedSubjectType= hashSubjectType.get(strSubject);
+                Subject strSubject = (Subject) spinnerSubject.getSelectedItem();
+                selectedSubjectType= hashSubjectType.get(strSubject.getsubName());
                // GetAccomodationType(selectedInventoryType);
             }
             @Override
@@ -114,7 +117,7 @@ public class SubjectActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.action_profile) {
 
-            Intent profileIntent = new Intent(SubjectActivity.this, ProfileActivity.class);
+            Intent profileIntent = new Intent(SubjectActivity.this, AcademicProfileActivity.class);
             startActivity(profileIntent);
         }
         else if (id == R.id.action_LogOff)
@@ -157,51 +160,5 @@ public class SubjectActivity extends AppCompatActivity {
     private void SetSubjectData(){
 
 
-        Subjects sub1 = new Subjects();
-        sub1.SemesterID = 1;
-        sub1.StreamID = 2;
-        sub1.Subject = "Engg Drawing";
-
-        listSubjectType.add(sub1.Subject);
-        hashSubjectType.put(sub1.Subject,1);
-
-        sub1.SemesterID = 1;
-        sub1.StreamID = 2;
-        sub1.Subject = "Fluid Mechanics";
-
-        listSubjectType.add(sub1.Subject);
-        hashSubjectType.put(sub1.Subject,2);
-
-        sub1.SemesterID = 1;
-        sub1.StreamID = 2;
-        sub1.Subject = "ThermoDynamics";
-
-        listSubjectType.add(sub1.Subject);
-        hashSubjectType.put(sub1.Subject,3);
-
-
-        sub1.SemesterID = 1;
-        sub1.StreamID = 2;
-        sub1.Subject = "Signal Processing";
-
-        listSubjectType.add(sub1.Subject);
-        hashSubjectType.put(sub1.Subject,4);
-
-
-        sub1.SemesterID = 1;
-        sub1.StreamID = 2;
-        sub1.Subject = "Maths";
-
-        listSubjectType.add(sub1.Subject);
-        hashSubjectType.put(sub1.Subject,5);
-
-        sub1.SemesterID = 1;
-        sub1.StreamID = 2;
-        sub1.Subject = "Physics";
-
-        listSubjectType.add(sub1.Subject);
-        hashSubjectType.put(sub1.Subject,6);
-
-        return ;
     }
 }

@@ -17,13 +17,17 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.example.iesmaster.Common.DataAccess;
 import com.example.iesmaster.model.Test;
 import com.example.iesmaster.Questions.QuestionsActivity;
+import com.example.iesmaster.model.Topic;
+import com.example.iesmaster.model.mock_data;
 
 
 public class TestPaperActivity extends AppCompatActivity {
     Button btnNext;
-    ArrayList<Test> arrayListTest=new ArrayList<>();
+    List<Topic> arrayListTest=new ArrayList<>();
     ListView testListView;
     MyAdapterTest adapterTest;
 
@@ -40,84 +44,25 @@ public class TestPaperActivity extends AppCompatActivity {
         actionBar.setTitle(" Select Test ");
         actionBar.show();
 
+        arrayListTest = mock_data.GetTopics();
+
         testListView = findViewById(R.id.testListView);
         adapterTest =new MyAdapterTest(TestPaperActivity.this,0,arrayListTest);
         testListView.setAdapter(adapterTest);
 
-        GetTestData();
-
 
 
     }
 
 
-    private List<Test> GetTestData(){
 
-        List<Test> tempSubject = new ArrayList<>();
 
-        Test test1 = new Test();
-        test1.DifficulyLevel = "Difficult";
-        test1.StreamID = 2;
-        test1.Cost = 30;
-        test1.Question = 20;
-        test1.Status = 1;
-        tempSubject.add(test1);
-        arrayListTest.add(test1);
-
-        test1 = new Test();
-        test1.DifficulyLevel = "Medium";
-        test1.StreamID = 2;
-        test1.Cost = 20;
-        test1.Question = 25;
-        test1.Status = 2;
-        tempSubject.add(test1);
-        arrayListTest.add(test1);
-
-        test1 = new Test();
-        test1.DifficulyLevel = "Easy";
-        test1.StreamID = 2;
-        test1.Cost = 10;
-        test1.Question = 30;
-        tempSubject.add(test1);
-        test1.Status = 2;
-        arrayListTest.add(test1);
-
-        test1 = new Test();
-        test1.DifficulyLevel = "Medium";
-        test1.StreamID = 2;
-        test1.Cost = 20;
-        test1.Question = 25;
-        tempSubject.add(test1);
-        test1.Status = 1;
-        arrayListTest.add(test1);
-
-        test1 = new Test();
-        test1.DifficulyLevel = "Medium";
-        test1.StreamID = 2;
-        test1.Cost = 20;
-        test1.Question = 25;
-        tempSubject.add(test1);
-        test1.Status = 1;
-        arrayListTest.add(test1);
-
-        test1 = new Test();
-        test1.DifficulyLevel = "Easy";
-        test1.StreamID = 2;
-        test1.Cost = 10;
-        test1.Question =30;
-        tempSubject.add(test1);
-        test1.Status = 3;
-        arrayListTest.add(test1);
-
-        return tempSubject;
-    }
-
-    class MyAdapterTest extends ArrayAdapter<Test>{
+    class MyAdapterTest extends ArrayAdapter<Topic>{
         LayoutInflater inflat;
         ViewHolder holder;
-        public MyAdapterTest(Context context, int resource, ArrayList<Test> objects) {
+        public MyAdapterTest(Context context, int resource, List<Topic> objects) {
 
-            super(context, resource, objects);
+            super(context, resource);
             // TODO Auto-generated constructor stub
             inflat= LayoutInflater.from(context);
         }
@@ -133,24 +78,32 @@ public class TestPaperActivity extends AppCompatActivity {
                 if (convertView == null) {
                     convertView = inflat.inflate(R.layout.row_item_testlist, null);
                     holder = new ViewHolder();
-                    holder.txtDifficulty = convertView.findViewById(R.id.txtDifficulty);
-                    holder.txtStreamID = convertView.findViewById(R.id.txtStreamID);
-                    holder.txtCost = convertView.findViewById(R.id.txtCost);
-                    holder.txtQuestion = convertView.findViewById(R.id.txtQuestion);
+                    holder.text1 = convertView.findViewById(R.id.text1);
+                    holder.text2 = convertView.findViewById(R.id.text2);
+                    holder.text3 = convertView.findViewById(R.id.text3);
+                    holder.text4 = convertView.findViewById(R.id.text4);
+
+                    holder.label1 = convertView.findViewById(R.id.label1);
+                    holder.label1.setText("Topic Name");
+                    holder.label2 = convertView.findViewById(R.id.label2);
+                    holder.label2.setText("Topic Name");
+                    holder.label3 = convertView.findViewById(R.id.label3);
+                    holder.label3.setText("Subject Name");
+                    holder.label4 = convertView.findViewById(R.id.label4);
+
                     holder.btnBuy = convertView.findViewById(R.id.btnBuy);
                     holder.btnStart = convertView.findViewById(R.id.btnStart);
-                    holder.txtScore = convertView.findViewById(R.id.txtScore);
-                    holder.viewScore = convertView.findViewById(R.id.viewScore);
+                     holder.viewScore = convertView.findViewById(R.id.viewScore);
 
                     convertView.setTag(holder);
                 }
                 holder = (ViewHolder) convertView.getTag();
-                Test testRow = getItem(position);
+               final Topic testRow = (Topic)getItem(position);
                 // Log.d("Dish Name", row.complaint_type);
-                holder.txtDifficulty.setText(testRow.DifficulyLevel);
-                holder.txtStreamID.setText(Integer.toString(testRow.StreamID));
-                holder.txtCost.setText(Integer.toString(testRow.Cost));
-                holder.txtQuestion.setText(Integer.toString(testRow.Question));
+                holder.text1.setText(testRow.TopicName);
+                holder.text2.setText(testRow.TopicName);
+                holder.text3.setText(testRow.SubjectName);
+                holder.text4.setText( Integer.toString(testRow.TopicId));
 
                 if(testRow.Status==1)
                 {
@@ -164,7 +117,7 @@ public class TestPaperActivity extends AppCompatActivity {
                         }
                     });
                     holder.btnStart.setVisibility(View.GONE);
-                    holder.viewScore.setVisibility(View.GONE);
+                  //  holder.viewScore.setVisibility(View.GONE);
 
                 }
                 else if(testRow.Status ==2)
@@ -174,20 +127,23 @@ public class TestPaperActivity extends AppCompatActivity {
                     holder.btnStart.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+
+                            DataAccess da = new DataAccess(getApplicationContext());
+                            da.open();
+                            da.InsertFavourite(testRow);
                             Intent intent = new Intent(TestPaperActivity.this, QuestionsActivity.class);
                             startActivity(intent);
                         }
                     });
                     holder.btnBuy.setVisibility(View.GONE);
-                    holder.viewScore.setVisibility(View.GONE);
+                   // holder.viewScore.setVisibility(View.GONE);
                 }
                 else if(testRow.Status == 3)
                 {
                     // Show Score
                     holder.btnStart.setVisibility(View.GONE);
                      holder.btnBuy.setVisibility(View.GONE);
-                    holder.viewScore.setVisibility(View.VISIBLE);
-                    holder.txtScore.setText("You Scored 70% on 12thApril, 2019");
+                    //holder.viewScore.setVisibility(View.VISIBLE);
 
                 }
 
@@ -203,13 +159,13 @@ public class TestPaperActivity extends AppCompatActivity {
         }
 
         @Override
-        public Test getItem(int position) {
+        public Topic getItem(int position) {
             // TODO Auto-generated method stub
             return arrayListTest.get(position);
         }
 
         @Override
-        public int getPosition(Test item) {
+        public int getPosition(Topic item) {
             return super.getPosition(item);
         }
 
@@ -217,7 +173,8 @@ public class TestPaperActivity extends AppCompatActivity {
 
     private class ViewHolder
     {
-        TextView txtDifficulty,txtStreamID,txtCost,txtQuestion,txtScore;
+        TextView text1,text2,text3,text4;
+        TextView label1,label2,label3,label4;
         Button btnBuy, btnStart;
         View viewScore;
     }

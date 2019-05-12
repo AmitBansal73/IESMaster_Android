@@ -20,9 +20,11 @@ public class PaymentActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+            /*
                 Intent intent = new Intent(PaymentActivity.this,WelcomeActivity.class);
-                startActivity(intent);
-                //PaymentActivity.this.finish();
+                startActivity(intent);*/
+
+                PaymentActivity.this.finish();
             }
         });
     }

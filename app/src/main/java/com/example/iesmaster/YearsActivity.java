@@ -61,9 +61,9 @@ public class YearsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Intent intent = new Intent(YearsActivity.this,PapersActivity.class);
+                Intent intent = new Intent(YearsActivity.this, UnitActivity.class);
                 startActivity(intent);
-                YearsActivity.this.finish();
+                //YearsActivity.this.finish();
             }
         });
 

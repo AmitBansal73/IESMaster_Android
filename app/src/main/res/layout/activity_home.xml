@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/background_white"
+    tools:context=".HomeActivity">
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    app:popupTheme="@style/AppTheme.PopupOverlay" />
+        </android.support.design.widget.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/appBar"
+        android:fillViewport="true"
+        android:visibility="visible"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:id="@+id/txtUniv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/Black"
+            android:text="Profile"
+            android:textSize="18sp"
+            android:padding="3dp"
+            android:gravity="start"
+            />
+        <com.example.iesmaster.Common.MyGridView
+            android:id="@+id/gridViewUniversity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/appBar"
+            android:layout_gravity="center"
+            android:horizontalSpacing="20dp"
+            android:numColumns="2"
+            android:overScrollMode="never"
+            android:layout_margin="10dp"
+            android:verticalSpacing="20dp">
+        </com.example.iesmaster.Common.MyGridView>
+
+        <TextView
+            android:id="@+id/txtAddProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/blue"
+            android:textSize="14sp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="16dp"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:id="@+id/txtSub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/Black"
+            android:text="Get Subject"
+            android:padding="5dp"
+            android:textSize="18sp"
+            android:layout_marginLeft="10dp"
+            />
+    <com.example.iesmaster.Common.MyGridView
+        android:id="@+id/gridView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:numColumns="2"
+
+        android:horizontalSpacing="20dp"
+        android:verticalSpacing="20dp"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:background="#f3f3f3"
+
+        >
+    </com.example.iesmaster.Common.MyGridView>
+    </LinearLayout>
+            <TextView
+                android:id="@+id/txtFavourites"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/Black"
+                android:text="My Favourites"
+                android:padding="5dp"
+                android:textSize="18sp"
+                android:layout_marginLeft="10dp"
+                />
+            <TextView
+                android:id="@+id/txtNoFavourite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/blue"
+                android:text="No favourite in lists"
+                android:padding="5dp"
+                android:textSize="18sp"
+                android:layout_marginLeft="10dp"
+
+                />
+            <LinearLayout
+                android:id="@+id/viewFavourite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+                <com.example.iesmaster.Common.MyGridView
+                    android:id="@+id/gridViewFavourite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:numColumns="2"
+                    android:horizontalSpacing="20dp"
+                    android:verticalSpacing="20dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:background="#f3f3f3"
+
+                    >
+                </com.example.iesmaster.Common.MyGridView>
+            </LinearLayout>
+    <Button
+        android:id="@+id/btnNext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_below="@id/gridView"
+        android:layout_alignParentRight="true"
+        android:text="Next"
+        android:layout_marginRight="20dp"
+        android:visibility="gone"
+        />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -9,36 +9,43 @@
         android:roundIcon="@drawable/ies"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".TopicActivity"
-            android:parentActivityName=".PapersActivity"
-            ></activity>
-        <activity android:name=".RegisterActivity"
-            android:parentActivityName=".MainActivity"/>
         <activity
-            android:name=".PapersActivity"
-            android:parentActivityName=".SubjectAndTestActivity" />
+            android:name=".TopicActivity"
+            android:parentActivityName=".UnitActivity" />
+        <activity
+            android:name=".RegisterActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".UnitActivity"
+            android:parentActivityName=".HomeActivity" />
         <activity
             android:name=".YearsActivity"
-            android:parentActivityName=".SubjectAndTestActivity" />
-        <activity
-            android:name=".SubjectAndTestActivity" />
-        <activity android:name=".WelcomeActivity">
+            android:parentActivityName=".HomeActivity" />
+
+        <activity android:name=".HomeActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".WelcomeActivity">
+        </activity>
+
         <activity android:name=".PaymentActivity" />
+
         <activity
             android:name=".Questions.QuestionsActivity"
-            android:parentActivityName=".PapersActivity" />
+            android:parentActivityName=".UnitActivity" />
+
         <activity android:name=".SubjectActivity" />
+
         <activity android:name=".TestPaperActivity" />
         <activity android:name=".LoginActivity" />
         <activity
-            android:name=".ProfileActivity"
-            android:parentActivityName=".SubjectAndTestActivity" />
+            android:name=".AcademicProfileActivity"
+            android:parentActivityName=".HomeActivity" />
+
         <activity android:name=".MainActivity" />
     </application>
 

@@ -18,7 +18,7 @@ import com.example.iesmaster.model.Subject;
 
 import java.util.ArrayList;
 
-public class PapersActivity extends AppCompatActivity {
+public class UnitActivity extends AppCompatActivity {
     GridView gridViewPaper;
     ArrayList paperList=new ArrayList<>();
     TestPaper testPaper;
@@ -26,7 +26,7 @@ public class PapersActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_papers);
+        setContentView(R.layout.activity_unit);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -61,9 +61,9 @@ public class PapersActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Intent intent = new Intent(PapersActivity.this, TopicActivity.class);
+                Intent intent = new Intent(UnitActivity.this, TestPaperActivity.class);
                 startActivity(intent);
-                PapersActivity.this.finish();
+                //UnitActivity.this.finish();
             }
         });
     }
