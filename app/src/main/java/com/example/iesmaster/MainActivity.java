@@ -1,10 +1,11 @@
 package com.example.iesmaster;
 
-import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -42,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     GoogleApiClient googleApiClient;
     private static final int REQ_CODE = 9001;
     ProgressBar progressBar;
-    ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         txtPassword = findViewById(R.id.txtPassword);
 
         signIn = findViewById(R.id.signIn);
-
         signIn.setOnClickListener(this);
 
         Login_sec = findViewById(R.id.Login_sec);
@@ -182,12 +181,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             myProfile.UserID = "";
             myProfile.UserPassword = "Google";
 
-           // UpdateUI(true);
             Session.AddProfile(getApplicationContext(),myProfile);
-
             Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
             startActivity(intent);
-            MainActivity.this.finish();
+           // MainActivity.this.finish();
+            UpdateUI(true);
         }else {
             UpdateUI(false);
         }
@@ -204,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
            // Login_sec.setVisibility(View.GONE);
 
         }else {
-            profile_sec.setVisibility(View.GONE);
+           // profile_sec.setVisibility(View.GONE);
             Login_sec.setVisibility(View.VISIBLE);
         }
     }
@@ -218,4 +216,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             handleResult(result);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        //builder.setTitle("Alert");
+        builder.setMessage("Are you sure to Exit ?");
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                MainActivity.this.finish();
+            }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        // create and show the alert dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
 }

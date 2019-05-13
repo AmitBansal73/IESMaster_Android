@@ -4,6 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:elevation="5dp"
+    android:padding="8dp"
     android:background="@drawable/grid_univ"
     >
     <TextView
@@ -16,16 +18,16 @@
         android:drawablePadding="5dp"
         android:drawableLeft="@drawable/ic_school"
         android:textColor="#fff"
-        android:elevation="5dp"
-        android:layout_margin="8dp"
         />
     <TextView
         android:id="@+id/txtStream"
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
         android:text="Civil(sem III)"
         android:layout_marginLeft="15dp"
-        android:textColor="#fff"
-        android:textSize="15sp"
+        android:textColor="#DDffffff"
+        android:textSize="13sp"
+        android:maxLines="2"
+        android:minLines="2"
         />
 </LinearLayout>

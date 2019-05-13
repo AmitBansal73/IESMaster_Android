@@ -47,16 +47,16 @@ public class RegisterActivity extends AppCompatActivity {
             txtName.setEnabled(false);
             txtEmail.setEnabled(false);
             Glide.with(this).load(myProfile.ProfileImage).into(profileImage);
+        }else {
+            UserRegistration();
         }
-
-        btnSubmit= findViewById(R.id.btnSubmit);
-        profileImage = findViewById(R.id.profileImage);
-        txtAddress = findViewById(R.id.txtAddress);
-        txtEmail = findViewById(R.id.txtEmail);
-        txtMobile = findViewById(R.id.txtMobile);
-        txtName = findViewById(R.id.txtName);
-
-        txtPassword = findViewById(R.id.txtPassword);
+            btnSubmit = findViewById(R.id.btnSubmit);
+            profileImage = findViewById(R.id.profileImage);
+            txtAddress = findViewById(R.id.txtAddress);
+            txtEmail = findViewById(R.id.txtEmail);
+            txtMobile = findViewById(R.id.txtMobile);
+            txtName = findViewById(R.id.txtName);
+            txtPassword = findViewById(R.id.txtPassword);
 
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
@@ -68,7 +68,15 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
+public void UserRegistration(){
 
+        String Name= txtName.getText().toString();
+        String Email= txtEmail.getText().toString();
+        String Mobile= txtMobile.getText().toString();
+        String Password= txtPassword.getText().toString();
+        String Address= txtAddress.getText().toString();
+
+}
 
     private void SaveProfile()
     {

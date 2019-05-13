@@ -1,14 +1,20 @@
 package com.example.iesmaster;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -27,11 +33,16 @@ import com.example.iesmaster.model.Profile;
 import com.example.iesmaster.model.Subject;
 import com.example.iesmaster.model.Topic;
 import com.example.iesmaster.model.mock_data;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
 
     GridView gridView,gridViewUniversity;
     List<Subject> subList=new ArrayList<>();
@@ -43,9 +54,8 @@ public class HomeActivity extends AppCompatActivity {
     TextView txtAddProfile,txtFavourites,txtNoFavourite;
     private Integer ClickCount=0;
     private long prevTime = 0;
-
     Profile myProfile;
-
+    GoogleApiClient googleApiClient;
     View viewFavourite;
     MyGridView gridViewFavourite;
     List<Topic> listFavourite;
@@ -55,6 +65,12 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(false);
+        actionBar.setTitle(" Home ");
+        actionBar.show();
 
         myProfile = Session.GetProfile(getApplicationContext());
 
@@ -75,13 +91,6 @@ public class HomeActivity extends AppCompatActivity {
                 HomeActivity.this.finish();
             }
         }
-
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(false);
-        actionBar.setTitle("Subjects");
-        actionBar.show();
 
         DataAccess da = new DataAccess(getApplicationContext());
         da.open();
@@ -216,6 +225,11 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
     public class TestSubject extends ArrayAdapter {
 
         List<Subject> subList = new ArrayList<>();
@@ -334,36 +348,79 @@ public class HomeActivity extends AppCompatActivity {
         Button btnBuy, btnStart;
         View viewScore;
     }
+
     @Override
     public void onBackPressed() {
-        try {
-            long time = SystemClock.currentThreadTimeMillis();
 
-            if (prevTime == 0) {
-                prevTime = SystemClock.currentThreadTimeMillis();
-            }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        //builder.setTitle("Alert");
+        builder.setMessage("Are you sure to Exit ?");
 
-            if (time - prevTime > 1000) {
-                prevTime = time;
-                ClickCount=0;
-                String msg = "double click to close";
-                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                HomeActivity.this.finish();
             }
-            if (time - prevTime < 1000 && time > prevTime) {
-                ClickCount++;
-                if (ClickCount == 2) {
+        });
 
-                    HomeActivity.this.finish();
-                } else {
-                    prevTime = time;
-                    String msg = "double click to close";
-                    Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
-                }
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
             }
+        });
+
+        // create and show the alert dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_profile) {
+
+            Intent profileIntent = new Intent(HomeActivity.this, AcademicProfileActivity.class);
+            startActivity(profileIntent);
         }
-        catch (Exception ex)
+        else if (id == R.id.action_LogOff)
         {
-            Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(
+                    HomeActivity.this);
+            builder.setTitle("Log Off");
+            builder.setMessage("Are you sure");
+            builder.setNegativeButton("NO",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,
+                                            int which) {
+                            dialog.cancel();
+                            Log.e("info", "NO");
+                        }
+                    });
+
+            builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,
+                                            int which) {
+                            Session.LogOff(getApplicationContext());
+                            Intent intent = new Intent(HomeActivity.this,MainActivity.class);
+                            startActivity(intent);
+                            HomeActivity.this.finish();
+
+                        }
+                    });
+
+            android.app.AlertDialog Alert = builder.create();
+            Alert.show();
+            return true;
         }
+
+        return  true;
     }
 }

@@ -4,20 +4,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#82F36A"
+    android:elevation="5dp"
+    android:padding="8dp"
+    android:background="@drawable/gradient_paper"
     >
     <TextView
         android:id="@+id/text1"
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:text="Text1"
         android:textSize="16sp"
         android:padding="2dp"
         android:drawablePadding="5dp"
-        android:drawableLeft="@drawable/ic_school"
+        android:drawableLeft="@drawable/ic_insert_file"
         android:textColor="#fff"
-        android:elevation="5dp"
-        android:layout_margin="8dp"
         />
     <TextView
         android:id="@+id/text2"
@@ -25,7 +25,7 @@
         android:layout_height="30dp"
         android:text="Text2"
         android:layout_marginLeft="15dp"
-        android:textColor="#fff"
-        android:textSize="15sp"
+        android:textColor="#DDffffff"
+        android:textSize="13sp"
         />
 </LinearLayout>
