@@ -10,6 +10,7 @@ public class AcademicProfile implements Parcelable {
     public  String UserID,UniversityName,Stream,Semester, CollegeName;
 
     public AcademicProfile() {
+
     }
 
 

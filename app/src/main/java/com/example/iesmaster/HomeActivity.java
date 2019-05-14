@@ -3,6 +3,7 @@ package com.example.iesmaster;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,16 +35,17 @@ import com.example.iesmaster.model.Profile;
 import com.example.iesmaster.model.Subject;
 import com.example.iesmaster.model.Topic;
 import com.example.iesmaster.model.mock_data;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
-public class HomeActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
+import static com.example.iesmaster.R.drawable.backgraund_grid;
+import static com.example.iesmaster.R.drawable.gradient_1;
+import static com.example.iesmaster.R.drawable.grid_univ;
+
+public class HomeActivity extends AppCompatActivity {
 
     GridView gridView,gridViewUniversity;
     List<Subject> subList=new ArrayList<>();
@@ -51,7 +54,7 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
     TestSubject myAdapter;
     UniversityAdpter universityAdpter;
     Button btnNext;
-    TextView txtAddProfile,txtFavourites,txtNoFavourite;
+    TextView txtAddProfile,txtFavourites,txtNoFavourite,univName,txtStream ;
     private Integer ClickCount=0;
     private long prevTime = 0;
     Profile myProfile;
@@ -59,6 +62,10 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
     View viewFavourite;
     MyGridView gridViewFavourite;
     List<Topic> listFavourite;
+    int color_arr[] = {R.drawable.grid_univ, R.drawable.gradient, R.drawable.gradient_paper,R.drawable.gradient_years,R.drawable.gradient_3,
+            R.drawable.gradient_4,R.drawable.gradient_2,R.drawable.gradient_1};
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,8 +79,10 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
         actionBar.setTitle(" Home ");
         actionBar.show();
 
-        myProfile = Session.GetProfile(getApplicationContext());
 
+        myProfile = Session.GetProfile(getApplicationContext());
+        univName = findViewById(R.id.univName);
+        txtStream = findViewById(R.id.txtStream);
 
         if(myProfile.UserLogin.matches(""))
         {
@@ -106,6 +115,7 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
                 HomeActivity.this.finish();
             }
         });
+
 
 
         txtAddProfile = findViewById(R.id.txtAddProfile);
@@ -165,14 +175,17 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
         }
     }
 
+
+
     private void setProfileGrid()
     {
-
         AcademicProfile myAcademicProfile = new AcademicProfile();
         myAcademicProfile.UniversityName = "UPTU";
         myAcademicProfile.Stream = "Civil";
         myAcademicProfile.Semester = "3rd";
-        univList.add(myAcademicProfile);
+        univName.setText(myAcademicProfile.UniversityName);
+        txtStream.setText(myAcademicProfile.Stream+ "," +myAcademicProfile.Semester );
+       // univList.add(myAcademicProfile);
         /*univList.add(new Subject("Punjab University", R.drawable.b));
         univList.add(new Subject("Amity University", R.drawable.a));
         univList.add(new Subject("CCS University", R.drawable.b));*/
@@ -225,10 +238,6 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
         });
     }
 
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
 
     public class TestSubject extends ArrayAdapter {
 
@@ -247,13 +256,18 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
                 try {
-                    LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    convertView = inflater.inflate(R.layout.gridview_subjects, null);
-                    TextView textView = convertView.findViewById(R.id.testName);
+                    if(convertView==null) {
+                        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        convertView = inflater.inflate(R.layout.gridview_subjects, null);
+                        TextView textView = convertView.findViewById(R.id.testName);
+                        Subject tempSubject = (Subject) subList.get(position);
+                        textView.setText(tempSubject.getsubName());
+                    }
 
-                    Subject tempSubject = (Subject) subList.get(position);
-                    textView.setText(tempSubject.getsubName());
+                    int rnd = new Random().nextInt(color_arr.length);
+                    convertView.setBackgroundResource(color_arr[rnd]);
                 }
+
                 catch (Exception ex)
                 {
                    int a=1;
@@ -290,6 +304,9 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
             textView.setText(tempProfile.UniversityName);
             String strStream = tempProfile.Stream + "," + tempProfile.Semester ;
             txtStream.setText(strStream);
+            int rnd = new Random().nextInt(color_arr.length);
+            convertView.setBackgroundResource(color_arr[rnd]);
+
             return convertView;
         }
     }
@@ -330,6 +347,9 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
                 // Log.d("Dish Name", row.complaint_type);
                 holder.text1.setText(testRow.TopicName);
                 holder.text2.setText(testRow.SubjectName);
+
+                int rnd = new Random().nextInt(color_arr.length);
+                convertView.setBackgroundResource(color_arr[rnd]);
                 return convertView;
             }
             catch (Exception ex)
@@ -340,7 +360,6 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
             }
         }
     }
-
     private class ViewHolder
     {
         TextView text1,text2,text3,text4;
@@ -355,7 +374,6 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         //builder.setTitle("Alert");
         builder.setMessage("Are you sure to Exit ?");
-
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -412,7 +430,6 @@ public class HomeActivity extends AppCompatActivity implements GoogleApiClient.O
                             Intent intent = new Intent(HomeActivity.this,MainActivity.class);
                             startActivity(intent);
                             HomeActivity.this.finish();
-
                         }
                     });
 

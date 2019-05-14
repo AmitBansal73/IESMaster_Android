@@ -48,6 +48,39 @@
             android:gravity="start"
             android:layout_marginLeft="10dp"
             />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:elevation="5dp"
+            android:padding="8dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/grid_profile"
+            >
+            <TextView
+                android:id="@+id/univName"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="Name"
+                android:textSize="16sp"
+                android:padding="2dp"
+                android:drawablePadding="5dp"
+                android:drawableLeft="@drawable/ic_school"
+                android:textColor="#000"
+                />
+            <TextView
+                android:id="@+id/txtStream"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Civil(sem III)"
+                android:layout_marginLeft="15dp"
+                android:textColor="#DD000000"
+                android:textSize="13sp"
+                android:maxLines="2"
+                android:minLines="2"
+                />
+        </LinearLayout>
+
         <com.example.iesmaster.Common.MyGridView
             android:id="@+id/gridViewUniversity"
             android:layout_width="match_parent"

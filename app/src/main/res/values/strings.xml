@@ -34,4 +34,5 @@
 
     <dimen name="txtSize8">8sp</dimen>
     <string name="title_activity_home">HomeActivity</string>
+
 </resources>

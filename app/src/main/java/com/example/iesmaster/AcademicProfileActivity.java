@@ -1,13 +1,19 @@
 package com.example.iesmaster;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -24,6 +31,8 @@ import android.widget.Toast;
 import com.example.iesmaster.Common.Session;
 import com.example.iesmaster.model.AcademicProfile;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +44,10 @@ public class AcademicProfileActivity extends AppCompatActivity  {
     ListView listViewUniversity,listViewCollage,listViewStream;
     Spinner spinnerSemester;
     TextView attachedID;
+    Bitmap newBitmap;
+    ImageView collageID;
     static final int REQUEST_IMAGE_GET = 1;
+    static final int REQUEST_IMAGE_CROP = 2;
 
     ArrayAdapter<String> adapterUniversity;
    // ArrayAdapter<String> adapterClg;
@@ -103,6 +115,7 @@ public class AcademicProfileActivity extends AppCompatActivity  {
                 }
             }
         });
+
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -453,6 +466,77 @@ public class AcademicProfileActivity extends AppCompatActivity  {
         String CollegeName;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        try {
+            if (requestCode == REQUEST_IMAGE_GET) {
+
+                if (data != null) {
+                    Uri uri = data.getData();
+                    InputStream image_stream = getContentResolver().openInputStream(uri);
+                   // byte[] imgByte= ImageServer.getBytes(image_stream);
+                  //  ImageServer.SaveFileToExternal(imgByte,"crop.jpg",getApplicationContext());
+                    File root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+                    File myDir = new File(root + "/SCM/crop.jpg");
+                    myDir.mkdirs();
+                    Uri contentUri = Uri.fromFile(myDir);
+                    ImageCropFunction(contentUri);
+                }
+            } else if (requestCode == REQUEST_IMAGE_CROP) {
+
+                if (data != null) {
+
+                    Bundle bundle = data.getExtras();
+                    if(bundle!= null) {
+                        newBitmap = bundle.getParcelable("data");
+                        collageID.setImageBitmap(newBitmap);
+                    }
+                    else
+                    {
+                        Uri cropUri =  data.getData();
+                        InputStream image_stream = getContentResolver().openInputStream(cropUri);
+                        newBitmap= BitmapFactory.decodeStream(image_stream);
+                        collageID.setImageBitmap(newBitmap);
+                    }
+                   // strImage = ImageServer.getStringFromBitmap(newBitmap);
+                    collageID.invalidate();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            int a=1;
+        }
+    }
+
+    public void ImageCropFunction(Uri uri) {
+
+        // Image Crop Code
+        try {
+
+            Intent CropIntent = new Intent("com.android.camera.action.CROP");
+
+            CropIntent.setDataAndType(uri, "image/*");
+
+            CropIntent.putExtra("crop", "true");
+            CropIntent.putExtra("outputX", 100);
+            CropIntent.putExtra("outputY", 100);
+            CropIntent.putExtra("aspectX", 1);
+            CropIntent.putExtra("aspectY", 1);
+            CropIntent.putExtra("scaleUpIfNeeded", true);
+            CropIntent.putExtra("return-data", true);
+            // CropIntent.putExtra(MediaStore.EXTRA_OUTPUT, contentUri);
+            // CropIntent.putExtra("outputFormat",Bitmap.CompressFormat.JPEG.toString());
+            startActivityForResult(CropIntent, REQUEST_IMAGE_CROP);
+        }
+        catch (Exception e)
+        {
+            int a =1;
+        }
+    }
+
+
+
     private void closeKeyboard() {
         View view = this.getCurrentFocus();
         if (view != null) {
@@ -460,5 +544,4 @@ public class AcademicProfileActivity extends AppCompatActivity  {
             imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
         }
     }
-
 }

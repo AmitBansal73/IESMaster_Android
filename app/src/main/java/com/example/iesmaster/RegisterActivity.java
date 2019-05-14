@@ -68,7 +68,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-public void UserRegistration(){
+   public void UserRegistration(){
 
         String Name= txtName.getText().toString();
         String Email= txtEmail.getText().toString();
@@ -76,7 +76,7 @@ public void UserRegistration(){
         String Password= txtPassword.getText().toString();
         String Address= txtAddress.getText().toString();
 
-}
+    }
 
     private void SaveProfile()
     {
