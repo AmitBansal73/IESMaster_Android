@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.example.iesmaster.Common.DataAccess;
 import com.example.iesmaster.Common.MyGridView;
+import com.example.iesmaster.Common.OvalImageView;
 import com.example.iesmaster.Common.Session;
 import com.example.iesmaster.Questions.QuestionsActivity;
 import com.example.iesmaster.model.AcademicProfile;
@@ -55,7 +56,7 @@ public class HomeActivity extends AppCompatActivity {
     UniversityAdpter universityAdpter;
     Button btnNext;
     TextView txtAddProfile,txtFavourites,txtNoFavourite,univName,txtStream,txtName,txtClgName;
-    ImageView profile_Image;
+    OvalImageView profile_Image;
     private Integer ClickCount=0;
     private long prevTime = 0;
     Profile myProfile;

@@ -14,7 +14,8 @@
         android:roundIcon="@drawable/ies"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MobileOTPActivity"></activity>
+        <activity android:name=".MyProfileActivity"></activity>
+        <activity android:name=".MobileOTPActivity" />
         <activity
             android:name=".TopicActivity"
             android:parentActivityName=".UnitActivity" />
@@ -34,7 +35,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".WelcomeActivity"></activity>
+        <activity android:name=".WelcomeActivity" />
         <activity android:name=".PaymentActivity" />
         <activity
             android:name=".Questions.QuestionsActivity"
