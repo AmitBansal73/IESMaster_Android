@@ -8,13 +8,14 @@ import com.example.iesmaster.model.Profile;
 
 public class Session {
 
+    private static final String SESSION_NAME = "IESMaster";
 
 
 
     public static boolean AddProfile(Context context, Profile UserProfile)
     {
         try {
-            SharedPreferences prefs = context.getSharedPreferences("IESMaster", Context.MODE_PRIVATE);
+            SharedPreferences prefs = context.getSharedPreferences(SESSION_NAME, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString("UserLogin", UserProfile.UserLogin);
             editor.putString("UserName", UserProfile.UserName);
@@ -35,7 +36,7 @@ public class Session {
     {
         Profile mProfile = new Profile();
         try {
-            SharedPreferences prefs = context.getSharedPreferences("IESMaster", Context.MODE_PRIVATE);
+            SharedPreferences prefs = context.getSharedPreferences(SESSION_NAME, Context.MODE_PRIVATE);
             mProfile.UserLogin =  prefs.getString("UserLogin","");
             mProfile.UserName = prefs.getString("UserName","");
             mProfile.MobileNumber =  prefs.getString("MobileNumber","");
@@ -57,7 +58,7 @@ public class Session {
     public static boolean AddAcademicProfile(Context context, AcademicProfile myProfile)
     {
         try {
-            SharedPreferences prefs = context.getSharedPreferences("IESMaster", Context.MODE_PRIVATE);
+            SharedPreferences prefs = context.getSharedPreferences(SESSION_NAME, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString("UserID", myProfile.UserID);
             editor.putInt("UniversityID",myProfile.UniversityID);
@@ -81,7 +82,7 @@ public class Session {
     {
         AcademicProfile mProfile = new AcademicProfile();
         try {
-            SharedPreferences prefs = context.getSharedPreferences("IESMaster", Context.MODE_PRIVATE);
+            SharedPreferences prefs = context.getSharedPreferences(SESSION_NAME, Context.MODE_PRIVATE);
             mProfile.UserID =  prefs.getString("UserID","");
             mProfile.UniversityID = prefs.getInt("UniversityID",0);
             mProfile.UniversityName =  prefs.getString("University","");
@@ -101,7 +102,7 @@ public class Session {
 
     public static void LogOff(Context context)
     {
-        SharedPreferences prefs = context.getSharedPreferences("IESMaster", Context.MODE_PRIVATE);
+        SharedPreferences prefs = context.getSharedPreferences(SESSION_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.clear();
         editor.commit();
