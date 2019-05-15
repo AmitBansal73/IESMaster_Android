@@ -139,7 +139,9 @@ public class AcademicProfileActivity extends AppCompatActivity  {
                     profile.Semester = spinnerSemester.getSelectedItem().toString();
                     profile.SemesterID =99;
                     Session.AddAcademicProfile(getApplicationContext(), profile);
+
                     Intent i = new Intent(AcademicProfileActivity.this, HomeActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(i);
                     AcademicProfileActivity.this.finish();
                 }

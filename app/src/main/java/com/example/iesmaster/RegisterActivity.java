@@ -176,11 +176,9 @@ public class RegisterActivity extends AppCompatActivity {
                     profile.UserLogin = txtEmail.getText().toString();
                     profile.MobileNumber = txtMobile.getText().toString();
                     profile.UserPassword = txtPassword.getText().toString();
-                    // profile.Address= txtAddress.getText().toString();
-
+                    profile.UserID ="999";
                     Session.AddProfile(getApplicationContext(), profile);
-
-                    Intent homeIntent = new Intent(RegisterActivity.this, HomeActivity.class);
+                    Intent homeIntent = new Intent(RegisterActivity.this, AcademicProfile.class);
                     startActivity(homeIntent);
                 }
             }

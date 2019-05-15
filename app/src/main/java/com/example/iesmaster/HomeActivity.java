@@ -53,7 +53,7 @@ public class HomeActivity extends AppCompatActivity {
     List<AcademicProfile> univList =new ArrayList<>();
     List<AcademicProfile> profileList =new ArrayList<>();
     TestSubject myAdapter;
-    UniversityAdpter universityAdpter;
+    ProfileAdpter profileAdpter;
     Button btnNext;
     TextView txtAddProfile,txtFavourites,txtNoFavourite,univName,txtStream,txtName,txtClgName;
     OvalImageView profile_Image;
@@ -175,7 +175,7 @@ public class HomeActivity extends AppCompatActivity {
             dataAccess.open();
             dataAccess.InsertProfile(newProfile);
             univList.add(newProfile);
-            universityAdpter.notifyDataSetChanged();
+            profileAdpter.notifyDataSetChanged();
         }
     }
 
@@ -197,13 +197,8 @@ public class HomeActivity extends AppCompatActivity {
         univList.add(new Subject("Amity University", R.drawable.a));
         univList.add(new Subject("CCS University", R.drawable.b));*/
 
-        universityAdpter=new UniversityAdpter(this, R.layout.grid_item_profile, univList) {
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                return super.getView(position, convertView, parent);
-            }
-        };
-        gridViewUniversity.setAdapter(universityAdpter);
+        profileAdpter=new ProfileAdpter(this, R.layout.grid_item_profile, univList);
+        gridViewUniversity.setAdapter(profileAdpter);
     }
 
     private void setSubjectGrid()
@@ -283,11 +278,11 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    public class UniversityAdpter extends ArrayAdapter {
+    public class ProfileAdpter extends ArrayAdapter {
 
         List<AcademicProfile>  univList = new ArrayList<>();
 
-        public UniversityAdpter(Context context, int textViewResourceId, List<AcademicProfile> objects) {
+        public ProfileAdpter(Context context, int textViewResourceId, List<AcademicProfile> objects) {
             super(context, textViewResourceId, objects);
             univList = objects;
         }
@@ -308,15 +303,18 @@ public class HomeActivity extends AppCompatActivity {
             TextView textView = convertView.findViewById(R.id.univName);
             TextView txtStream = convertView.findViewById(R.id.txtStream);
             TextView btnRemove = convertView.findViewById(R.id.btnRemove);
+
             AcademicProfile tempProfile = (AcademicProfile) univList.get(position);
+            final int Index = position;
             textView.setText(tempProfile.UniversityName);
             String strStream = tempProfile.Stream + "," + tempProfile.Semester ;
             txtStream.setText(strStream);
             btnRemove.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    univList.remove(0);
-                    universityAdpter.notifyDataSetChanged();
+
+                    univList.remove(Index);
+                    profileAdpter.notifyDataSetChanged();
                 }
             });
 
