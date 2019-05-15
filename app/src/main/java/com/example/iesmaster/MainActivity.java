@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         googleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this,this).addApi(Auth.GOOGLE_SIGN_IN_API,gso).build();
 
-
+/*
         btnNext= findViewById(R.id.btnNext);
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent testActivity = new Intent(MainActivity.this, AcademicProfileActivity.class);
                 startActivity(testActivity);
             }
-        });
+        });*/
 
         btnRegister= findViewById(R.id.btnRegister);
         btnRegister.setOnClickListener(new View.OnClickListener() {

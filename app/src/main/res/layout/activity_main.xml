@@ -83,23 +83,7 @@
                 android:gravity="center"
                 android:padding="10dp"
                 />
-<android.support.constraint.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="20dp"
-    >
-                <Button
-                    android:id="@+id/btnNext"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/blue"
-                    android:text="Skip"
-                    android:background="@color/White"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    />
-</android.support.constraint.ConstraintLayout>
+
         </LinearLayout>
 
     </LinearLayout>

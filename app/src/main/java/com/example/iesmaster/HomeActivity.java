@@ -167,11 +167,13 @@ public class HomeActivity extends AppCompatActivity {
         {
             AcademicProfile newProfile = data.getParcelableExtra("Profile");
 
-            DataAccess dataAccess = new DataAccess(getApplicationContext());
-            dataAccess.open();
-            dataAccess.InsertProfile(newProfile);
-            univList.add(newProfile);
-            universityAdpter.notifyDataSetChanged();
+            if(newProfile != null) {
+                DataAccess dataAccess = new DataAccess(getApplicationContext());
+                dataAccess.open();
+                dataAccess.InsertProfile(newProfile);
+                univList.add(newProfile);
+                universityAdpter.notifyDataSetChanged();
+            }
         }
     }
 

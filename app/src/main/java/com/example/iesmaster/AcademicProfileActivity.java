@@ -544,4 +544,23 @@ public class AcademicProfileActivity extends AppCompatActivity  {
             imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
         }
     }
+
+
+    @Override
+    public void onBackPressed() {
+        if(!IsResult) {
+
+            Intent i = new Intent(AcademicProfileActivity.this, RegisterActivity.class);
+            startActivity(i);
+            AcademicProfileActivity.this.finish();
+        }
+        else {
+
+            AcademicProfile profile = null;
+            Intent intent = new Intent();
+            intent.putExtra("Profile", profile);
+            setResult(100, intent);
+            finish();//finishing activity
+        }
+    }
 }
