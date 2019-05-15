@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#fff"
     tools:context=".MyProfileActivity">
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBar"
@@ -23,7 +24,7 @@
         android:orientation="vertical"
         android:layout_marginTop="56dp"
         android:padding="16dp"
-        android:background="@drawable/grid_univ"
+        android:background="@drawable/background_white"
         >
         <com.example.iesmaster.Common.OvalImageView
             android:id="@+id/profileImage"
@@ -31,8 +32,117 @@
             android:layout_height="120dp"
             android:background="@drawable/user_image"
             android:layout_gravity="center"
-
             />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/background_white"
+            android:elevation="3dp"
+            android:padding="5dp"
+            android:layout_marginTop="10dp"
+            >
+        <TextView
+            android:id="@+id/txtHeading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Personal Information"
+            android:textColor="#5506E4"
+            android:textSize="16sp"
+            android:padding="3dp"
+            />
+        <TextView
+            android:id="@+id/txtName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:padding="3dp"
+            android:textColor="@color/Black"
+            android:layout_marginTop="5dp"
+            />
+            <TextView
+                android:id="@+id/txtEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Email"
+                android:padding="3dp"
+                android:textColor="@color/Black"
+                android:layout_marginTop="5dp"
+                />
+            <TextView
+                android:id="@+id/txtMobile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Mobile"
+                android:padding="3dp"
+                android:textColor="@color/Black"
+                android:layout_marginTop="5dp"
+                />
+            <TextView
+                android:id="@+id/txtAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Address"
+                android:padding="3dp"
+                android:textColor="@color/Black"
+                android:layout_marginTop="5dp"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/background_white"
+            android:elevation="3dp"
+            android:padding="5dp"
+            android:layout_marginTop="5dp"
+            >
+            <TextView
+                android:id="@+id/txtHeading2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Acadmic Profile"
+                android:textColor="#5506E4"
+                android:textSize="16sp"
+                android:padding="3dp"
+                />
+            <TextView
+                android:id="@+id/txtUnivName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="UniversityName"
+                android:padding="3dp"
+                android:textColor="@color/Black"
+                android:layout_marginTop="5dp"
+                />
+            <TextView
+                android:id="@+id/txtCollage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Collage"
+                android:padding="3dp"
+                android:textColor="@color/Black"
+                android:layout_marginTop="5dp"
+                />
+            <TextView
+                android:id="@+id/txtStream"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Stream/sem:"
+                android:padding="3dp"
+                android:textColor="@color/Black"
+                android:layout_marginTop="5dp"
+                />
+            <TextView
+                android:id="@+id/txtStudentID"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="StudentID"
+                android:padding="3dp"
+                android:textColor="@color/Black"
+                android:layout_marginTop="5dp"
+                />
+        </LinearLayout>
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

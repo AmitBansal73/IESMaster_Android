@@ -421,7 +421,7 @@ public class HomeActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.action_profile) {
 
-            Intent profileIntent = new Intent(HomeActivity.this, AcademicProfileActivity.class);
+            Intent profileIntent = new Intent(HomeActivity.this, MyProfileActivity.class);
             startActivity(profileIntent);
         }
         else if (id == R.id.action_LogOff)
