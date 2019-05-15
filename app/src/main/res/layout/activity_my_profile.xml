@@ -17,14 +17,23 @@
             android:layout_height="56dp"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
     </android.support.design.widget.AppBarLayout>
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginTop="56dp"
-        android:padding="16dp"
         android:background="@drawable/background_white"
+        >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/background_heading"
+        android:elevation="3dp"
+        android:padding="15dp"
         >
         <com.example.iesmaster.Common.OvalImageView
             android:id="@+id/profileImage"
@@ -33,6 +42,7 @@
             android:background="@drawable/user_image"
             android:layout_gravity="center"
             />
+    </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -40,7 +50,7 @@
             android:background="@drawable/background_white"
             android:elevation="3dp"
             android:padding="5dp"
-            android:layout_marginTop="10dp"
+            android:layout_margin="10dp"
             >
         <TextView
             android:id="@+id/txtHeading"
@@ -57,8 +67,10 @@
             android:layout_height="wrap_content"
             android:text="Name"
             android:padding="3dp"
-            android:textColor="@color/Black"
+            android:textColor="#6e7ea3"
             android:layout_marginTop="5dp"
+            android:drawablePadding="5dp"
+            android:drawableLeft="@drawable/ic_perm_identity"
             />
             <TextView
                 android:id="@+id/txtEmail"
@@ -66,8 +78,9 @@
                 android:layout_height="wrap_content"
                 android:text="Email"
                 android:padding="3dp"
-                android:textColor="@color/Black"
-                android:layout_marginTop="5dp"
+                android:textColor="#6e7ea3"
+                android:drawablePadding="5dp"
+                android:drawableLeft="@drawable/ic_email_black_24dp"
                 />
             <TextView
                 android:id="@+id/txtMobile"
@@ -75,8 +88,9 @@
                 android:layout_height="wrap_content"
                 android:text="Mobile"
                 android:padding="3dp"
-                android:textColor="@color/Black"
-                android:layout_marginTop="5dp"
+                android:textColor="#6e7ea3"
+                android:drawablePadding="5dp"
+                android:drawableLeft="@drawable/ic_call"
                 />
             <TextView
                 android:id="@+id/txtAddress"
@@ -84,8 +98,9 @@
                 android:layout_height="wrap_content"
                 android:text="Address"
                 android:padding="3dp"
-                android:textColor="@color/Black"
-                android:layout_marginTop="5dp"
+                android:textColor="#6e7ea3"
+                android:drawablePadding="5dp"
+                android:drawableLeft="@drawable/ic_location_on_black_24dp"
                 />
         </LinearLayout>
         <LinearLayout
@@ -95,13 +110,13 @@
             android:background="@drawable/background_white"
             android:elevation="3dp"
             android:padding="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_margin="10dp"
             >
             <TextView
                 android:id="@+id/txtHeading2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Acadmic Profile"
+                android:text="Academic Profile"
                 android:textColor="#5506E4"
                 android:textSize="16sp"
                 android:padding="3dp"
@@ -112,7 +127,7 @@
                 android:layout_height="wrap_content"
                 android:text="UniversityName"
                 android:padding="3dp"
-                android:textColor="@color/Black"
+                android:textColor="#6e7ea3"
                 android:layout_marginTop="5dp"
                 />
             <TextView
@@ -121,7 +136,7 @@
                 android:layout_height="wrap_content"
                 android:text="Collage"
                 android:padding="3dp"
-                android:textColor="@color/Black"
+                android:textColor="#6e7ea3"
                 android:layout_marginTop="5dp"
                 />
             <TextView
@@ -130,7 +145,7 @@
                 android:layout_height="wrap_content"
                 android:text="Stream/sem:"
                 android:padding="3dp"
-                android:textColor="@color/Black"
+                android:textColor="#6e7ea3"
                 android:layout_marginTop="5dp"
                 />
             <TextView
@@ -139,10 +154,84 @@
                 android:layout_height="wrap_content"
                 android:text="StudentID"
                 android:padding="3dp"
-                android:textColor="@color/Black"
+                android:textColor="#6e7ea3"
                 android:layout_marginTop="5dp"
                 />
         </LinearLayout>
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/editProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/background_white"
+            android:elevation="3dp"
+            android:padding="5dp"
+            android:layout_margin="10dp"
+            android:visibility="gone"
+            >
+            <TextView
+                android:id="@+id/txtHeading3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Edit Profile"
+                android:textColor="#5506E4"
+                android:textSize="16sp"
+                android:padding="3dp"
+                />
+            <EditText
+                android:id="@+id/editName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:textColor="#6e7ea3"
+                android:layout_marginTop="5dp"
+                />
+            <EditText
+                android:id="@+id/editEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Email"
+                android:textColor="#6e7ea3"
+                android:layout_marginTop="5dp"
+                />
+            <EditText
+                android:id="@+id/editMobile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Mobile"
+                android:textColor="#6e7ea3"
+                android:layout_marginTop="5dp"
+                />
+            <EditText
+                android:id="@+id/editAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Address"
+                android:textColor="#6e7ea3"
+                android:layout_marginTop="5dp"
+                />
+            <Button
+                android:id="@+id/btnSubmit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/background_btn"
+                android:text="submit"
+                />
+        </LinearLayout>
 
+        <TextView
+            android:id="@+id/btnEditProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:text="Edit profile"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/blue"
+            />
+
+
+    </LinearLayout>
+</ScrollView>
 </android.support.design.widget.CoordinatorLayout>
