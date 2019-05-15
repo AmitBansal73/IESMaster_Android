@@ -157,7 +157,6 @@ public class TestPaperActivity extends AppCompatActivity {
                 return null;
             }
         }
-
         @Override
         public Topic getItem(int position) {
             // TODO Auto-generated method stub

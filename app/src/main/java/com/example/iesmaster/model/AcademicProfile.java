@@ -7,7 +7,7 @@ public class AcademicProfile implements Parcelable {
 
     public int ProfileId;
     public  int  UniversityID,CollegeID,StreamID,SemesterID;
-    public  String UserID,UniversityName,Stream,Semester, CollegeName;
+    public  String UserID,UniversityName,Stream,Semester, CollegeName,Name;
 
     public AcademicProfile() {
 
@@ -34,7 +34,7 @@ public class AcademicProfile implements Parcelable {
 
     }
 
-    public static final Parcelable.Creator<AcademicProfile> CREATOR = new Creator<AcademicProfile>() {
+    public static final Creator<AcademicProfile> CREATOR = new Creator<AcademicProfile>() {
         @Override
         public AcademicProfile createFromParcel(Parcel parcel) {
             return new AcademicProfile(parcel);

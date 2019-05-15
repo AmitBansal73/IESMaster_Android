@@ -57,28 +57,73 @@
             android:layout_margin="10dp"
             android:background="@drawable/grid_profile"
             >
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profile_Image"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/user_image"
+                    android:layout_margin="10dp"
+                    />
+                <TextView
+                    android:id="@+id/txtWelcome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hi! "
+                    android:textSize="16sp"
+                    android:padding="2dp"
+                    android:textColor="#5506E4"
+                    android:layout_marginLeft="10dp"
+                    />
             <TextView
-                android:id="@+id/univName"
+                android:id="@+id/txtName"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
                 android:text="Name"
                 android:textSize="16sp"
                 android:padding="2dp"
-                android:drawablePadding="5dp"
-                android:drawableLeft="@drawable/ic_school"
-                android:textColor="#000"
+                android:textColor="#5506E4"
+                android:layout_marginLeft="7dp"
+                android:layout_toRightOf="@id/txtWelcome"
+                />
+            <TextView
+                android:id="@+id/univName"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:text="UnivName"
+                android:textSize="14sp"
+                android:padding="2dp"
+                android:textColor="#6E1EDC"
+                android:layout_marginLeft="10dp"
+                android:layout_below="@id/txtName"
+                android:maxLines="2"
+                />
+            <TextView
+                android:id="@+id/txtClgName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Collage"
+                android:layout_marginLeft="10dp"
+                android:textColor="#6E1EDC"
+                android:textSize="13sp"
+                android:layout_below="@id/univName"
+                android:visibility="gone"
                 />
             <TextView
                 android:id="@+id/txtStream"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Civil(sem III)"
-                android:layout_marginLeft="15dp"
-                android:textColor="#DD000000"
+                android:layout_marginLeft="10dp"
+                android:textColor="#6E1EDC"
                 android:textSize="13sp"
                 android:maxLines="2"
-                android:minLines="2"
+                android:layout_below="@id/txtClgName"
                 />
+            </RelativeLayout>
         </LinearLayout>
 
         <com.example.iesmaster.Common.MyGridView
@@ -104,6 +149,7 @@
             android:layout_marginBottom="16dp"
             android:layout_marginLeft="16dp"
             />
+
     </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"

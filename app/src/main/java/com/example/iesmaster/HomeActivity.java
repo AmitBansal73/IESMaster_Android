@@ -54,7 +54,8 @@ public class HomeActivity extends AppCompatActivity {
     TestSubject myAdapter;
     UniversityAdpter universityAdpter;
     Button btnNext;
-    TextView txtAddProfile,txtFavourites,txtNoFavourite,univName,txtStream ;
+    TextView txtAddProfile,txtFavourites,txtNoFavourite,univName,txtStream,txtName,txtClgName;
+    ImageView profile_Image;
     private Integer ClickCount=0;
     private long prevTime = 0;
     Profile myProfile;
@@ -83,7 +84,9 @@ public class HomeActivity extends AppCompatActivity {
         myProfile = Session.GetProfile(getApplicationContext());
         univName = findViewById(R.id.univName);
         txtStream = findViewById(R.id.txtStream);
-
+        profile_Image = findViewById(R.id.profile_Image);
+        txtClgName = findViewById(R.id.txtClgName);
+        txtName = findViewById(R.id.txtName);
         if(myProfile.UserLogin.matches(""))
         {
             Intent intent = new Intent(HomeActivity.this,WelcomeActivity.class);
@@ -167,13 +170,11 @@ public class HomeActivity extends AppCompatActivity {
         {
             AcademicProfile newProfile = data.getParcelableExtra("Profile");
 
-            if(newProfile != null) {
-                DataAccess dataAccess = new DataAccess(getApplicationContext());
-                dataAccess.open();
-                dataAccess.InsertProfile(newProfile);
-                univList.add(newProfile);
-                universityAdpter.notifyDataSetChanged();
-            }
+            DataAccess dataAccess = new DataAccess(getApplicationContext());
+            dataAccess.open();
+            dataAccess.InsertProfile(newProfile);
+            univList.add(newProfile);
+            universityAdpter.notifyDataSetChanged();
         }
     }
 
@@ -185,7 +186,10 @@ public class HomeActivity extends AppCompatActivity {
         myAcademicProfile.UniversityName = "UPTU";
         myAcademicProfile.Stream = "Civil";
         myAcademicProfile.Semester = "3rd";
-        univName.setText(myAcademicProfile.UniversityName);
+        myAcademicProfile.CollegeName = "ABES Collage";
+        myAcademicProfile.Name = "OMPRAKASH";
+        txtName.setText(myAcademicProfile.Name);
+        univName.setText(myAcademicProfile.UniversityName+", "+myAcademicProfile.CollegeName);
         txtStream.setText(myAcademicProfile.Stream+ "," +myAcademicProfile.Semester );
        // univList.add(myAcademicProfile);
         /*univList.add(new Subject("Punjab University", R.drawable.b));
@@ -235,7 +239,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(HomeActivity.this,QuestionsActivity.class);
                 startActivity(intent);
-                HomeActivity.this.finish();
+               // HomeActivity.this.finish();
             }
         });
     }
@@ -302,10 +306,19 @@ public class HomeActivity extends AppCompatActivity {
             }
             TextView textView = convertView.findViewById(R.id.univName);
             TextView txtStream = convertView.findViewById(R.id.txtStream);
+            TextView btnRemove = convertView.findViewById(R.id.btnRemove);
             AcademicProfile tempProfile = (AcademicProfile) univList.get(position);
             textView.setText(tempProfile.UniversityName);
             String strStream = tempProfile.Stream + "," + tempProfile.Semester ;
             txtStream.setText(strStream);
+            btnRemove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    univList.remove(0);
+                    universityAdpter.notifyDataSetChanged();
+                }
+            });
+
             int rnd = new Random().nextInt(color_arr.length);
             convertView.setBackgroundResource(color_arr[rnd]);
 
