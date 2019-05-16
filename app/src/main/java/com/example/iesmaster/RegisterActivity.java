@@ -19,6 +19,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.iesmaster.Common.Constants;
 import com.example.iesmaster.Common.ImageServer;
@@ -34,6 +40,8 @@ import com.google.android.gms.common.api.Api;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.Status;
+
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileDescriptor;
@@ -355,9 +363,14 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     public void ServerRegister(){
-
+        String Mobile= txtMobile.getText().toString();
         Intent intent = new Intent(getApplicationContext(), MobileOTPActivity.class);
-       //intent.putExtra("IsResult", false);
+        intent.putExtra("number", Mobile);
+        //intent.putExtra("IsResult", false);
         startActivityForResult(intent, Constants.REQUEST_OTP_VERIFY);
+
+
+
+
     }
 }

@@ -1,5 +1,6 @@
 package com.example.iesmaster;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,8 +18,7 @@ import com.example.iesmaster.model.Profile;
 
 public class MyProfileActivity extends AppCompatActivity {
     OvalImageView profileImage;
-    TextView txtName,txtEmail,txtMobile,txtAddress,txtUnivName,txtCollage,txtStream,txtStudentID,btnEditProfile;
-    LinearLayout editProfile;
+    TextView txtName,txtEmail,txtMobile,txtAddress,txtUnivName,txtCollage,txtStream,txtStudentID,btnEditAcademicProfile,btnEditPersonalProfile;
     Profile myProfile;
     AcademicProfile myAcademicProfile;
     Button btnSubmit;
@@ -47,19 +47,20 @@ public class MyProfileActivity extends AppCompatActivity {
         txtCollage = findViewById(R.id.txtCollage);
         txtStream = findViewById(R.id.txtStream);
         txtStudentID = findViewById(R.id.txtStudentID);
-        btnSubmit = findViewById(R.id.btnSubmit);
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
+        btnEditPersonalProfile = findViewById(R.id.btnEditPersonalProfile);
+        btnEditPersonalProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editProfile.setVisibility(View.GONE);
+                Intent personal = new Intent(MyProfileActivity.this,RegisterActivity.class);
+                startActivity(personal);
             }
         });
-        editProfile = findViewById(R.id.editProfile);
-        btnEditProfile = findViewById(R.id.btnEditProfile);
-        btnEditProfile.setOnClickListener(new View.OnClickListener() {
+        btnEditAcademicProfile = findViewById(R.id.btnEditAcademicProfile);
+        btnEditAcademicProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editProfile.setVisibility(View.VISIBLE);
+                Intent academic = new Intent(MyProfileActivity.this,AcademicProfileActivity.class);
+                startActivity(academic);
             }
         });
         Glide.with(this).load(myProfile.ProfileImage).into(profileImage);

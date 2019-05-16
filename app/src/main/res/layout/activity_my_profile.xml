@@ -52,6 +52,12 @@
             android:padding="5dp"
             android:layout_margin="10dp"
             >
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="3dp"
+                >
         <TextView
             android:id="@+id/txtHeading"
             android:layout_width="match_parent"
@@ -61,6 +67,15 @@
             android:textSize="16sp"
             android:padding="3dp"
             />
+                <TextView
+                    android:id="@+id/btnEditPersonalProfile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_edit"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="20dp"
+                    />
+            </RelativeLayout>
         <TextView
             android:id="@+id/txtName"
             android:layout_width="match_parent"
@@ -112,15 +127,30 @@
             android:padding="5dp"
             android:layout_margin="10dp"
             >
+           <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="3dp"
+                >
             <TextView
                 android:id="@+id/txtHeading2"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Academic Profile"
                 android:textColor="#5506E4"
                 android:textSize="16sp"
-                android:padding="3dp"
+
                 />
+            <TextView
+                android:id="@+id/btnEditAcademicProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_edit"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                />
+           </RelativeLayout>
             <TextView
                 android:id="@+id/txtUnivName"
                 android:layout_width="match_parent"
@@ -158,79 +188,6 @@
                 android:layout_marginTop="5dp"
                 />
         </LinearLayout>
-        <LinearLayout
-            android:id="@+id/editProfile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/background_white"
-            android:elevation="3dp"
-            android:padding="5dp"
-            android:layout_margin="10dp"
-            android:visibility="gone"
-            >
-            <TextView
-                android:id="@+id/txtHeading3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Edit Profile"
-                android:textColor="#5506E4"
-                android:textSize="16sp"
-                android:padding="3dp"
-                />
-            <EditText
-                android:id="@+id/editName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Name"
-                android:textColor="#6e7ea3"
-                android:layout_marginTop="5dp"
-                />
-            <EditText
-                android:id="@+id/editEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Email"
-                android:textColor="#6e7ea3"
-                android:layout_marginTop="5dp"
-                />
-            <EditText
-                android:id="@+id/editMobile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Mobile"
-                android:textColor="#6e7ea3"
-                android:layout_marginTop="5dp"
-                />
-            <EditText
-                android:id="@+id/editAddress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Address"
-                android:textColor="#6e7ea3"
-                android:layout_marginTop="5dp"
-                />
-            <Button
-                android:id="@+id/btnSubmit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:background="@drawable/background_btn"
-                android:text="submit"
-                />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/btnEditProfile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16dp"
-            android:text="Edit profile"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/blue"
-            />
-
 
     </LinearLayout>
 </ScrollView>

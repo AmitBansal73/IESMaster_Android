@@ -176,7 +176,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);
            // MainActivity.this.finish();
           //  UpdateUI(true);
-        }else {
+        }
+        else {
             UpdateUI(false);
         }
     }

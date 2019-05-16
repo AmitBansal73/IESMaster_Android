@@ -174,36 +174,26 @@ public class AcademicProfileActivity extends AppCompatActivity  {
 
 
 
-    private void setUniversitySpinner()
+    public void setUniversitySpinner()
     {
         adapterUniversity = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, universityList);
         adapterUniversity.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         listViewUniversity.setAdapter(adapterUniversity);
 
-        txtUniversity.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                closeKeyboard();
-
-                if(hasFocus)
-                {
-                    listViewUniversity.setVisibility(View.VISIBLE);
-                }
-                else
-                {
-                    listViewUniversity.setVisibility(View.GONE);
-                }
-
-            }
-        });
+      txtUniversity.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+              listViewUniversity.setVisibility(View.VISIBLE);
+          }
+      });
 
         txtUniversity.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
                 // When user changed the Text
 
-                adapterUniversity.getFilter().filter(cs);
-                listViewUniversity.setVisibility(View.VISIBLE);
+                    adapterUniversity.getFilter().filter(cs);
+                    listViewUniversity.setVisibility(View.VISIBLE);
 
             }
 
@@ -228,38 +218,29 @@ public class AcademicProfileActivity extends AppCompatActivity  {
             }
         });
 
-
     }
 
     private void setCollegeSpinner()
     {
+
         adapterCollege = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, collegeList);
         adapterCollege.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         listViewCollage.setAdapter(adapterCollege);
-
-        txtCollage.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        txtCollage.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                closeKeyboard();
-                if(hasFocus)
-                {
+            public void onClick(View v) {
+
                     listViewCollage.setVisibility(View.VISIBLE);
-                }
-                else
-                {
-                    listViewCollage.setVisibility(View.GONE);
-                }
+
             }
         });
-
         txtCollage.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
                 // When user changed the Text
-
-                AcademicProfileActivity.this.adapterCollege.getFilter().filter(cs);
-                listViewCollage.setVisibility(View.VISIBLE);
+                    AcademicProfileActivity.this.adapterCollege.getFilter().filter(cs);
+                    listViewCollage.setVisibility(View.VISIBLE);
 
             }
 
@@ -288,22 +269,18 @@ public class AcademicProfileActivity extends AppCompatActivity  {
 
     private void setStreamSpinner()
     {
+
         adapterStream = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, streamList);
         adapterStream.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         listViewStream.setAdapter(adapterStream);
 
-        txtStream.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        txtStream.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
+            public void onClick(View v) {
 
-                if(hasFocus)
-                {
                     listViewStream.setVisibility(View.VISIBLE);
-                }
-                else
-                {
-                    listViewStream.setVisibility(View.GONE);
-                }
+
+
             }
         });
 
@@ -311,14 +288,10 @@ public class AcademicProfileActivity extends AppCompatActivity  {
 
             @Override
             public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
-                if(cs.length()<2)
-                {
-                    listViewStream.setVisibility(View.GONE);
-                }
-                else {
+
                     AcademicProfileActivity.this.adapterStream.getFilter().filter(cs);
                     listViewStream.setVisibility(View.VISIBLE);
-                }
+
             }
 
             @Override
@@ -342,6 +315,19 @@ public class AcademicProfileActivity extends AppCompatActivity  {
             }
         });
 
+    }
+
+    public void valid(){
+        String University = txtUniversity.getText().toString();
+        String Collage = txtCollage.getText().toString();
+        String Stream = txtStream.getText().toString();
+        if (University.equals("")) {
+            txtUniversity.setError("select University");
+        }else if (Collage.equals("")) {
+            txtCollage.setError("Select Collage");
+        }else if (Stream.equals("")) {
+            txtStream.setError(" Select Stream");
+        }
     }
 
 

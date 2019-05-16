@@ -9,13 +9,71 @@
     tools:context=".MobileOTPActivity"
     android:background="@color/White"
     >
-<TextView
-    android:id="@+id/txtValidation"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="20dp"
-    android:layout_gravity="center"
-    />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="100dp"
+        android:gravity="center"
+        >
+        <EditText
+            android:id="@+id/txtValidation1"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:background="@drawable/border"
+            android:inputType="number"
+            android:textSize="30sp"
+            android:gravity="center"
+            android:maxLength="1"
+            />
+        <EditText
+            android:id="@+id/txtValidation2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:background="@drawable/border"
+            android:layout_marginLeft="10dp"
+            android:inputType="number"
+            android:textSize="30dp"
+            android:gravity="center"
+            android:maxLength="1"
+            />
+        <EditText
+            android:id="@+id/txtValidation3"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:background="@drawable/border"
+            android:layout_marginLeft="10dp"
+            android:inputType="number"
+            android:textSize="30dp"
+            android:gravity="center"
+            android:maxLength="1"
+            />
+        <EditText
+            android:id="@+id/txtValidation4"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:background="@drawable/border"
+            android:layout_marginLeft="10dp"
+            android:inputType="number"
+            android:textSize="30dp"
+            android:gravity="center"
+            android:maxLength="1"
+            />
+    </LinearLayout>
+    <TextView
+        android:id="@+id/txtResendOtp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:text="Resend OTP"
+        android:textColor="@color/blue"
+        />
+
     <Button
         android:id="@+id/btnValidate"
         android:layout_width="wrap_content"
