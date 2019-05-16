@@ -1,12 +1,16 @@
 package com.example.iesmaster;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -42,6 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static com.example.iesmaster.Common.Constants.SMS_PERMISSION_CODE;
 import static com.example.iesmaster.R.drawable.backgraund_grid;
 import static com.example.iesmaster.R.drawable.gradient_1;
 import static com.example.iesmaster.R.drawable.grid_univ;
@@ -80,6 +85,7 @@ public class HomeActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setTitle(" Home ");
         actionBar.show();
+
 
 
         myProfile = Session.GetProfile(getApplicationContext());
@@ -454,4 +460,7 @@ public class HomeActivity extends AppCompatActivity {
 
         return  true;
     }
+
+
+
 }

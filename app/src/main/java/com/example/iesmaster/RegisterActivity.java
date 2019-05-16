@@ -1,11 +1,15 @@
 package com.example.iesmaster;
 
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,14 +20,28 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.example.iesmaster.Common.Constants;
 import com.example.iesmaster.Common.ImageServer;
 import com.example.iesmaster.Common.OvalImageView;
 import com.example.iesmaster.Common.Session;
 import com.example.iesmaster.model.AcademicProfile;
 import com.example.iesmaster.model.Profile;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.credentials.Credential;
+import com.google.android.gms.auth.api.credentials.HintRequest;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.Api;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.Status;
 
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.concurrent.TimeUnit;
+
+import static com.example.iesmaster.Common.Constants.RESOLVE_HINT;
 
 public class RegisterActivity extends AppCompatActivity {
     OvalImageView profileImage;
@@ -34,9 +52,100 @@ public class RegisterActivity extends AppCompatActivity {
     boolean IsLogin = false;
     Bitmap newBitmap;
     String strImage;
-    static final int REQUEST_IMAGE_GET = 1;
-    static final int REQUEST_IMAGE_CROP = 2;
-    static  final int REQUEST_OTP_VERIFY =3;
+
+
+    GoogleApiClient apiClient = new GoogleApiClient() {
+        @Override
+        public boolean hasConnectedApi(@NonNull Api<?> api) {
+            return false;
+        }
+
+        @NonNull
+        @Override
+        public ConnectionResult getConnectionResult(@NonNull Api<?> api) {
+            return null;
+        }
+
+        @Override
+        public void connect() {
+
+        }
+
+        @Override
+        public ConnectionResult blockingConnect() {
+            return null;
+        }
+
+        @Override
+        public ConnectionResult blockingConnect(long l, @NonNull TimeUnit timeUnit) {
+            return null;
+        }
+
+        @Override
+        public void disconnect() {
+
+        }
+
+        @Override
+        public void reconnect() {
+
+        }
+
+        @Override
+        public PendingResult<Status> clearDefaultAccountAndReconnect() {
+            return null;
+        }
+
+        @Override
+        public void stopAutoManage(@NonNull FragmentActivity fragmentActivity) {
+
+        }
+
+        @Override
+        public boolean isConnected() {
+            return false;
+        }
+
+        @Override
+        public boolean isConnecting() {
+            return false;
+        }
+
+        @Override
+        public void registerConnectionCallbacks(@NonNull ConnectionCallbacks connectionCallbacks) {
+
+        }
+
+        @Override
+        public boolean isConnectionCallbacksRegistered(@NonNull ConnectionCallbacks connectionCallbacks) {
+            return false;
+        }
+
+        @Override
+        public void unregisterConnectionCallbacks(@NonNull ConnectionCallbacks connectionCallbacks) {
+
+        }
+
+        @Override
+        public void registerConnectionFailedListener(@NonNull OnConnectionFailedListener onConnectionFailedListener) {
+
+        }
+
+        @Override
+        public boolean isConnectionFailedListenerRegistered(@NonNull OnConnectionFailedListener onConnectionFailedListener) {
+            return false;
+        }
+
+        @Override
+        public void unregisterConnectionFailedListener(@NonNull OnConnectionFailedListener onConnectionFailedListener) {
+
+        }
+
+        @Override
+        public void dump(String s, FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strings) {
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +181,14 @@ public class RegisterActivity extends AppCompatActivity {
             txtMobile = findViewById(R.id.txtMobile);
             txtName = findViewById(R.id.txtName);
             txtPassword = findViewById(R.id.txtPassword);
+
+
+        txtMobile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //requestHint();
+            }
+        });
 
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
@@ -118,14 +235,32 @@ public class RegisterActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(intent, REQUEST_IMAGE_GET);
+            startActivityForResult(intent, Constants.REQUEST_IMAGE_GET);
         }
+    }
+
+    private void requestHint() {
+        try {
+            HintRequest hintRequest = new HintRequest.Builder()
+                    .setPhoneNumberIdentifierSupported(true)
+                    .build();
+
+            PendingIntent intent = Auth.CredentialsApi.getHintPickerIntent(
+                    apiClient, hintRequest);
+            startIntentSenderForResult(intent.getIntentSender(),
+                    RESOLVE_HINT, null, 0, 0, 0);
+        }
+        catch (IntentSender.SendIntentException sex)
+        {
+
+        }
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         try {
-            if (requestCode == REQUEST_IMAGE_GET) {
+            if (requestCode == Constants.REQUEST_IMAGE_GET) {
 
                 if (data != null) {
                     try {
@@ -144,7 +279,7 @@ public class RegisterActivity extends AppCompatActivity {
                      int a=1;
                     }
                 }
-            } else if (requestCode == REQUEST_IMAGE_CROP) {
+            } else if (requestCode == Constants.REQUEST_IMAGE_CROP) {
 
                 if (data != null) {
 
@@ -166,8 +301,14 @@ public class RegisterActivity extends AppCompatActivity {
                     profileImage.invalidate();
                 }
             }
+            else if (requestCode == RESOLVE_HINT) {
+                if (resultCode == RESULT_OK) {
+                    Credential credential = data.getParcelableExtra(Credential.EXTRA_KEY);
+                    // credential.getId(); <-- E.164 format phone number on 10.2.+ devices
+                }
+            }
 
-            else if(requestCode == REQUEST_OTP_VERIFY)
+            else if(requestCode == Constants.REQUEST_OTP_VERIFY)
             {
                 boolean result = data.getBooleanExtra("isVerified", false);
                 if(result) {
@@ -178,7 +319,7 @@ public class RegisterActivity extends AppCompatActivity {
                     profile.UserPassword = txtPassword.getText().toString();
                     profile.UserID ="999";
                     Session.AddProfile(getApplicationContext(), profile);
-                    Intent homeIntent = new Intent(RegisterActivity.this, AcademicProfile.class);
+                    Intent homeIntent = new Intent(RegisterActivity.this, AcademicProfileActivity.class);
                     startActivity(homeIntent);
                 }
             }
@@ -204,7 +345,7 @@ public class RegisterActivity extends AppCompatActivity {
             CropIntent.putExtra("return-data", true);
             // CropIntent.putExtra(MediaStore.EXTRA_OUTPUT, contentUri);
             // CropIntent.putExtra("outputFormat",Bitmap.CompressFormat.JPEG.toString());
-            startActivityForResult(CropIntent, REQUEST_IMAGE_CROP);
+            startActivityForResult(CropIntent, Constants.REQUEST_IMAGE_CROP);
         }
         catch (Exception e)
         {
@@ -217,6 +358,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         Intent intent = new Intent(getApplicationContext(), MobileOTPActivity.class);
        //intent.putExtra("IsResult", false);
-        startActivityForResult(intent, REQUEST_OTP_VERIFY);
+        startActivityForResult(intent, Constants.REQUEST_OTP_VERIFY);
     }
 }
