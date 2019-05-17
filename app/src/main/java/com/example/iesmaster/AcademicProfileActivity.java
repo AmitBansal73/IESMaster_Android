@@ -552,8 +552,8 @@ public class AcademicProfileActivity extends AppCompatActivity  {
     public void onBackPressed() {
         if(!IsResult) {
 
-            Intent i = new Intent(AcademicProfileActivity.this, RegisterActivity.class);
-            startActivity(i);
+            //Intent i = new Intent(AcademicProfileActivity.this, RegisterActivity.class);
+            //startActivity(i);
             AcademicProfileActivity.this.finish();
         }
         else {

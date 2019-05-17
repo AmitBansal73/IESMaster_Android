@@ -94,6 +94,7 @@ public class HomeActivity extends AppCompatActivity {
         profile_Image = findViewById(R.id.profile_Image);
         txtClgName = findViewById(R.id.txtClgName);
         txtName = findViewById(R.id.txtName);
+
         if(myProfile.UserLogin.matches(""))
         {
             Intent intent = new Intent(HomeActivity.this,WelcomeActivity.class);
@@ -107,7 +108,14 @@ public class HomeActivity extends AppCompatActivity {
             {
                 Intent intent = new Intent(HomeActivity.this, AcademicProfileActivity.class);
                 startActivity(intent);
-                HomeActivity.this.finish();
+               // HomeActivity.this.finish();
+            }
+            else
+            {
+
+                txtName.setText(academicProfile.Name);
+                univName.setText(academicProfile.UniversityName+", "+academicProfile.CollegeName);
+                txtStream.setText(academicProfile.Stream+ "," +academicProfile.Semester );
             }
         }
 
@@ -189,15 +197,6 @@ public class HomeActivity extends AppCompatActivity {
 
     private void setProfileGrid()
     {
-        AcademicProfile myAcademicProfile = new AcademicProfile();
-        myAcademicProfile.UniversityName = "UPTU";
-        myAcademicProfile.Stream = "Civil";
-        myAcademicProfile.Semester = "3rd";
-        myAcademicProfile.CollegeName = "ABES Collage";
-        myAcademicProfile.Name = "OMPRAKASH";
-        txtName.setText(myAcademicProfile.Name);
-        univName.setText(myAcademicProfile.UniversityName+", "+myAcademicProfile.CollegeName);
-        txtStream.setText(myAcademicProfile.Stream+ "," +myAcademicProfile.Semester );
        // univList.add(myAcademicProfile);
         /*univList.add(new Subject("Punjab University", R.drawable.b));
         univList.add(new Subject("Amity University", R.drawable.a));

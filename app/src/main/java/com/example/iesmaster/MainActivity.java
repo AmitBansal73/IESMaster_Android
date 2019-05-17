@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -71,7 +72,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .requestEmail()
                 .build();
 
-        googleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this,this).addApi(Auth.GOOGLE_SIGN_IN_API,gso).build();
+        googleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this,this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API,gso).build();
 
 
         btnRegister= findViewById(R.id.btnRegister);
@@ -126,6 +128,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+
+    }
+
+
+
+    @Override
     public void onClick(View v) {
         switch (v.getId())
         {
@@ -157,12 +167,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+
     private void handleResult(GoogleSignInResult result){
+        progressBar.setVisibility(View.GONE);
         if(result.isSuccess()){
-            progressBar.setVisibility(View.GONE);
             GoogleSignInAccount account = result.getSignInAccount();
-
-
             Profile myProfile = new Profile();
             myProfile.UserName = account.getDisplayName();
             myProfile.UserLogin = account.getEmail();
