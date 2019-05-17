@@ -169,10 +169,7 @@ public class AcademicProfileActivity extends AppCompatActivity  {
         adapterSemester.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerSemester.setAdapter(adapterSemester);
 
-
     }
-
-
 
     public void setUniversitySpinner()
     {

@@ -65,6 +65,7 @@ public class HomeActivity extends AppCompatActivity {
     private Integer ClickCount=0;
     private long prevTime = 0;
     Profile myProfile;
+    AcademicProfile academicProfile;
     GoogleApiClient googleApiClient;
     View viewFavourite;
     MyGridView gridViewFavourite;
@@ -103,7 +104,8 @@ public class HomeActivity extends AppCompatActivity {
         }
         else
         {
-           AcademicProfile academicProfile = Session.GetAcademicProfile(getApplicationContext());
+            academicProfile = Session.GetAcademicProfile(getApplicationContext());
+
             if(academicProfile.UniversityID == 0)
             {
                 Intent intent = new Intent(HomeActivity.this, AcademicProfileActivity.class);
@@ -112,8 +114,7 @@ public class HomeActivity extends AppCompatActivity {
             }
             else
             {
-
-                txtName.setText(academicProfile.Name);
+                txtName.setText(myProfile.UserName);
                 univName.setText(academicProfile.UniversityName+", "+academicProfile.CollegeName);
                 txtStream.setText(academicProfile.Stream+ "," +academicProfile.Semester );
             }

@@ -45,18 +45,25 @@ public class StartActivity extends AppCompatActivity {
             if(myProfile.UserLogin.matches("")) {
                 Intent intent = new Intent(StartActivity.this, MainActivity.class);
                 startActivity(intent);
+                StartActivity.this.finish();
             }
             else
             {
-                Intent intent = new Intent(StartActivity.this, HomeActivity.class);
-                startActivity(intent);
-
+              //  Intent intent = new Intent(StartActivity.this, HomeActivity.class);
+              //  startActivity(intent);
             }
         }
+
         else if(account.isExpired())
         {
             Intent intent = new Intent(StartActivity.this, MainActivity.class);
             startActivity(intent);
+        }
+        else
+        {
+            Intent intent = new Intent(StartActivity.this, HomeActivity.class);
+            startActivity(intent);
+            StartActivity.this.finish();
         }
     }
 

@@ -171,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void handleResult(GoogleSignInResult result){
         progressBar.setVisibility(View.GONE);
         if(result.isSuccess()){
+
             GoogleSignInAccount account = result.getSignInAccount();
             Profile myProfile = new Profile();
             myProfile.UserName = account.getDisplayName();
@@ -179,12 +180,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             myProfile.MobileNumber = "";
             myProfile.UserID = "";
             myProfile.UserPassword = "Google";
-
             Session.AddProfile(getApplicationContext(),myProfile);
-            Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
-            startActivity(intent);
+           // Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+           // startActivity(intent);
            // MainActivity.this.finish();
-          //  UpdateUI(true);
+            UpdateUI(true);
         }
         else {
             UpdateUI(false);
@@ -202,7 +202,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
            // Login_sec.setVisibility(View.GONE);
 
         }else {
-           // profile_sec.setVisibility(View.GONE);
             Login_sec.setVisibility(View.VISIBLE);
         }
     }

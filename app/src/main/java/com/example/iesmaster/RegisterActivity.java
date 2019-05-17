@@ -235,7 +235,6 @@ public class RegisterActivity extends AppCompatActivity {
         intent.putExtra("IsResult", false);
         startActivity(intent);
         RegisterActivity.this.finish();
-
     }
 
     public void EditImage(View view)
