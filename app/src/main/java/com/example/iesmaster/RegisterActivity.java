@@ -168,6 +168,13 @@ public class RegisterActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setTitle("User Registration");
         actionBar.show();
+        btnSubmit = findViewById(R.id.btnSubmit);
+        profileImage = findViewById(R.id.profileImage);
+        txtAddress = findViewById(R.id.txtAddress);
+        txtEmail = findViewById(R.id.txtEmail);
+        txtMobile = findViewById(R.id.txtMobile);
+        txtName = findViewById(R.id.txtName);
+        txtPassword = findViewById(R.id.txtPassword);
 
         myProfile = Session.GetProfile(getApplicationContext());
 
@@ -182,13 +189,6 @@ public class RegisterActivity extends AppCompatActivity {
         }else {
             IsLogin = false;
         }
-            btnSubmit = findViewById(R.id.btnSubmit);
-            profileImage = findViewById(R.id.profileImage);
-            txtAddress = findViewById(R.id.txtAddress);
-            txtEmail = findViewById(R.id.txtEmail);
-            txtMobile = findViewById(R.id.txtMobile);
-            txtName = findViewById(R.id.txtName);
-            txtPassword = findViewById(R.id.txtPassword);
 
 
         txtMobile.setOnClickListener(new View.OnClickListener() {
