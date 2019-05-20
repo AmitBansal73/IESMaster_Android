@@ -30,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.iesmaster.Common.DataAccess;
 import com.example.iesmaster.Common.MyGridView;
 import com.example.iesmaster.Common.OvalImageView;
@@ -116,7 +117,8 @@ public class HomeActivity extends AppCompatActivity {
             {
                 txtName.setText(myProfile.UserName);
                 univName.setText(academicProfile.UniversityName+", "+academicProfile.CollegeName);
-                txtStream.setText(academicProfile.Stream+ "," +academicProfile.Semester );
+                txtStream.setText(academicProfile.Stream+ ",  " +academicProfile.Semester );
+                Glide.with(this).load(myProfile.ProfileImage).into(profile_Image);
             }
         }
 

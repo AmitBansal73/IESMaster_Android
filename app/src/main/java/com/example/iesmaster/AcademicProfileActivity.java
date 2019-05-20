@@ -18,18 +18,34 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.iesmaster.Common.Constants;
 import com.example.iesmaster.Common.Session;
 import com.example.iesmaster.model.AcademicProfile;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.InputStream;
@@ -38,7 +54,8 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class AcademicProfileActivity extends AppCompatActivity  {
+public class AcademicProfileActivity extends AppCompatActivity   {
+    ProgressBar progressBar;
     Button btnSave;
     EditText txtUniversity,txtCollage,txtStream;
     ListView listViewUniversity,listViewCollage,listViewStream;
@@ -48,6 +65,7 @@ public class AcademicProfileActivity extends AppCompatActivity  {
     ImageView collageID;
     static final int REQUEST_IMAGE_GET = 1;
     static final int REQUEST_IMAGE_CROP = 2;
+    int selectedUniversity,selectedCollage;
 
     ArrayAdapter<String> adapterUniversity;
    // ArrayAdapter<String> adapterClg;
@@ -86,11 +104,11 @@ public class AcademicProfileActivity extends AppCompatActivity  {
 
        Intent intent = getIntent();
         IsResult = intent.getBooleanExtra("IsResult", false);
-        setUniversityData();
-        setCollegeData();
-        setStreamData();
+       // setUniversityData();
+      //  setCollegeData();
+      //  setStreamData();
         setSemesterData();
-
+        progressBar = findViewById(R.id.progressBar);
         attachedID = findViewById(R.id.attachedID);
         txtUniversity = findViewById(R.id.txtUniversity);
         txtStream = findViewById(R.id.txtStream);
@@ -161,9 +179,7 @@ public class AcademicProfileActivity extends AppCompatActivity  {
         });
 
         setUniversitySpinner();
-        setCollegeSpinner();
         setStreamSpinner();
-
         spinnerSemester = findViewById(R.id.spinnerSemester);
         adapterSemester = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, semesterList);
         adapterSemester.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -173,16 +189,61 @@ public class AcademicProfileActivity extends AppCompatActivity  {
 
     public void setUniversitySpinner()
     {
+        String url = Constants.Application_URL+ "/api/University/All";
+        try{
+            RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+            JsonArrayRequest jsArrayRequest = new JsonArrayRequest(Request.Method.GET, url, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+
+                    try {
+                        int x = response.length();
+                        for (int i = 0; i <x; i++) {
+
+                            JSONObject jObj = response.getJSONObject(i);
+
+                            String UniversityName = jObj.getString("Name");
+                            int UniversityID = jObj.getInt("UnivID");
+                            universityHashMap.put(UniversityName, UniversityID);
+                            universityList.add(UniversityName);
+                        }
+                        progressBar.setVisibility(View.GONE);
+                        adapterUniversity.notifyDataSetChanged();
+
+                    } catch (JSONException e) {
+                        int a=1;
+                    }
+                    catch (Exception ex)
+                    {
+                        int a=1;
+                    }
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    progressBar.setVisibility(View.GONE);
+
+                }
+            });
+            RetryPolicy rPolicy = new DefaultRetryPolicy(0, -1, 0);
+            jsArrayRequest.setRetryPolicy(rPolicy);
+            queue.add(jsArrayRequest);
+        }catch (Exception ex){
+            int a=1;
+        }
+
+
+
         adapterUniversity = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, universityList);
         adapterUniversity.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         listViewUniversity.setAdapter(adapterUniversity);
-
-      txtUniversity.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-              listViewUniversity.setVisibility(View.VISIBLE);
-          }
-      });
+        txtUniversity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listViewUniversity.setVisibility(View.VISIBLE);
+            }
+        });
 
         txtUniversity.addTextChangedListener(new TextWatcher() {
             @Override
@@ -210,27 +271,79 @@ public class AcademicProfileActivity extends AppCompatActivity  {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String University = (String) listViewUniversity.getItemAtPosition(position);
+                selectedUniversity = universityHashMap.get(University);
                 txtUniversity.setText(University);
+                setCollegeSpinner(selectedUniversity);
                 listViewUniversity.setVisibility(View.GONE);
             }
         });
 
     }
 
-    private void setCollegeSpinner()
+    private void setCollegeSpinner(int id )
     {
+        String url = Constants.Application_URL+ "/api/Colleges/University/" + id;
+        try{
+            RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+            JsonArrayRequest jsArrayRequest = new JsonArrayRequest(Request.Method.GET, url, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+
+                    try {
+                        int x = response.length();
+                        collegeHashMap.clear();
+                        adapterCollege.clear();
+                        for (int i = 0; i <x; i++) {
+
+                            JSONObject jObj = response.getJSONObject(i);
+                            String ClgName = jObj.getString("College_Name");
+                            int ClgID = jObj.getInt("CollegeID");
+                            collegeHashMap.put(ClgName, ClgID);
+                            collegeList.add(ClgName);
+                        }
+
+
+                        adapterCollege.notifyDataSetChanged();
+
+                    } catch (JSONException e) {
+                        int a=1;
+                    }
+                    catch (Exception ex)
+                    {
+                        int a=1;
+                    }
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                    progressBar.setVisibility(View.GONE);
+
+                }
+            });
+            RetryPolicy rPolicy = new DefaultRetryPolicy(0, -1, 0);
+            jsArrayRequest.setRetryPolicy(rPolicy);
+            queue.add(jsArrayRequest);
+        }catch (Exception ex){
+            int a=1;
+        }
 
         adapterCollege = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, collegeList);
         adapterCollege.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         listViewCollage.setAdapter(adapterCollege);
-        txtCollage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                    listViewCollage.setVisibility(View.VISIBLE);
-
-            }
-        });
+                txtCollage.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if (hasFocus) {
+                            listViewCollage.setVisibility(View.VISIBLE);
+                        }else {
+                            listViewCollage.setVisibility(View.GONE);
+                        }
+                    }
+                });
+                   // listViewCollage.setVisibility(View.VISIBLE);
         txtCollage.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -258,7 +371,9 @@ public class AcademicProfileActivity extends AppCompatActivity  {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String University = listViewCollage.getItemAtPosition(position).toString();
                 txtCollage.setText(University);
+                selectedCollage = collegeHashMap.get(University);
                 listViewCollage.setVisibility(View.GONE);
+               // setStreamSpinner(selectedCollage);
             }
         });
     }
@@ -267,17 +382,57 @@ public class AcademicProfileActivity extends AppCompatActivity  {
     private void setStreamSpinner()
     {
 
+        String url = Constants.Application_URL+ "/api/Streams/All";
+        try{
+            RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+            JsonArrayRequest jsArrayRequest = new JsonArrayRequest(Request.Method.GET, url, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    try {
+                        int x = response.length();
+                        for (int i = 0; i <x; i++) {
+                            JSONObject jObj = response.getJSONObject(i);
+                            String Stream = jObj.getString("Stream_Name");
+                            int StreamID = jObj.getInt("StreamID");
+                            streamHashMap.put(Stream, StreamID);
+                            streamList.add(Stream);
+                        }
+                        adapterStream.notifyDataSetChanged();
+                    } catch (JSONException e) {
+                        int a=1;
+                    }
+                    catch (Exception ex)
+                    {
+                        int a=1;
+                    }
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                    progressBar.setVisibility(View.GONE);
+
+                }
+            });
+            RetryPolicy rPolicy = new DefaultRetryPolicy(0, -1, 0);
+            jsArrayRequest.setRetryPolicy(rPolicy);
+            queue.add(jsArrayRequest);
+        }catch (Exception ex){
+            int a=1;
+        }
+
         adapterStream = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, streamList);
         adapterStream.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         listViewStream.setAdapter(adapterStream);
-
-        txtStream.setOnClickListener(new View.OnClickListener() {
+        txtStream.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onClick(View v) {
-
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus){
                     listViewStream.setVisibility(View.VISIBLE);
-
-
+                }else {
+                    listViewStream.setVisibility(View.GONE);
+                }
             }
         });
 
@@ -288,7 +443,6 @@ public class AcademicProfileActivity extends AppCompatActivity  {
 
                     AcademicProfileActivity.this.adapterStream.getFilter().filter(cs);
                     listViewStream.setVisibility(View.VISIBLE);
-
             }
 
             @Override
@@ -329,7 +483,7 @@ public class AcademicProfileActivity extends AppCompatActivity  {
 
 
 
-    private void setUniversityData()
+ /*   private void setUniversityData()
     {
         universityList.add("UPTU");
         universityHashMap.put("UPTU",1);
@@ -366,7 +520,7 @@ public class AcademicProfileActivity extends AppCompatActivity  {
         streamHashMap.put("Electrical",3);
         streamList.add("Computer Science");
         streamHashMap.put("Computer Science",4);
-    }
+    } */
 
 
     private void setSemesterData()

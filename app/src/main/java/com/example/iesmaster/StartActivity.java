@@ -7,6 +7,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.webkit.WebView;
 
 import com.example.iesmaster.Common.Session;
 import com.example.iesmaster.model.Profile;
@@ -18,12 +19,15 @@ import static com.example.iesmaster.Common.Constants.SMS_PERMISSION_CODE;
 public class StartActivity extends AppCompatActivity {
 
 
+    WebView loaderWeb;
     Profile myProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+
+        loaderWeb = findViewById(R.id.loaderWeb);
 
         if (!isSmsPermissionGranted())
         {
@@ -54,11 +58,11 @@ public class StartActivity extends AppCompatActivity {
             }
         }
 
-        else if(account.isExpired())
+       /* else if(account.isExpired())
         {
             Intent intent = new Intent(StartActivity.this, MainActivity.class);
             startActivity(intent);
-        }
+        } */
         else
         {
             Intent intent = new Intent(StartActivity.this, HomeActivity.class);

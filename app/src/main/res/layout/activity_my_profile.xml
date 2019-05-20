@@ -191,4 +191,72 @@
 
     </LinearLayout>
 </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/layoutEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/background_white"
+        android:elevation="3dp"
+        android:padding="5dp"
+        android:layout_margin="10dp"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        >
+            <TextView
+                android:id="@+id/txtHeadingEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Personal Information"
+                android:textColor="#5506E4"
+                android:textSize="16sp"
+                android:padding="3dp"
+                />
+        <TextView
+            android:id="@+id/editName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:padding="3dp"
+            android:textColor="#000"
+            android:layout_marginTop="5dp"
+            android:drawablePadding="5dp"
+            android:drawableLeft="@drawable/ic_perm_identity"
+            />
+        <TextView
+            android:id="@+id/editEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:textColor="#000"
+            android:drawablePadding="5dp"
+            android:drawableLeft="@drawable/ic_email_black_24dp"
+            />
+        <EditText
+            android:id="@+id/editMobile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Mobile"
+            android:textColor="#000"
+            android:drawablePadding="5dp"
+            android:drawableLeft="@drawable/ic_call"
+            />
+        <EditText
+            android:id="@+id/editAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Address"
+            android:textColor="#6e7ea3"
+            android:drawablePadding="5dp"
+            android:drawableLeft="@drawable/ic_location_on_black_24dp"
+            />
+        <Button
+            android:id="@+id/btnUpdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_btn"
+            android:text="submit"
+            />
+    </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

@@ -104,8 +104,8 @@ public class Session {
     {
         SharedPreferences prefs = context.getSharedPreferences(SESSION_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.clear();
-        editor.commit();
+        //editor.clear();
+      //  editor.commit();
 
     }
 }

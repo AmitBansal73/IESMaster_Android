@@ -58,7 +58,6 @@ public class TopicActivity extends AppCompatActivity {
         gridViewTopic.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 Topic selectedTopic = topicList.get(position);
                 DataAccess dataAccess = new DataAccess(getApplicationContext());
                 dataAccess.open();

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -18,10 +19,13 @@ import com.example.iesmaster.model.Profile;
 
 public class MyProfileActivity extends AppCompatActivity {
     OvalImageView profileImage;
-    TextView txtName,txtEmail,txtMobile,txtAddress,txtUnivName,txtCollage,txtStream,txtStudentID,btnEditAcademicProfile,btnEditPersonalProfile;
+    TextView txtName,txtEmail,txtMobile,txtAddress,txtUnivName,txtCollage,txtStream,txtStudentID,btnEditAcademicProfile,btnEditPersonalProfile,
+            editEmail,editName;
     Profile myProfile;
     AcademicProfile myAcademicProfile;
-    Button btnSubmit;
+    Button btnUpdate;
+    LinearLayout layoutEdit;
+    EditText editMobile,editAddress;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +41,18 @@ public class MyProfileActivity extends AppCompatActivity {
 
         myProfile = Session.GetProfile(getApplicationContext());
         myAcademicProfile = Session.GetAcademicProfile(getApplicationContext());
-
+        layoutEdit = findViewById(R.id.layoutEdit);
+        editName = findViewById(R.id.editName);
+        editEmail = findViewById(R.id.editEmail);
+        editMobile = findViewById(R.id.editMobile);
+        editAddress = findViewById(R.id.editAddress);
+        btnUpdate = findViewById(R.id.btnUpdate);
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                layoutEdit.setVisibility(View.GONE);
+            }
+        });
         profileImage = findViewById(R.id.profileImage);
         txtName = findViewById(R.id.txtName);
         txtEmail = findViewById(R.id.txtEmail);
@@ -51,8 +66,9 @@ public class MyProfileActivity extends AppCompatActivity {
         btnEditPersonalProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent personal = new Intent(MyProfileActivity.this,RegisterActivity.class);
-                startActivity(personal);
+                layoutEdit.setVisibility(View.VISIBLE);
+                //Intent personal = new Intent(MyProfileActivity.this,RegisterActivity.class);
+               // startActivity(personal);
             }
         });
         btnEditAcademicProfile = findViewById(R.id.btnEditAcademicProfile);
@@ -67,10 +83,14 @@ public class MyProfileActivity extends AppCompatActivity {
         txtName.setText(myProfile.UserName);
         txtEmail.setText(myProfile.UserLogin);
         txtMobile.setText(myProfile.MobileNumber);
-        txtAddress.setText("");
+        txtAddress.setText(myProfile.Address);
         txtUnivName.setText(myAcademicProfile.UniversityName);
         txtCollage.setText(myAcademicProfile.CollegeName);
         txtStream.setText(myAcademicProfile.Stream+", "+myAcademicProfile.Semester);
         txtStudentID.setText(myAcademicProfile.UserID);
+    }
+
+    private void EditProfile(){
+
     }
 }

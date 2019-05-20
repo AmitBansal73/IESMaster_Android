@@ -7,4 +7,5 @@ public class Profile {
     public String ProfileImage ="";
     public String UserLogin = "";
     public String UserPassword = "";
+    public String Address = "";
 }

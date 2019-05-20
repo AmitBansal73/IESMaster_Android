@@ -14,6 +14,8 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.example.iesmaster.Common.Session;
+import com.example.iesmaster.model.AcademicProfile;
 import com.example.iesmaster.model.Subject;
 
 import java.util.ArrayList;
@@ -22,6 +24,8 @@ public class YearsActivity extends AppCompatActivity {
     GridView gridViewYr;
     ArrayList yearList=new ArrayList<>();
     TestYear testYear;
+    TextView txtCollage,txtStream;
+    AcademicProfile myAcademic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +39,14 @@ public class YearsActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setTitle("Test Paper for Year ");
         actionBar.show();
+        txtStream = findViewById(R.id.txtStream);
+        txtCollage = findViewById(R.id.txtCollage);
+
+
+        myAcademic = Session.GetAcademicProfile(getApplicationContext());
+
+        txtCollage.setText(myAcademic.CollegeName+", "+myAcademic.UniversityName);
+        txtStream.setText(myAcademic.Stream+", "+myAcademic.Semester);
 
         gridViewYr = findViewById(R.id.gridViewYr);
         yearList.add(new Subject("2008", R.drawable.a));
@@ -91,7 +103,6 @@ public class YearsActivity extends AppCompatActivity {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.gridview_years, null);
             TextView textView = convertView.findViewById(R.id.testYear);
-
             Subject tempSubject = (Subject) yearList.get(position);
             textView.setText( tempSubject.getsubName());
             return convertView;
