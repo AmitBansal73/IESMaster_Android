@@ -247,7 +247,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Address"
-            android:textColor="#6e7ea3"
+            android:textColor="#000"
             android:drawablePadding="5dp"
             android:drawableLeft="@drawable/ic_location_on_black_24dp"
             />

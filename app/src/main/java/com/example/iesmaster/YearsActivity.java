@@ -45,8 +45,8 @@ public class YearsActivity extends AppCompatActivity {
 
         myAcademic = Session.GetAcademicProfile(getApplicationContext());
 
-        txtCollage.setText(myAcademic.CollegeName+", "+myAcademic.UniversityName);
-        txtStream.setText(myAcademic.Stream+", "+myAcademic.Semester);
+       // txtCollage.setText(myAcademic.CollegeName+", "+myAcademic.UniversityName);
+       // txtStream.setText(myAcademic.Stream+", "+myAcademic.Semester);
 
         gridViewYr = findViewById(R.id.gridViewYr);
         yearList.add(new Subject("2008", R.drawable.a));
