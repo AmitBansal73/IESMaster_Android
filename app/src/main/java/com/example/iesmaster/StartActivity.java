@@ -3,12 +3,21 @@ package com.example.iesmaster;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.webkit.WebView;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.iesmaster.Common.Session;
 import com.example.iesmaster.model.Profile;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -17,9 +26,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import static com.example.iesmaster.Common.Constants.SMS_PERMISSION_CODE;
 
 public class StartActivity extends AppCompatActivity {
-
-
-    WebView loaderWeb;
+    ImageView Image;
     Profile myProfile;
 
     @Override
@@ -27,7 +34,10 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        loaderWeb = findViewById(R.id.loaderWeb);
+        Image = findViewById(R.id.Image);
+        //Glide.with(this).load(R.drawable.start).asGif().into(Image);
+
+
 
         if (!isSmsPermissionGranted())
         {
@@ -39,7 +49,6 @@ public class StartActivity extends AppCompatActivity {
         }
 
     }
-
 
     private void updateUI(GoogleSignInAccount account)
     {

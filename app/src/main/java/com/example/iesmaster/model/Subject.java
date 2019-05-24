@@ -2,12 +2,12 @@ package com.example.iesmaster.model;
 
 public class Subject {
 
-    String SubjectName;
-    int SubjectImage;
+   public String SubjectName;
+   public int SubjectImage, SubjectID;
 
-    public Subject(){}
+     public Subject(){}
 
-    public Subject(String subName,int subImage)
+   public Subject(String subName,int subImage)
     {
         this.SubjectName=subName;
         this.SubjectImage=subImage;

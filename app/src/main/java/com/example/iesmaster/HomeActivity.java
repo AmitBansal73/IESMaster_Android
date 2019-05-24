@@ -27,10 +27,20 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.example.iesmaster.Common.Constants;
 import com.example.iesmaster.Common.DataAccess;
 import com.example.iesmaster.Common.MyGridView;
 import com.example.iesmaster.Common.OvalImageView;
@@ -43,16 +53,23 @@ import com.example.iesmaster.model.Topic;
 import com.example.iesmaster.model.mock_data;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
 import static com.example.iesmaster.Common.Constants.SMS_PERMISSION_CODE;
+import static com.example.iesmaster.R.drawable.a;
 import static com.example.iesmaster.R.drawable.backgraund_grid;
 import static com.example.iesmaster.R.drawable.gradient_1;
 import static com.example.iesmaster.R.drawable.grid_univ;
 
 public class HomeActivity extends AppCompatActivity {
+
 
     GridView gridView,gridViewUniversity;
     List<Subject> subList=new ArrayList<>();
@@ -71,6 +88,10 @@ public class HomeActivity extends AppCompatActivity {
     View viewFavourite;
     MyGridView gridViewFavourite;
     List<Topic> listFavourite;
+    ProgressBar progressBar;
+    ArrayAdapter<String> adapterSubject;
+    HashMap<String,Integer> profileHashMap = new HashMap<>();
+
     int color_arr[] = {R.drawable.grid_univ, R.drawable.gradient, R.drawable.gradient_paper,R.drawable.gradient_years,R.drawable.gradient_3,
             R.drawable.gradient_4,R.drawable.gradient_2,R.drawable.gradient_1};
 
@@ -88,9 +109,8 @@ public class HomeActivity extends AppCompatActivity {
         actionBar.setTitle(" Home ");
         actionBar.show();
 
-
-
         myProfile = Session.GetProfile(getApplicationContext());
+        academicProfile = Session.GetAcademicProfile(getApplicationContext());
         univName = findViewById(R.id.univName);
         txtStream = findViewById(R.id.txtStream);
         profile_Image = findViewById(R.id.profile_Image);
@@ -105,7 +125,7 @@ public class HomeActivity extends AppCompatActivity {
         }
         else
         {
-            academicProfile = Session.GetAcademicProfile(getApplicationContext());
+
 
             if(academicProfile.UniversityID == 0)
             {
@@ -126,6 +146,10 @@ public class HomeActivity extends AppCompatActivity {
         da.open();
         listFavourite = da.GetFavourite();
         univList = da.GetProfiles();
+
+
+      //  myAdapter = new TestSubject(this, R.layout.gridview_subjects,subList );
+      //  gridView.setAdapter(myAdapter);
 
         btnNext = findViewById(R.id.btnNext);
         btnNext.setOnClickListener(new View.OnClickListener() {
@@ -154,6 +178,14 @@ public class HomeActivity extends AppCompatActivity {
 
         gridViewUniversity = findViewById(R.id.gridViewUniversity);
         setProfileGrid();
+        gridViewUniversity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+              //  GetSubjects();
+            }
+        });
+
 
         gridView = findViewById(R.id.gridView);
         setSubjectGrid();
@@ -164,13 +196,11 @@ public class HomeActivity extends AppCompatActivity {
 
         viewFavourite = findViewById(R.id.viewFavourite);
 
-
-
         if ( listFavourite != null && listFavourite.size()>0)
         {
             viewFavourite.setVisibility(View.VISIBLE);
             txtNoFavourite.setVisibility(View.GONE);
-         gridViewFavourite = findViewById(R.id.gridViewFavourite);
+            gridViewFavourite = findViewById(R.id.gridViewFavourite);
           SetFavouriteGrid();
         }
         else
@@ -209,6 +239,52 @@ public class HomeActivity extends AppCompatActivity {
         gridViewUniversity.setAdapter(profileAdpter);
     }
 
+    public void GetSubjects(){
+
+        String url = Constants.Application_URL+ "/api/Class/"+ academicProfile.CollegeID+"/"+academicProfile.StreamID+"/"+academicProfile.SemesterID;
+        try{
+            RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+            JsonArrayRequest jsArrayRequest = new JsonArrayRequest(Request.Method.GET, url, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+
+                    try {
+                        int x = response.length();
+                        for (int i = 0; i <x; i++) {
+                            Subject subject = new Subject();
+                            JSONObject jObj = response.getJSONObject(i);
+                            subject.SubjectName = jObj.getString("SubjectName");
+                            subject.SubjectID = jObj.getInt("SubjectID");
+                             subList.add(subject);
+                        }
+                        progressBar.setVisibility(View.GONE);
+                        myAdapter.notifyDataSetChanged();
+
+                    } catch (JSONException e) {
+                        int a=1;
+                    }
+                    catch (Exception ex)
+                    {
+                        int a=1;
+                    }
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    progressBar.setVisibility(View.GONE);
+
+                }
+            });
+            RetryPolicy rPolicy = new DefaultRetryPolicy(0, -1, 0);
+            jsArrayRequest.setRetryPolicy(rPolicy);
+            queue.add(jsArrayRequest);
+        }catch (Exception ex){
+            int a=1;
+        }
+    }
+
+
     private void setSubjectGrid()
     {
         subList = mock_data.GetSubjects();
@@ -233,6 +309,8 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
+
+
     private void SetFavouriteGrid(){
 
         FavouriteAdapter favouriteAdapter = new FavouriteAdapter(this, R.layout.grid_item_topic,listFavourite );
@@ -247,7 +325,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
-
 
     public class TestSubject extends ArrayAdapter {
 
@@ -320,7 +397,6 @@ public class HomeActivity extends AppCompatActivity {
             btnRemove.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     univList.remove(Index);
                     profileAdpter.notifyDataSetChanged();
                 }
@@ -332,6 +408,7 @@ public class HomeActivity extends AppCompatActivity {
             return convertView;
         }
     }
+
 
     public class FavouriteAdapter extends  ArrayAdapter
     {

@@ -2,7 +2,6 @@ package com.example.iesmaster.Common;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
 import com.example.iesmaster.model.AcademicProfile;
 import com.example.iesmaster.model.Profile;
 

@@ -6,6 +6,8 @@ public class Topic {
     public String TopicName;
     public String SubjectName;
     public int Status;
+    public int Cost;
+    public String University;
 
     public Topic()
     {}

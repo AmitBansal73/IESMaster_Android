@@ -12,5 +12,5 @@ public class Constants {
     public static final int REQUEST_IMAGE_CROP = 2;
     public static  final int REQUEST_OTP_VERIFY =3;
 
-    public static String Application_URL = "http://www.kevintech.in/IES-WebApi";
+    public static String Application_URL = "http://www.kevintech.in/IESMaster-Api";
 }
