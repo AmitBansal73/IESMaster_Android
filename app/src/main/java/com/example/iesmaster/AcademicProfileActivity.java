@@ -197,7 +197,7 @@ public class AcademicProfileActivity extends AppCompatActivity   {
 
                             JSONObject jObj = response.getJSONObject(i);
 
-                            String UniversityName = jObj.getString("Name");
+                            String UniversityName = jObj.getString("UniversityName");
                             int UniversityID = jObj.getInt("UnivID");
                             universityHashMap.put(UniversityName, UniversityID);
                             universityList.add(UniversityName);
@@ -237,6 +237,7 @@ public class AcademicProfileActivity extends AppCompatActivity   {
             @Override
             public void onClick(View v) {
                 listViewUniversity.setVisibility(View.VISIBLE);
+
             }
         });
 
@@ -289,7 +290,7 @@ public class AcademicProfileActivity extends AppCompatActivity   {
                         for (int i = 0; i <x; i++) {
 
                             JSONObject jObj = response.getJSONObject(i);
-                            String ClgName = jObj.getString("College_Name");
+                            String ClgName = jObj.getString("CollegeName");
                             int ClgID = jObj.getInt("CollegeID");
                             collegeHashMap.put(ClgName, ClgID);
                             collegeList.add(ClgName);
@@ -371,7 +372,7 @@ public class AcademicProfileActivity extends AppCompatActivity   {
     private void setStreamSpinner(int clgId)
     {
 
-        String url = Constants.Application_URL+ "/api/Stream/Colleges/"+ clgId;
+        String url = Constants.Application_URL+ "/api/Stream/College/"+ clgId;
         try{
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
             JsonArrayRequest jsArrayRequest = new JsonArrayRequest(Request.Method.GET, url, new Response.Listener<JSONArray>() {
@@ -383,7 +384,7 @@ public class AcademicProfileActivity extends AppCompatActivity   {
                         adapterCollege.clear();
                         for (int i = 0; i <x; i++) {
                             JSONObject jObj = response.getJSONObject(i);
-                            String Stream = jObj.getString("Stream_Name");
+                            String Stream = jObj.getString("StreamName");
                             int StreamID = jObj.getInt("StreamID");
                             streamHashMap.put(Stream, StreamID);
                             streamList.add(Stream);
@@ -454,17 +455,17 @@ public class AcademicProfileActivity extends AppCompatActivity   {
                 String stream = listViewStream.getItemAtPosition(position).toString();
                 txtStream.setText(stream);
                 selectedStream = streamHashMap.get(stream);
-                setSemesterSpinner(selectedStream);
+                setSemesterSpinner();
                 listViewStream.setVisibility(View.GONE);
             }
         });
 
     }
 
-    private void setSemesterSpinner(int semID)
+    private void setSemesterSpinner()
     {
 
-        String url = Constants.Application_URL+ "/api/Stream/" + semID;
+        String url = Constants.Application_URL+ "/api/Semester/All";
         try{
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
             JsonArrayRequest jsArrayRequest = new JsonArrayRequest(Request.Method.GET, url, new Response.Listener<JSONArray>() {

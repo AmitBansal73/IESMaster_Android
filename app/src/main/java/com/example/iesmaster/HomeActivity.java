@@ -92,6 +92,8 @@ public class HomeActivity extends AppCompatActivity {
     ArrayAdapter<String> adapterSubject;
     HashMap<String,Integer> profileHashMap = new HashMap<>();
 
+    int selectedCollegeID, selectedStreamID, selectedSemesterID, selectedSubjectID;
+
     int color_arr[] = {R.drawable.grid_univ, R.drawable.gradient, R.drawable.gradient_paper,R.drawable.gradient_years,R.drawable.gradient_3,
             R.drawable.gradient_4,R.drawable.gradient_2,R.drawable.gradient_1};
 
@@ -139,6 +141,10 @@ public class HomeActivity extends AppCompatActivity {
                 univName.setText(academicProfile.UniversityName+", "+academicProfile.CollegeName);
                 txtStream.setText(academicProfile.Stream+ ",  " +academicProfile.Semester );
                 Glide.with(this).load(myProfile.ProfileImage).into(profile_Image);
+                selectedCollegeID = academicProfile.CollegeID;
+                selectedStreamID =academicProfile.StreamID;
+                selectedSemesterID = academicProfile.SemesterID;
+                GetSubjects(selectedCollegeID, selectedStreamID,selectedSemesterID);
             }
         }
 
@@ -178,13 +184,6 @@ public class HomeActivity extends AppCompatActivity {
 
         gridViewUniversity = findViewById(R.id.gridViewUniversity);
         setProfileGrid();
-        gridViewUniversity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-              //  GetSubjects();
-            }
-        });
 
 
         gridView = findViewById(R.id.gridView);
@@ -201,7 +200,7 @@ public class HomeActivity extends AppCompatActivity {
             viewFavourite.setVisibility(View.VISIBLE);
             txtNoFavourite.setVisibility(View.GONE);
             gridViewFavourite = findViewById(R.id.gridViewFavourite);
-          SetFavouriteGrid();
+            SetFavouriteGrid();
         }
         else
         {
@@ -237,11 +236,23 @@ public class HomeActivity extends AppCompatActivity {
 
         profileAdpter=new ProfileAdpter(this, R.layout.grid_item_profile, univList);
         gridViewUniversity.setAdapter(profileAdpter);
+
+        gridViewUniversity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                AcademicProfile tempProfile =  univList.get(position);
+                selectedCollegeID = academicProfile.CollegeID;
+                selectedStreamID =academicProfile.StreamID;
+                selectedSemesterID = academicProfile.SemesterID;
+                GetSubjects(selectedCollegeID, selectedStreamID,selectedSemesterID);
+               // GetSubjects(tempProfile.CollegeID, tempProfile.StreamID, tempProfile.SemesterID);
+            }
+        });
     }
 
-    public void GetSubjects(){
+    public void GetSubjects(int CollegeId, int StreamId, int SemesterId ){
 
-        String url = Constants.Application_URL+ "/api/Class/"+ academicProfile.CollegeID+"/"+academicProfile.StreamID+"/"+academicProfile.SemesterID;
+        String url = Constants.Application_URL+ "/api/Class/"+ CollegeId+"/"+StreamId+"/"+SemesterId;
         try{
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
             JsonArrayRequest jsArrayRequest = new JsonArrayRequest(Request.Method.GET, url, new Response.Listener<JSONArray>() {
@@ -302,6 +313,10 @@ public class HomeActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Intent intent = new Intent(HomeActivity.this,YearsActivity.class);
+                intent.putExtra("CollegeID", selectedCollegeID);
+                intent.putExtra("StreamID", selectedStreamID);
+                intent.putExtra("SemesterID", selectedSemesterID);
+                intent.putExtra("SubjectID", selectedSubjectID);
                 startActivity(intent);
                // HomeActivity.this.finish();
             }

@@ -43,6 +43,9 @@ public class YearsActivity extends AppCompatActivity {
     ArrayAdapter<String> adapterYear;
     Subject subject;
     ProgressBar progressBar;
+
+    int CollegeID,StreamID , SemesterID, SubjectID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,19 +66,27 @@ public class YearsActivity extends AppCompatActivity {
       //  testYear = new TestYear(this, R.layout.gridview_subjects,yearList );
       //  gridViewYr.setAdapter(testYear);
 
+        Intent intent = getIntent();
+        CollegeID = intent.getIntExtra("CollegeID", 0);
+        StreamID = intent.getIntExtra("StreamID", 0);
+        SemesterID = intent.getIntExtra("SemesterID", 0);
+        SubjectID = intent.getIntExtra("SubjectID", 0);
 
-        yearList.add(new Subject("2008", R.drawable.a));
-        yearList.add(new Subject("2009", R.drawable.b));
-        yearList.add(new Subject("2010", R.drawable.a));
-        yearList.add(new Subject("2011", R.drawable.b));
-        yearList.add(new Subject("2012", R.drawable.a));
-        yearList.add(new Subject("2013", R.drawable.b));
-        yearList.add(new Subject("2014", R.drawable.a));
-        yearList.add(new Subject("2015", R.drawable.a));
-        yearList.add(new Subject("2016", R.drawable.b));
-        yearList.add(new Subject("2017", R.drawable.a));
-        yearList.add(new Subject("2018", R.drawable.b));
-        yearList.add(new Subject("2019", R.drawable.a));
+        /*
+                yearList.add(new Subject("2008", R.drawable.a));
+                yearList.add(new Subject("2009", R.drawable.b));
+                yearList.add(new Subject("2010", R.drawable.a));
+                yearList.add(new Subject("2011", R.drawable.b));
+                yearList.add(new Subject("2012", R.drawable.a));
+                yearList.add(new Subject("2013", R.drawable.b));
+                yearList.add(new Subject("2014", R.drawable.a));
+                yearList.add(new Subject("2015", R.drawable.a));
+                yearList.add(new Subject("2016", R.drawable.b));
+                yearList.add(new Subject("2017", R.drawable.a));
+                yearList.add(new Subject("2018", R.drawable.b));
+                yearList.add(new Subject("2019", R.drawable.a));
+        */
+
 
         testYear=new TestYear(this, R.layout.gridview_years, yearList) {
             @Override
@@ -88,17 +99,26 @@ public class YearsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                int year = (int)yearList.get(position);
+
                 Intent intent = new Intent(YearsActivity.this, UnitActivity.class);
+                intent.putExtra("CollegeID", CollegeID);
+                intent.putExtra("StreamID", StreamID);
+                intent.putExtra("SemesterID", SemesterID);
+                intent.putExtra("SubjectID", SubjectID);
+                intent.putExtra("Year", year);
                 startActivity(intent);
                 //YearsActivity.this.finish();
             }
         });
 
+        GetPapersYears();
+
     }
 
     public void GetPapersYears(){
         progressBar.setVisibility(View.VISIBLE);
-        String url = Constants.Application_URL+ "/api/Question/univ/1000/Stream/1001/Subject/1001";
+        String url = Constants.Application_URL+ "/api/Question/College/"+CollegeID+"/Stream/"+StreamID+"/Subject/"+ SubjectID;
        // String url = Constants.Application_URL+ "/api/Question/univ/" +myAcademic.UniversityID+ "/Stream/"+myAcademic.StreamID+"/Subject/"+subject.SubjectID;
         try{
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
@@ -113,7 +133,7 @@ public class YearsActivity extends AppCompatActivity {
                             JSONObject jObj = response.getJSONObject(i);
 
                             int Year = jObj.getInt("Year");
-                            int YearID = jObj.getInt("yearId");
+                           // int YearID = jObj.getInt("yearId");
                             yearList.add(Year);
                         }
                         progressBar.setVisibility(View.GONE);
