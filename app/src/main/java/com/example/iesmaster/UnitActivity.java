@@ -36,8 +36,10 @@ public class UnitActivity extends AppCompatActivity {
     GridView gridViewPaper;
     ArrayList paperList=new ArrayList<>();
     TestPaper testPaper;
-    ArrayAdapter<String> adapterUnit;
     ProgressBar progressBar;
+
+    int CollegeID,StreamID , Year, SubjectID;
+    String subjectName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,11 +55,17 @@ public class UnitActivity extends AppCompatActivity {
         actionBar.show();
 
         gridViewPaper = findViewById(R.id.gridViewPaper);
-       // testPaper = new TestPaper(this, R.layout.gridview_subjects,paperList );
-      //  gridViewPaper.setAdapter(testPaper);
+        testPaper = new TestPaper(this, R.layout.gridview_subjects,paperList );
+        gridViewPaper.setAdapter(testPaper);
+
+        Intent intent = getIntent();
+        CollegeID = intent.getIntExtra("CollegeID",0);
+        StreamID = intent.getIntExtra("StreamID", 0);
+        Year = intent.getIntExtra("year", 0);
+        subjectName = intent.getStringExtra("SubjectName");
 
 
-        paperList.add(new Subject("Unit 1", R.drawable.a));
+     /*   paperList.add(new Subject("Unit 1", R.drawable.a));
         paperList.add(new Subject("Unit 2", R.drawable.b));
         paperList.add(new Subject("Unit 3", R.drawable.a));
         paperList.add(new Subject("Unit 4", R.drawable.b));
@@ -69,13 +77,14 @@ public class UnitActivity extends AppCompatActivity {
         paperList.add(new Subject("Unit 10", R.drawable.a));
         paperList.add(new Subject("Unit 11", R.drawable.b));
         paperList.add(new Subject("Unit 12", R.drawable.a));
-        testPaper=new TestPaper(this, R.layout.grid_papers, paperList) {
+
+        testPaper=new TestPaper(this, R.layout.grid_papers, paperList){
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 return super.getView(position, convertView, parent);
             }
         };
-        gridViewPaper.setAdapter(testPaper);
+        gridViewPaper.setAdapter(testPaper);*/
 
 
 
@@ -87,15 +96,16 @@ public class UnitActivity extends AppCompatActivity {
                 //UnitActivity.this.finish();
             }
         });
+
+        GetPaperUnit();
     }
 
 
     public void GetPaperUnit(){
 
         progressBar.setVisibility(View.VISIBLE);
-
-        String url = Constants.Application_URL+ "/api/Question/univ/1000/Stream/1001/Subject/1001";
-        // String url = Constants.Application_URL+ "/api/Question/univ/" +myAcademic.UniversityID+ "/Stream/"+myAcademic.StreamID+"/Subject/"+subject.SubjectID;
+        String url = Constants.Application_URL+ "/api/Paper/1006/1002/Compilers/2017";
+        // String url = Constants.Application_URL+ "/api/Paper/" +CollegeID+ "/"+StreamID+"/"+subjectName+"/"+Year;
         try{
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
             JsonArrayRequest jsArrayRequest = new JsonArrayRequest(Request.Method.GET, url, new Response.Listener<JSONArray>() {
@@ -108,12 +118,12 @@ public class UnitActivity extends AppCompatActivity {
 
                             JSONObject jObj = response.getJSONObject(i);
 
-                            String Unit = jObj.getString("Year");
-                            int UnitID = jObj.getInt("yearId");
+                            String Unit = jObj.getString("unit");
+                            //int UnitID = jObj.getInt("yearId");
                             paperList.add(Unit);
                         }
                         progressBar.setVisibility(View.GONE);
-                        adapterUnit.notifyDataSetChanged();
+                        testPaper.notifyDataSetChanged();
 
                     } catch (JSONException e) {
                         int a=1;

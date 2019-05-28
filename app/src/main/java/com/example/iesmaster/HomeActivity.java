@@ -89,6 +89,7 @@ public class HomeActivity extends AppCompatActivity {
     MyGridView gridViewFavourite;
     List<Topic> listFavourite;
     ProgressBar progressBar;
+    HashMap<String,Integer> subjectHashMap = new HashMap<>();
     ArrayAdapter<String> adapterSubject;
     HashMap<String,Integer> profileHashMap = new HashMap<>();
 
@@ -143,8 +144,8 @@ public class HomeActivity extends AppCompatActivity {
                 Glide.with(this).load(myProfile.ProfileImage).into(profile_Image);
                 selectedCollegeID = academicProfile.CollegeID;
                 selectedStreamID =academicProfile.StreamID;
-                selectedSemesterID = academicProfile.SemesterID;
-                GetSubjects(selectedCollegeID, selectedStreamID,selectedSemesterID);
+                //selectedSemesterID = academicProfile.SemesterID;
+                GetSubjects(selectedCollegeID, selectedStreamID);
             }
         }
 
@@ -215,17 +216,19 @@ public class HomeActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(requestCode == 100)
         {
-            AcademicProfile newProfile = data.getParcelableExtra("Profile");
 
-            DataAccess dataAccess = new DataAccess(getApplicationContext());
-            dataAccess.open();
-            dataAccess.InsertProfile(newProfile);
-            univList.add(newProfile);
-            profileAdpter.notifyDataSetChanged();
+            boolean IsProfile = data.getBooleanExtra("IsProfile", false);
+            if(IsProfile) {
+                AcademicProfile newProfile = data.getParcelableExtra("Profile");
+
+                DataAccess dataAccess = new DataAccess(getApplicationContext());
+                dataAccess.open();
+                dataAccess.InsertProfile(newProfile);
+                univList.add(newProfile);
+                profileAdpter.notifyDataSetChanged();
+            }
         }
     }
-
-
 
     private void setProfileGrid()
     {
@@ -243,16 +246,17 @@ public class HomeActivity extends AppCompatActivity {
                 AcademicProfile tempProfile =  univList.get(position);
                 selectedCollegeID = academicProfile.CollegeID;
                 selectedStreamID =academicProfile.StreamID;
-                selectedSemesterID = academicProfile.SemesterID;
-                GetSubjects(selectedCollegeID, selectedStreamID,selectedSemesterID);
+               // selectedSemesterID = academicProfile.SemesterID;
+                GetSubjects(selectedCollegeID, selectedStreamID);
                // GetSubjects(tempProfile.CollegeID, tempProfile.StreamID, tempProfile.SemesterID);
             }
         });
     }
 
-    public void GetSubjects(int CollegeId, int StreamId, int SemesterId ){
+    public void GetSubjects(int CollegeId, int StreamId ){
 
-        String url = Constants.Application_URL+ "/api/Class/"+ CollegeId+"/"+StreamId+"/"+SemesterId;
+        String url = Constants.Application_URL+ "/api/Paper/1006/1002";
+      //  String url = Constants.Application_URL+ "/api/Paper/"+ CollegeId+"/"+StreamId;
         try{
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
             JsonArrayRequest jsArrayRequest = new JsonArrayRequest(Request.Method.GET, url, new Response.Listener<JSONArray>() {
@@ -264,11 +268,11 @@ public class HomeActivity extends AppCompatActivity {
                         for (int i = 0; i <x; i++) {
                             Subject subject = new Subject();
                             JSONObject jObj = response.getJSONObject(i);
-                            subject.SubjectName = jObj.getString("SubjectName");
-                            subject.SubjectID = jObj.getInt("SubjectID");
+                            subject.SubjectName = jObj.getString("subjectname");
+                            //subject.SubjectID = jObj.getInt("SubjectID");
                              subList.add(subject);
                         }
-                        progressBar.setVisibility(View.GONE);
+                        //progressBar.setVisibility(View.GONE);
                         myAdapter.notifyDataSetChanged();
 
                     } catch (JSONException e) {
@@ -283,7 +287,7 @@ public class HomeActivity extends AppCompatActivity {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    progressBar.setVisibility(View.GONE);
+                    //progressBar.setVisibility(View.GONE);
 
                 }
             });
@@ -298,34 +302,28 @@ public class HomeActivity extends AppCompatActivity {
 
     private void setSubjectGrid()
     {
-        subList = mock_data.GetSubjects();
+       // subList = mock_data.GetSubjects();
 
-        myAdapter=new TestSubject(this, R.layout.gridview_subjects, subList) {
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                return super.getView(position, convertView, parent);
-            }
-        };
+        myAdapter=new TestSubject(this, R.layout.gridview_subjects, subList);
         gridView.setAdapter(myAdapter);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                Subject sub = (Subject) subList.get(position);
+                String selectedSubjectName = sub.SubjectName;
                 Intent intent = new Intent(HomeActivity.this,YearsActivity.class);
                 intent.putExtra("CollegeID", selectedCollegeID);
                 intent.putExtra("StreamID", selectedStreamID);
-                intent.putExtra("SemesterID", selectedSemesterID);
-                intent.putExtra("SubjectID", selectedSubjectID);
+               // intent.putExtra("SemesterID", selectedSemesterID);
+                intent.putExtra("SubjectName", selectedSubjectName);
                 startActivity(intent);
                // HomeActivity.this.finish();
             }
         });
     }
-
-
-
-
+    
     private void SetFavouriteGrid(){
 
         FavouriteAdapter favouriteAdapter = new FavouriteAdapter(this, R.layout.grid_item_topic,listFavourite );
@@ -369,7 +367,6 @@ public class HomeActivity extends AppCompatActivity {
                     int rnd = new Random().nextInt(color_arr.length);
                     convertView.setBackgroundResource(color_arr[rnd]);
                 }
-
                 catch (Exception ex)
                 {
                    int a=1;
@@ -461,7 +458,6 @@ public class HomeActivity extends AppCompatActivity {
                 // Log.d("Dish Name", row.complaint_type);
                 holder.text1.setText(testRow.TopicName);
                 holder.text2.setText(testRow.SubjectName);
-
                 int rnd = new Random().nextInt(color_arr.length);
                 convertView.setBackgroundResource(color_arr[rnd]);
                 return convertView;

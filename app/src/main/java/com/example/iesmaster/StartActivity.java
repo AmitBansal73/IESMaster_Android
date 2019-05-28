@@ -56,7 +56,7 @@ public class StartActivity extends AppCompatActivity {
         {
             myProfile = Session.GetProfile(getApplicationContext());
             if(myProfile.UserLogin.matches("")) {
-                Intent intent = new Intent(StartActivity.this, MainActivity.class);
+                Intent intent = new Intent(StartActivity.this, WelcomeActivity.class);
                 startActivity(intent);
                 StartActivity.this.finish();
             }

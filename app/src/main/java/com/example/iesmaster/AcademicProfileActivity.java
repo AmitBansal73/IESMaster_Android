@@ -85,6 +85,7 @@ public class AcademicProfileActivity extends AppCompatActivity   {
     ArrayAdapter<String> adapterStream;
     ArrayAdapter<String> adapterSemester;
     boolean IsResult = false;
+    AcademicProfile profile;
 
 
     @Override
@@ -148,7 +149,7 @@ public class AcademicProfileActivity extends AppCompatActivity   {
                 }
 
                 if(!IsResult) {
-                    AcademicProfile profile = new AcademicProfile();
+                    profile = new AcademicProfile();
                     profile.UniversityName = txtUniversity.getText().toString();
                     profile.UniversityID = selectedUniversity;
                     profile.CollegeName = txtCollage.getText().toString();
@@ -157,12 +158,14 @@ public class AcademicProfileActivity extends AppCompatActivity   {
                     profile.StreamID =  selectedStream;
                     profile.Semester = spinnerSemester.getSelectedItem().toString();
                     profile.SemesterID =selectedSemester;
-                    Session.AddAcademicProfile(getApplicationContext(), profile);
 
+                    UpdateAcademicProfile();
+
+                   /* Session.AddAcademicProfile(getApplicationContext(), profile);
                     Intent i = new Intent(AcademicProfileActivity.this, HomeActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(i);
-                    AcademicProfileActivity.this.finish();
+                    AcademicProfileActivity.this.finish(); */
                 }
                 else {
 
@@ -171,6 +174,7 @@ public class AcademicProfileActivity extends AppCompatActivity   {
                     profile.Stream = txtStream.getText().toString();
                     profile.Semester = spinnerSemester.getSelectedItem().toString();
                     Intent intent = new Intent();
+                    intent.putExtra("IsProfile", true);
                     intent.putExtra("Profile", profile);
                     setResult(100, intent);
                     finish();//finishing activity
@@ -277,7 +281,7 @@ public class AcademicProfileActivity extends AppCompatActivity   {
 
     private void setCollegeSpinner(int id )
     {
-        String url = Constants.Application_URL+ "/api/Colleges/University/" + id;
+        String url = Constants.Application_URL+ "/api/College/University/" + id;
         try{
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
             JsonArrayRequest jsArrayRequest = new JsonArrayRequest(Request.Method.GET, url, new Response.Listener<JSONArray>() {
@@ -478,7 +482,7 @@ public class AcademicProfileActivity extends AppCompatActivity   {
 
                             JSONObject jObj = response.getJSONObject(i);
 
-                            String SemesterName = jObj.getString("Sem_Name");
+                            String SemesterName = jObj.getString("SemesterName");
                             int SemesterID = jObj.getInt("SemID");
                             semesterHashMap.put(SemesterName, SemesterID);
                             semesterList.add(SemesterName);
@@ -535,6 +539,59 @@ public class AcademicProfileActivity extends AppCompatActivity   {
 
     }
 
+
+    private void UpdateAcademicProfile() {
+        try {
+            String url = Constants.Application_URL + "/api/User/AddAcademic";
+
+            final String reqBody = "{\"UnivID\":\"" + selectedUniversity + "\", \"CollegeID\":\"" +selectedCollage  + "\", \"StreamID\":\"" + selectedStream + "\",\"SemesterID\":\"" +selectedSemester + "\",\"UserID\":\"" + 1234 + "\"}";
+            JSONObject jsRequest = new JSONObject(reqBody);
+            //-------------------------------------------------------------------------------------------------
+            RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+
+            JsonObjectRequest jsArrayRequest = new JsonObjectRequest(Request.Method.POST, url, jsRequest, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+
+                        if(response.getString("Response").matches("Ok")) {
+                            Toast.makeText(getApplicationContext(), "Profile Updated Successfully.", Toast.LENGTH_SHORT).show();
+
+                            Session.AddAcademicProfile(getApplicationContext(), profile);
+                            Intent intent = new Intent(AcademicProfileActivity.this, HomeActivity.class);
+                            startActivity(intent);
+                            AcademicProfileActivity.this.finish();
+                            progressBar.setVisibility(View.GONE);
+                        }else if(response.getString("Response").matches("Fail")) {
+
+                            Toast.makeText(getApplicationContext(), "Failed... ", Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.GONE);
+                        }
+
+                    } catch (JSONException e) {
+                        int a = 1;
+                    }
+                }
+
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    String message = error.toString();
+
+                    // prgBar.setVisibility(View.GONE);
+                }
+            });
+            RetryPolicy rPolicy = new DefaultRetryPolicy(0, -1, 0);
+
+            jsArrayRequest.setRetryPolicy(rPolicy);
+            queue.add(jsArrayRequest);
+
+            //*******************************************************************************************************
+        } catch (JSONException js) {
+            Toast.makeText(getApplicationContext(), "Could not Update Academic profile,Contact Admin", Toast.LENGTH_LONG).show();
+        }
+    }
+
     public void valid(){
         String University = txtUniversity.getText().toString();
         String Collage = txtCollage.getText().toString();
@@ -560,9 +617,7 @@ public class AcademicProfileActivity extends AppCompatActivity   {
         universityHashMap.put("Amity University",3);
         universityList.add("CCS University");
         universityHashMap.put("CCS University",4);
-
     }
-
 
     private void setCollegeData()
     {
@@ -759,11 +814,16 @@ public class AcademicProfileActivity extends AppCompatActivity   {
         }
         else {
 
-            AcademicProfile profile = null;
+            AcademicProfile profile = new AcademicProfile();
             Intent intent = new Intent();
+            intent.putExtra("IsProfile", false);
             intent.putExtra("Profile", profile);
             setResult(100, intent);
             finish();//finishing activity
+
+
+
+
         }
     }
 }
