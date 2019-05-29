@@ -1,4 +1,4 @@
-package com.example.iesmaster;
+package com.example.iesmaster.Test;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,9 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -34,12 +32,13 @@ import com.example.iesmaster.Common.Constants;
 import com.example.iesmaster.Common.DataAccess;
 import com.example.iesmaster.Common.Session;
 import com.example.iesmaster.Common.Utility;
+import com.example.iesmaster.Payment.PaymentActivity;
+import com.example.iesmaster.R;
 import com.example.iesmaster.model.AcademicProfile;
+import com.example.iesmaster.model.Profile;
 import com.example.iesmaster.model.Subject;
-import com.example.iesmaster.model.Test;
 import com.example.iesmaster.Questions.QuestionsActivity;
 import com.example.iesmaster.model.Topic;
-import com.example.iesmaster.model.mock_data;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,6 +52,11 @@ public class TestPaperActivity extends AppCompatActivity {
     com.example.iesmaster.model.Subject subject;
     AcademicProfile academicProfile ;
     ProgressBar progressBar;
+    Profile myProfile;
+
+    int UniversityID,StreamID,Year,unit;
+    String subjectName;
+    String Semester;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +72,7 @@ public class TestPaperActivity extends AppCompatActivity {
         actionBar.show();
 
         subject = new Subject();
+        myProfile = Session.GetProfile(getApplicationContext());
         academicProfile = Session.GetAcademicProfile(getApplicationContext());
        // arrayListTest = mock_data.GetTopics();
 
@@ -75,15 +80,21 @@ public class TestPaperActivity extends AppCompatActivity {
         testListView = findViewById(R.id.testListView);
         adapterTest =new MyAdapterTest(TestPaperActivity.this,0,arrayListTest);
         testListView.setAdapter(adapterTest);
+
+        Intent intent = getIntent();
+        UniversityID = intent.getIntExtra("UniversityID",0);
+        StreamID = intent.getIntExtra("StreamID", 0);
+        Year = intent.getIntExtra("year", 0);
+        subjectName = intent.getStringExtra("SubjectName");
+        unit = intent.getIntExtra("unit", 0);
+
         GetTestPapers();
-
-
     }
 
     public void GetTestPapers(){
         progressBar.setVisibility(View.VISIBLE);
-        String url = Constants.Application_URL+ "/api/Test/1000/1001/1000/1000";
-       // String url = Constants.Application_URL+ "/api/Test/"+ academicProfile.CollegeID+"/"+academicProfile.StreamID+"/"+academicProfile.SemesterID+"/1000"; //+subject.SubjectID;
+       // String url = Constants.Application_URL+ "/api/Paper/1000/1001/1000/1000";
+        String url = Constants.Application_URL+ "/api/Paper/"+ UniversityID+"/"+StreamID+"/"+subjectName+"/"+Year+"/"+unit+"/1001";//+myProfile.UserID;
         try{
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
             JsonArrayRequest jsArrayRequest = new JsonArrayRequest(Request.Method.GET, url, new Response.Listener<JSONArray>() {
@@ -95,23 +106,25 @@ public class TestPaperActivity extends AppCompatActivity {
                         for (int i = 0; i <x; i++) {
                             Topic topic = new Topic();
                             JSONObject jObj = response.getJSONObject(i);
+
                             topic.SubjectName = jObj.getString("SubjectName");
-                            topic.TopicName = jObj.getString("Stream_Name");
+                            topic.TopicName = jObj.getString("StreamName");
                             topic.Cost = jObj.getInt("Cost");
-                            String Semester = jObj.getString("Sem_Name");
-                            topic.University = jObj.getString("Name");
-                            String  purchaseDate = jObj.getString("PurchaseDate");
+                            Semester = jObj.getString("SemesterName");
+                            topic.University = jObj.getString("UniversityName");
+                            Year = jObj.getInt("Year");
+                            topic.Status = 1;
+                          /*   String  purchaseDate = jObj.getString("PurchaseDate");
                             Date purchaseOn = Utility.StringToDate(purchaseDate);
                             Date today = new Date();
-
-                            if(today.after(purchaseOn))
+                           if(today.after(purchaseOn))
                             {
                                 topic.Status = 2;
                             }
                             else
                             {
                                 topic.Status =1;
-                            }
+                            }    */
                             arrayListTest.add(topic);
                         }
                         progressBar.setVisibility(View.GONE);
@@ -191,9 +204,10 @@ public class TestPaperActivity extends AppCompatActivity {
                 // Log.d("Dish Name", row.complaint_type);
                 holder.txtSubName.setText(testRow.SubjectName);
                 holder.text1.setText(testRow.TopicName);
-                holder.text2.setText(testRow.TopicName);
+                holder.text2.setText(Semester);
                 holder.text3.setText(testRow.University);
                 holder.text4.setText( Integer.toString(testRow.Cost));
+                holder.txtYear.setText(Integer.toString(Year));
                // holder.text4.setText( Integer.toString(testRow.TopicId));
                 if(testRow.Status==1)
                 {
@@ -205,9 +219,10 @@ public class TestPaperActivity extends AppCompatActivity {
                             Intent intent = new Intent(TestPaperActivity.this, PaymentActivity.class);
                             intent.putExtra("Subject", testRow.SubjectName);
                             intent.putExtra("TopicName", testRow.TopicName);
-                            intent.putExtra("TopicName", testRow.TopicName);
+                            intent.putExtra("Semester", Semester);
                             intent.putExtra("University", testRow.University);
                             intent.putExtra("Cost", testRow.Cost);
+                            intent.putExtra("year",Year);
                             startActivity(intent);
                         }
                     });

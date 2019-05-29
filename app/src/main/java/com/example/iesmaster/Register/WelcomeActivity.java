@@ -1,4 +1,4 @@
-package com.example.iesmaster;
+package com.example.iesmaster.Register;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.iesmaster.Common.PrefManeger;
+import com.example.iesmaster.R;
 
 public class WelcomeActivity extends AppCompatActivity {
     ViewPager viewPager;
@@ -60,7 +61,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 R.layout.welcome_slide1,
                 R.layout.welcome_slide2,
                // R.layout.welcome_slide3,
-                //R.layout.activity_main
+                //R.layout.activity_login
         };
 
         // adding bottom dots
@@ -126,7 +127,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
     private void launchHomeScreen() {
         prefManeger.setFirstTimeLaunch(false);
-        startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
+        startActivity(new Intent(WelcomeActivity.this, LoginActivity.class));
         finish();
     }
 

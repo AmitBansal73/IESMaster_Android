@@ -1,4 +1,4 @@
-package com.example.iesmaster;
+package com.example.iesmaster.Test;
 
 import android.content.Context;
 import android.content.Intent;
@@ -24,21 +24,23 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.iesmaster.Common.Constants;
-import com.example.iesmaster.model.Subject;
+import com.example.iesmaster.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class UnitActivity extends AppCompatActivity {
-    GridView gridViewPaper;
-    ArrayList paperList=new ArrayList<>();
-    TestPaper testPaper;
+    GridView gridViewUnit;
+    List<Integer> unitList=new ArrayList<>();
+    TestPaper testUnitAdapter;
+    TextView txtError;
     ProgressBar progressBar;
 
-    int CollegeID,StreamID , Year, SubjectID;
+    int UniversityID,StreamID , Year, SubjectID;
     String subjectName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,12 +56,12 @@ public class UnitActivity extends AppCompatActivity {
         actionBar.setTitle("Unit of Electrical");
         actionBar.show();
 
-        gridViewPaper = findViewById(R.id.gridViewPaper);
-        testPaper = new TestPaper(this, R.layout.gridview_subjects,paperList );
-        gridViewPaper.setAdapter(testPaper);
-
+        gridViewUnit = findViewById(R.id.gridViewPaper);
+        testUnitAdapter = new TestPaper(this, R.layout.grid_papers,unitList );
+        gridViewUnit.setAdapter(testUnitAdapter);
+        txtError = findViewById(R.id.txtError);
         Intent intent = getIntent();
-        CollegeID = intent.getIntExtra("CollegeID",0);
+        UniversityID = intent.getIntExtra("UniversityID",0);
         StreamID = intent.getIntExtra("StreamID", 0);
         Year = intent.getIntExtra("year", 0);
         subjectName = intent.getStringExtra("SubjectName");
@@ -88,24 +90,31 @@ public class UnitActivity extends AppCompatActivity {
 
 
 
-        gridViewPaper.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        gridViewUnit.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int Unit = (int)unitList.get(position);
+
                 Intent intent = new Intent(UnitActivity.this, TestPaperActivity.class);
+                intent.putExtra("UniversityID", UniversityID);
+                intent.putExtra("StreamID", StreamID);
+                // intent.putExtra("SemesterID", SemesterID);
+                intent.putExtra("SubjectName", subjectName);
+                intent.putExtra("year", Year);
+                intent.putExtra("unit", Unit);
                 startActivity(intent);
                 //UnitActivity.this.finish();
             }
         });
-
         GetPaperUnit();
     }
 
 
     public void GetPaperUnit(){
 
-        progressBar.setVisibility(View.VISIBLE);
-        String url = Constants.Application_URL+ "/api/Paper/1006/1002/Compilers/2017";
-        // String url = Constants.Application_URL+ "/api/Paper/" +CollegeID+ "/"+StreamID+"/"+subjectName+"/"+Year;
+       // progressBar.setVisibility(View.VISIBLE);
+        //String url = Constants.Application_URL+ "/api/Paper/1006/1002/Compilers/2017";
+         String url = Constants.Application_URL+ "/api/Paper/" +UniversityID+ "/"+StreamID+"/"+subjectName+"/"+Year;
         try{
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
             JsonArrayRequest jsArrayRequest = new JsonArrayRequest(Request.Method.GET, url, new Response.Listener<JSONArray>() {
@@ -114,17 +123,21 @@ public class UnitActivity extends AppCompatActivity {
 
                     try {
                         int x = response.length();
-                        for (int i = 0; i <x; i++) {
+                        if (x>0) {
+                            for (int i = 0; i < x; i++) {
 
-                            JSONObject jObj = response.getJSONObject(i);
-
-                            String Unit = jObj.getString("unit");
-                            //int UnitID = jObj.getInt("yearId");
-                            paperList.add(Unit);
+                                JSONObject jObj = response.getJSONObject(i);
+                                 int unit = jObj.getInt("Unit");
+                                //int UnitID = jObj.getInt("yearId");
+                                unitList.add(unit);
+                            }
+                            //progressBar.setVisibility(View.GONE);
+                            testUnitAdapter.notifyDataSetChanged();
+                        }else {
+                            gridViewUnit.setVisibility(View.GONE);
+                            txtError.setVisibility(View.VISIBLE);
+                            txtError.setText("No data Found");
                         }
-                        progressBar.setVisibility(View.GONE);
-                        testPaper.notifyDataSetChanged();
-
                     } catch (JSONException e) {
                         int a=1;
                     }
@@ -132,12 +145,11 @@ public class UnitActivity extends AppCompatActivity {
                     {
                         int a=1;
                     }
-
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    progressBar.setVisibility(View.GONE);
+                   // progressBar.setVisibility(View.GONE);
 
                 }
             });
@@ -149,27 +161,30 @@ public class UnitActivity extends AppCompatActivity {
         }
     }
 
-
     public class TestPaper extends ArrayAdapter {
 
-        ArrayList paperList = new ArrayList<>();
-        public TestPaper(Context context, int textViewResourceId, ArrayList objects) {
+        ArrayList<Integer> unitList = new ArrayList<>();
+        public TestPaper(Context context, int textViewResourceId, List<Integer> objects) {
             super(context, textViewResourceId, objects);
-            paperList = objects;
+            unitList = (ArrayList<Integer>) objects;
+            //unitList = objects;
         }
         @Override
         public int getCount() {
-            return super.getCount();
+            return unitList.size();
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.grid_papers, null);
             TextView textView = convertView.findViewById(R.id.testPapers);
-            Subject tempSubject = (Subject) paperList.get(position);
-            textView.setText(tempSubject.getsubName());
+            int tempUnit = (int) unitList.get(position);
+            textView.setText(Integer.toString(tempUnit));
             return convertView;
         }
     }
+
+
 }

@@ -1,4 +1,4 @@
-package com.example.iesmaster;
+package com.example.iesmaster.Register;
 
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -24,6 +24,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.iesmaster.Common.Constants;
 import com.example.iesmaster.Common.MySMSReceiver;
+import com.example.iesmaster.R;
 import com.google.android.gms.auth.api.phone.SmsRetriever;
 import com.google.android.gms.auth.api.phone.SmsRetrieverClient;
 import com.google.android.gms.tasks.OnFailureListener;

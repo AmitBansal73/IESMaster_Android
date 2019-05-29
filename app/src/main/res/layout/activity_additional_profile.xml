@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_white"
-    tools:context=".Test.SubjectActivity">
+    tools:context=".AcademicProfileActivity">
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
@@ -17,7 +17,8 @@
             android:layout_height="56dp"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
     </android.support.design.widget.AppBarLayout>
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/Parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -26,146 +27,138 @@
         android:padding="10dp"
         >
         <LinearLayout
+            android:id="@+id/univ"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_margin="10dp"
-            android:padding="5dp"
+            android:padding="0dp"
             >
             <TextView
+                android:id="@+id/University"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="University"
-                android:textStyle="bold"
-                android:textSize="14sp"
+                android:text="University: "
                 android:textColor="@color/Black"
                 />
-            <TextView
+            <EditText
                 android:id="@+id/txtUniversity"
                 android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_weight="1.5"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="#232323"
+                android:layout_marginLeft="10dp"
+                android:keyboardNavigationCluster="false"
+                android:clickable="true"
+                android:focusableInTouchMode="true"
                 />
-
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
+        <ListView
+            android:id="@+id/listViewUniversity"
+            android:layout_width="170dp"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_marginRight="20dp"
+            android:elevation="8dp"
+            android:background="#f9f9f9"
+            android:layout_below="@id/univ"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="0dp"
             android:padding="5dp"
+            android:visibility="gone"
             >
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="College"
-                android:textStyle="bold"
-                android:textSize="14sp"
-                android:textColor="@color/Black"
-                />
-            <TextView
-                android:id="@+id/txtCollege"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="#232323"
-                />
-
-        </LinearLayout>
+        </ListView>
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:padding="5dp"
-            >
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="Stream"
-                android:textStyle="bold"
-                android:textSize="14sp"
-                android:textColor="@color/Black"
-                />
-            <TextView
-                android:id="@+id/txtStream"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="#232323"
-                />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:padding="5dp"
-            >
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="Year"
-                android:textStyle="bold"
-                android:textSize="14sp"
-                android:textColor="@color/Black"
-                />
-            <TextView
-                android:id="@+id/txtyear"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="#232323"
-                />
-
-        </LinearLayout>
-        <TextView
-            android:id="@+id/txtMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:lines="3"
-            android:textSize="16sp"
-            android:layout_margin="16dp"
-            />
-        <LinearLayout
+            android:id="@+id/strem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_margin="10dp"
             android:padding="5dp"
-            android:visibility="gone"
+            android:layout_below="@id/univ"
             >
             <TextView
-                android:id="@+id/SelectSubject"
+                android:id="@+id/Stream"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="Subject: "
+                android:text="Stream: "
+                android:textColor="@color/Black"
+                />
+            <EditText
+                android:id="@+id/txtStream"
+                android:layout_width="0dp"
+                android:layout_weight="1.5"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:keyboardNavigationCluster="false"
+                />
+        </LinearLayout>
+        <ListView
+            android:id="@+id/listViewStream"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:visibility="gone"
+            android:elevation="8dp"
+            android:background="#f9f9f9"
+            android:layout_below="@id/strem"
+            android:layout_alignParentRight="true"
+            >
+        </ListView>
+
+
+        <LinearLayout
+            android:id="@+id/sem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp"
+            android:padding="5dp"
+            android:layout_below="@id/strem"
+            >
+            <TextView
+                android:id="@+id/Year"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Year/Semester: "
                 android:textColor="@color/Black"
                 />
             <Spinner
-                android:id="@+id/Subject"
+                android:id="@+id/spinnerSemester"
                 android:layout_width="0dp"
                 android:layout_weight="1.5"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 />
-
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/collageID"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            />
         <Button
-            android:id="@+id/btnNext"
+            android:id="@+id/btnSave"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Next"
+            android:text="Save"
             android:textColor="@color/White"
             android:background="@drawable/background_btn"
             android:layout_margin="16dp"
+            android:layout_below="@id/sem"
             />
-    </LinearLayout>
+
+    </RelativeLayout>
+
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:elevation="10dp"
+        android:visibility="gone"
+        />
+
 </android.support.design.widget.CoordinatorLayout>

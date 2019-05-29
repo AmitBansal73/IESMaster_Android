@@ -1,4 +1,4 @@
-package com.example.iesmaster;
+package com.example.iesmaster.Test;
 
 import android.content.Context;
 import android.content.Intent;
@@ -25,26 +25,27 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.iesmaster.Common.Constants;
 import com.example.iesmaster.Common.Session;
+import com.example.iesmaster.R;
 import com.example.iesmaster.model.AcademicProfile;
-import com.example.iesmaster.model.Subject;
+import com.example.iesmaster.model.Years;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class YearsActivity extends AppCompatActivity {
     GridView gridViewYr;
-    ArrayList yearList=new ArrayList<>();
+    List<Years> yearList=new ArrayList<>();
+   // ArrayList yearList=new ArrayList<>();
     TestYearAdapter testYear;
-    TextView txtCollage,txtStream;
+    TextView txtCollage,txtStream,txtError;
     AcademicProfile myAcademic;
-    ArrayAdapter<String> adapterYear;
-    Subject subject;
     ProgressBar progressBar;
 
-    int CollegeID,StreamID , SemesterID, SubjectID;
+    int UniverID,StreamID , SemesterID, SubjectID;
     String subjectName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,14 +62,14 @@ public class YearsActivity extends AppCompatActivity {
         txtStream = findViewById(R.id.txtStream);
         txtCollage = findViewById(R.id.txtCollage);
         progressBar = findViewById(R.id.progressBar);
-
+        txtError = findViewById(R.id.txtError);
         myAcademic = Session.GetAcademicProfile(getApplicationContext());
         gridViewYr = findViewById(R.id.gridViewYr);
       //  testYear = new TestYear(this, R.layout.gridview_subjects,yearList );
       //  gridViewYr.setAdapter(testYear);
 
         Intent intent = getIntent();
-        CollegeID = intent.getIntExtra("CollegeID",0);
+        UniverID = intent.getIntExtra("UniversityID",0);
         StreamID = intent.getIntExtra("StreamID", 0);
        // SemesterID = intent.getIntExtra("SemesterID", 0);
         subjectName = intent.getStringExtra("SubjectName");
@@ -91,31 +92,30 @@ public class YearsActivity extends AppCompatActivity {
 
         testYear=new TestYearAdapter(this, R.layout.gridview_years, yearList);
         gridViewYr.setAdapter(testYear);
+
         gridViewYr.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                int Year = (int)yearList.get(position);
-
+                Years Yr = (Years) yearList.get(position);
+                int year = Yr.year;
                 Intent intent = new Intent(YearsActivity.this, UnitActivity.class);
-                intent.putExtra("CollegeID", CollegeID);
+                intent.putExtra("UniversityID", UniverID);
                 intent.putExtra("StreamID", StreamID);
                // intent.putExtra("SemesterID", SemesterID);
                 intent.putExtra("SubjectName", subjectName);
-                intent.putExtra("year", Year);
+                intent.putExtra("year", year);
                 startActivity(intent);
                 //YearsActivity.this.finish();
             }
         });
 
         GetPapersYears();
-
     }
 
     public void GetPapersYears(){
         //progressBar.setVisibility(View.VISIBLE);
-       // String url = Constants.Application_URL+ "/api/Paper/"+CollegeID+"/"+StreamID+"/"+ subjectName;
-        String url = Constants.Application_URL+ "/api/Paper/1006/1002/Compilers";
+        String url = Constants.Application_URL+ "/api/Paper/"+UniverID+"/"+StreamID+"/"+ subjectName;
+         //String url = Constants.Application_URL+ "/api/Paper/1006/1002/Compilers";
         try{
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
             JsonArrayRequest jsArrayRequest = new JsonArrayRequest(Request.Method.GET, url, new Response.Listener<JSONArray>() {
@@ -124,17 +124,23 @@ public class YearsActivity extends AppCompatActivity {
 
                     try {
                         int x = response.length();
-                        for (int i = 0; i <x; i++) {
+                        if (x>0) {
+                            for (int i = 0; i < x; i++) {
 
-                            JSONObject jObj = response.getJSONObject(i);
+                                JSONObject jObj = response.getJSONObject(i);
+                                Years years = new Years();
 
-                            int Year = jObj.getInt("year");
-                           // int YearID = jObj.getInt("yearId");
-                            yearList.add(Year);
+                                years.year = jObj.getInt("year");
+                                // int YearID = jObj.getInt("yearId");
+                                yearList.add(years);
+                            }
+                            // progressBar.setVisibility(View.GONE);
+                            testYear.notifyDataSetChanged();
+                        }else {
+                            gridViewYr.setVisibility(View.GONE);
+                            txtError.setVisibility(View.VISIBLE);
+                            txtError.setText("No data Found");
                         }
-                       // progressBar.setVisibility(View.GONE);
-                        testYear.notifyDataSetChanged();
-
                     } catch (JSONException e) {
                         int a=1;
                     }
@@ -158,29 +164,27 @@ public class YearsActivity extends AppCompatActivity {
         }
     }
 
-
-
     public class TestYearAdapter extends ArrayAdapter {
 
-        ArrayList yearList = new ArrayList<>();
+        List<Years> yearList = new ArrayList<>();
 
-        public TestYearAdapter(Context context, int textViewResourceId, ArrayList objects) {
+        public TestYearAdapter(Context context, int textViewResourceId, List<Years> objects) {
             super(context, textViewResourceId, objects);
             yearList = objects;
         }
-
         @Override
         public int getCount() {
-            return super.getCount();
+            return yearList.size();
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
+        public View getView(int position, View convertView, ViewGroup parent)
+        {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.gridview_years, null);
             TextView textView = convertView.findViewById(R.id.testYear);
-            textView.setText((Integer) yearList.get(position));
+            Years tempyear = (Years) yearList.get(position);
+            textView.setText(Integer.toString(tempyear.getYear()));
             return convertView;
         }
     }

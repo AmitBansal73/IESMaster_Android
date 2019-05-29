@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/background_white"
     android:orientation="vertical"
-    tools:context=".UnitActivity">
+    tools:context=".Test.UnitActivity">
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
@@ -68,6 +68,19 @@
         android:layout_below="@id/heading"
         >
     </GridView>
+        <TextView
+            android:id="@+id/txtError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="No Data"
+            android:textColor="@color/black"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:visibility="gone"
+            android:padding="30dp"
+            android:background="@drawable/background_white"
+            />
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"

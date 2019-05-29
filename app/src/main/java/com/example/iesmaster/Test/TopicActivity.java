@@ -1,8 +1,7 @@
-package com.example.iesmaster;
+package com.example.iesmaster.Test;
 
 import android.content.Context;
 import android.content.Intent;
-import android.provider.ContactsContract;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,8 +15,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.example.iesmaster.Common.DataAccess;
-import com.example.iesmaster.model.Subject;
-import com.example.iesmaster.Questions.QuestionsActivity;
+import com.example.iesmaster.R;
 import com.example.iesmaster.model.Topic;
 import com.example.iesmaster.model.mock_data;
 

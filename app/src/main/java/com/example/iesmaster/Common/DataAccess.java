@@ -20,14 +20,14 @@ public class DataAccess {
     private static final  String FAVOURITE_TABLE = "FAVOURITE_TABLE";
     private static final String TABLE_CREATE_PROFILE = "CREATE TABLE IF NOT EXISTS "
             + PROFILE_TABLE
-            + "( profile_id INTEGER PRIMARY KEY AUTOINCREMENT, semester VARCHAR(60), stream VARCHAR(60), university VARCHAR(60));";
+            + "( profile_id INTEGER PRIMARY KEY AUTOINCREMENT, semester VARCHAR(60), stream_id INTEGER, stream VARCHAR(60), university_id INTEGER , university VARCHAR(60));";
 
     private static final String TABLE_CREATE_FAVOURITE = "CREATE TABLE IF NOT EXISTS "
             + FAVOURITE_TABLE
             + "( favourite_id INTEGER PRIMARY KEY AUTOINCREMENT, topic VARCHAR(20), subject VARCHAR(20));";
 
 
-    private static  final  int DATABASE_VERSION =1;
+    private static  final  int DATABASE_VERSION =2;
     private DatabaseHelper mDBHelper;
     private SQLiteDatabase myDatabase;
     private final Context mCtx;
@@ -50,7 +50,7 @@ public class DataAccess {
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-            // db.execSQL("DROP TABLE IF EXISTS " + EXPENSE_TABLE);
+              db.execSQL("DROP TABLE IF EXISTS " + PROFILE_TABLE);
             // db.execSQL("DROP TABLE IF EXISTS " + PROJECT_TABLE);
             // db.execSQL("DROP TABLE IF EXISTS " + SERVER_ACTIVITY_TABLE);
 
@@ -93,7 +93,9 @@ public class DataAccess {
             ContentValues initialValues = new ContentValues();
             //initialValues.put("profile_id",trans.ProfileId);
             initialValues.put("semester",trans.Semester);
+            initialValues.put("stream_id",trans.StreamID);
             initialValues.put("stream",trans.Stream);
+            initialValues.put("university_id",trans.UniversityID);
             initialValues.put("university",trans.UniversityName);
 
             long result  = myDatabase.insert(PROFILE_TABLE, null,initialValues);
@@ -123,7 +125,9 @@ public class DataAccess {
                         academic = new AcademicProfile();
                         academic.ProfileId = c.getInt(c.getColumnIndex("profile_id"));
                         academic.Semester = c.getString(c.getColumnIndex("semester"));
+                        academic.StreamID = c.getInt(c.getColumnIndex("stream_id"));
                         academic.Stream = c.getString(c.getColumnIndex("stream"));
+                        academic.UniversityID = c.getInt(c.getColumnIndex("university_id"));
                         academic.UniversityName = c.getString(c.getColumnIndex("university"));
                         academicList.add(academic);
                     }

@@ -1,4 +1,4 @@
-package com.example.iesmaster;
+package com.example.iesmaster.Payment;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +18,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.iesmaster.Common.Constants;
+import com.example.iesmaster.R;
 import com.example.iesmaster.model.Transaction;
 import com.paytm.pgsdk.PaytmOrder;
 import com.paytm.pgsdk.PaytmPGService;
@@ -58,14 +59,16 @@ public class PaymentActivity extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
         String SubjectName= bundle.getString("Subject");
         String TopicName= bundle.getString("TopicName");
-        String TopicName1= bundle.getString("TopicName");
+        String TopicName1= bundle.getString("Semester");
         String TopicName2= bundle.getString("University");
         int TopicName3= bundle.getInt("Cost");
+        int year = bundle.getInt("year");
         txtSubName.setText(SubjectName);
         text1.setText(TopicName);
         text2.setText(TopicName1);
         text3.setText(TopicName2);
         text4.setText(Integer.toString(TopicName3));
+        txtYear.setText(Integer.toString(year));
         btnPayNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -1,4 +1,4 @@
-package com.example.iesmaster;
+package com.example.iesmaster.Register;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,8 +17,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.iesmaster.AcademicProfileActivity;
+import com.example.iesmaster.HomeActivity;
+import com.example.iesmaster.R;
 import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -31,7 +33,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
     Button LoginMannual,btnNext,btnSkip;
     TextView txtUserName,txtPassword,btnRegister;
@@ -47,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
         Toolbar toolbar =  findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -80,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent testActivity = new Intent(MainActivity.this, RegisterActivity.class);
+                Intent testActivity = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(testActivity);
             }
         });
@@ -108,9 +110,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     if(loginResult)
                     {
-                        Intent profileActivity = new Intent(MainActivity.this, AcademicProfileActivity.class);
+                        Intent profileActivity = new Intent(LoginActivity.this, AcademicProfileActivity.class);
                         startActivity(profileActivity);
-                        MainActivity.this.finish();
+                        LoginActivity.this.finish();
                     }
                     else
                     {
@@ -163,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onResult(@NonNull Status status) {
                 UpdateUI(false);
-                Toast.makeText(MainActivity.this, "You are Successfully SignOut", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "You are Successfully SignOut", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -183,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Session.AddProfile(getApplicationContext(),myProfile);
            // Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
            // startActivity(intent);
-           // MainActivity.this.finish();
+           // LoginActivity.this.finish();
             UpdateUI(true);
         }
         else {
@@ -195,9 +197,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (isLogin){
 
-            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
             startActivity(intent);
-            MainActivity.this.finish();
+            LoginActivity.this.finish();
           //  profile_sec.setVisibility(View.VISIBLE);
            // Login_sec.setVisibility(View.GONE);
 
@@ -226,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                MainActivity.this.finish();
+                LoginActivity.this.finish();
             }
         });
 

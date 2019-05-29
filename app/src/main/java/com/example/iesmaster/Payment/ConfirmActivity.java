@@ -1,4 +1,4 @@
-package com.example.iesmaster;
+package com.example.iesmaster.Payment;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +14,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.iesmaster.Common.Constants;
+import com.example.iesmaster.R;
 import com.example.iesmaster.model.Transaction;
 
 import org.json.JSONException;

@@ -153,7 +153,7 @@
 
     </LinearLayout>
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         >
@@ -168,7 +168,7 @@
             android:layout_marginLeft="10dp"
             />
     <com.example.iesmaster.Common.MyGridView
-        android:id="@+id/gridView"
+        android:id="@+id/gridViewSubject"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:numColumns="2"
@@ -179,6 +179,18 @@
         android:background="#f3f3f3"
         >
     </com.example.iesmaster.Common.MyGridView>
+        <TextView
+            android:id="@+id/txtErrorSubject"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="No Data"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:visibility="gone"
+            android:padding="30dp"
+            android:background="@drawable/background_white"
+            />
     </LinearLayout>
             <TextView
                 android:id="@+id/txtFavourites"
@@ -225,7 +237,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:layout_below="@id/gridView"
+        android:layout_below="@id/gridViewUniversity"
         android:layout_alignParentRight="true"
         android:text="Next"
         android:layout_marginRight="20dp"

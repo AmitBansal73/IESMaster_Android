@@ -1,4 +1,4 @@
-package com.example.iesmaster;
+package com.example.iesmaster.Test;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -17,7 +17,9 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.iesmaster.AcademicProfileActivity;
 import com.example.iesmaster.Common.Session;
+import com.example.iesmaster.R;
 import com.example.iesmaster.model.AcademicProfile;
 import com.example.iesmaster.model.Subject;
 import com.example.iesmaster.model.mock_data;
@@ -25,8 +27,6 @@ import com.example.iesmaster.model.mock_data;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import com.example.iesmaster.model.Subject;
 
 public class SubjectActivity extends AppCompatActivity {
 

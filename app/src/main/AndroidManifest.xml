@@ -16,7 +16,8 @@
         android:roundIcon="@drawable/ies"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ConfirmActivity"></activity>
+        <activity android:name=".AdditionalProfileActivity"></activity>
+        <activity android:name=".Payment.ConfirmActivity" />
         <activity android:name=".StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,31 +36,31 @@
         </receiver>
 
         <activity android:name=".MyProfileActivity" />
-        <activity android:name=".MobileOTPActivity" />
+        <activity android:name=".Register.MobileOTPActivity" />
         <activity
-            android:name=".TopicActivity"
-            android:parentActivityName=".UnitActivity" />
+            android:name=".Test.TopicActivity"
+            android:parentActivityName=".Test.UnitActivity" />
         <activity
-            android:name=".RegisterActivity"
-            android:parentActivityName=".MainActivity" />
+            android:name=".Register.RegisterActivity"
+            android:parentActivityName=".Register.LoginActivity" />
         <activity
-            android:name=".UnitActivity"
+            android:name=".Test.UnitActivity"
             android:parentActivityName=".HomeActivity" />
         <activity
-            android:name=".YearsActivity"
+            android:name=".Test.YearsActivity"
             android:parentActivityName=".HomeActivity" />
-        <activity android:name=".HomeActivity"></activity>
-        <activity android:name=".WelcomeActivity" />
-        <activity android:name=".PaymentActivity" />
+        <activity android:name=".HomeActivity" />
+        <activity android:name=".Register.WelcomeActivity" />
+        <activity android:name=".Payment.PaymentActivity" />
         <activity
             android:name=".Questions.QuestionsActivity"
-            android:parentActivityName=".UnitActivity" />
-        <activity android:name=".SubjectActivity" />
-        <activity android:name=".TestPaperActivity" />
+            android:parentActivityName=".Test.UnitActivity" />
+        <activity android:name=".Test.SubjectActivity" />
+        <activity android:name=".Test.TestPaperActivity" />
         <activity
             android:name=".AcademicProfileActivity"
             android:parentActivityName=".HomeActivity" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".Register.LoginActivity" />
         <activity
             android:name="com.paytm.pgsdk.PaytmPGActivity"
             android:configChanges="keyboardHidden|orientation|keyboard"

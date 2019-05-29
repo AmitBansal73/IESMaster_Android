@@ -1,4 +1,4 @@
-package com.example.iesmaster;
+package com.example.iesmaster.Register;
 
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -19,18 +19,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.example.iesmaster.AcademicProfileActivity;
 import com.example.iesmaster.Common.Constants;
 import com.example.iesmaster.Common.ImageServer;
 import com.example.iesmaster.Common.OvalImageView;
 import com.example.iesmaster.Common.Session;
-import com.example.iesmaster.model.AcademicProfile;
+import com.example.iesmaster.R;
 import com.example.iesmaster.model.Profile;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.credentials.Credential;
@@ -40,8 +35,6 @@ import com.google.android.gms.common.api.Api;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.Status;
-
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileDescriptor;

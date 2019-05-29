@@ -15,7 +15,9 @@ public class AcademicProfile implements Parcelable {
 
 
     public AcademicProfile(Parcel in) {
+        UniversityID = in.readInt();
         UniversityName = in.readString();
+        StreamID = in.readInt();
         Stream = in.readString();
         Semester = in.readString();
     }
@@ -28,7 +30,9 @@ public class AcademicProfile implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(UniversityID);
         dest.writeString(UniversityName);
+        dest.writeInt(StreamID);
         dest.writeString(Stream);
         dest.writeString(Semester);
 
