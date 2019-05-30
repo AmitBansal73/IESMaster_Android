@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -74,8 +75,7 @@ public class HomeActivity extends AppCompatActivity {
     List<Topic> listFavourite;
     ProgressBar progressBar;
     AcademicProfile selectedProfile;
-
-
+    LinearLayout profileLayout;
     TextView txtErrorSubject;
 
     int selectedUniversityID, selectedStreamID, selectedSemesterID, selectedSubjectID;
@@ -105,7 +105,7 @@ public class HomeActivity extends AppCompatActivity {
         txtClgName = findViewById(R.id.txtClgName);
         txtName = findViewById(R.id.txtName);
         txtErrorSubject = findViewById(R.id.txtErrorSubject);
-
+        profileLayout = findViewById(R.id.profileLayout);
         if(myProfile.UserLogin.matches(""))
         {
             Intent intent = new Intent(HomeActivity.this, WelcomeActivity.class);
@@ -114,8 +114,6 @@ public class HomeActivity extends AppCompatActivity {
         }
         else
         {
-
-
             if(academicProfile.UniversityID == 0)
             {
                 Intent intent = new Intent(HomeActivity.this, AcademicProfileActivity.class);
@@ -135,7 +133,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
 
-        univName.setOnClickListener(new View.OnClickListener() {
+        profileLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 GetSubjects(academicProfile.UniversityID, academicProfile.StreamID);
@@ -535,8 +533,8 @@ public class HomeActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog,
                                             int which) {
                             Session.LogOff(getApplicationContext());
-                            Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
-                            startActivity(intent);
+                            //Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+                            //startActivity(intent);
                             HomeActivity.this.finish();
                         }
                     });

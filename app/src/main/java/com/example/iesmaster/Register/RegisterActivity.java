@@ -18,13 +18,26 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.iesmaster.AcademicProfileActivity;
 import com.example.iesmaster.Common.Constants;
+import com.example.iesmaster.Common.DataAccess;
 import com.example.iesmaster.Common.ImageServer;
 import com.example.iesmaster.Common.OvalImageView;
 import com.example.iesmaster.Common.Session;
+import com.example.iesmaster.Common.Utility;
+import com.example.iesmaster.HomeActivity;
 import com.example.iesmaster.R;
 import com.example.iesmaster.model.Profile;
 import com.google.android.gms.auth.api.Auth;
@@ -36,10 +49,16 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.Status;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import static com.example.iesmaster.Common.Constants.RESOLVE_HINT;
@@ -355,11 +374,72 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     public void ServerRegister(){
+
+        String Name= txtName.getText().toString();
+        String Email= txtEmail.getText().toString();
         String Mobile= txtMobile.getText().toString();
+        String Password= txtPassword.getText().toString();
+        String Address= txtAddress.getText().toString();
+
+        Calendar cal = Calendar.getInstance();
+        Date date = cal.getTime();
+        String ActivationDate = Utility.CurrentDate();
+        try {
+            String url = Constants.Application_URL + "/api/User/Register";
+            final String reqBody = "{\"Token\":\" \", \"Email\":\"" +Email  + "\", \"Password\":\"" + Password + "\", \"ActivationDate\":\"" + ActivationDate+
+                    "\",\"Name\":\"" + Name + "\",\"MobileNumber\":\"" +Mobile + "\",\"Address\":\"" + Address + "\"}";
+
+            JSONObject jsRequest = new JSONObject(reqBody);
+            //-------------------------------------------------------------------------------------------------
+            RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+
+            JsonObjectRequest jsArrayRequest = new JsonObjectRequest(Request.Method.POST, url, jsRequest, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+                            if(response!=null) {
+                                Profile userProfile = new Profile();
+                                userProfile.UserID = response.getString("UserID");
+                                userProfile.UserName = response.getString("Name");
+                                userProfile.UserLogin = response.getString("Email");
+                                userProfile.MobileNumber = response.getString("MobileNumber");
+                                userProfile.Address = response.getString("Address");
+                                Session.AddProfile(getApplicationContext(),userProfile);
+
+                                Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
+                                startActivity(intent);
+                                RegisterActivity.this.finish();
+
+                            }
+
+                    } catch (Exception e) {
+                        int a = 1;
+                    }
+                }
+
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    String message = error.toString();
+
+                    // prgBar.setVisibility(View.GONE);
+                }
+            });
+            RetryPolicy rPolicy = new DefaultRetryPolicy(0, -1, 0);
+
+            jsArrayRequest.setRetryPolicy(rPolicy);
+            queue.add(jsArrayRequest);
+
+            //*******************************************************************************************************
+        } catch (JSONException js) {
+            Toast.makeText(getApplicationContext(), "Could not Update Academic profile,Contact Admin", Toast.LENGTH_LONG).show();
+        }
+
+      /*
         Intent intent = new Intent(getApplicationContext(), MobileOTPActivity.class);
         intent.putExtra("number", Mobile);
         //intent.putExtra("IsResult", false);
-        startActivityForResult(intent, Constants.REQUEST_OTP_VERIFY);
+        startActivityForResult(intent, Constants.REQUEST_OTP_VERIFY);  */
 
 
 

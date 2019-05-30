@@ -2,6 +2,7 @@ package com.example.iesmaster.Common;
 
 import android.text.format.Time;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -23,6 +24,21 @@ public class Utility {
         catch (Exception ex)
         {
             return new Date();
+        }
+
+    }
+
+    public static String CurrentDate()
+    {
+        try {
+            DateFormat formatter = new SimpleDateFormat(INPUT_DATE_FORMAT);
+            //DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            String currentDate = formatter.format(new Date());
+            return currentDate;
+        }
+        catch (Exception ex)
+        {
+            return "";
         }
 
     }

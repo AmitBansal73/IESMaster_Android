@@ -42,6 +42,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.iesmaster.Common.Constants;
 import com.example.iesmaster.Common.Session;
 import com.example.iesmaster.model.AcademicProfile;
+import com.example.iesmaster.model.Profile;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -86,7 +87,7 @@ public class AcademicProfileActivity extends AppCompatActivity   {
     ArrayAdapter<String> adapterSemester;
     boolean IsResult = false;
     AcademicProfile profile;
-
+    Profile userProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +103,7 @@ public class AcademicProfileActivity extends AppCompatActivity   {
         actionBar.setTitle("Academic Profile");
         actionBar.show();
         closeKeyboard();
-
+        userProfile = Session.GetProfile(getApplicationContext());
         Intent intent = getIntent();
         IsResult = intent.getBooleanExtra("IsResult", false);
        // setUniversityData();
@@ -544,7 +545,8 @@ public class AcademicProfileActivity extends AppCompatActivity   {
         try {
             String url = Constants.Application_URL + "/api/User/AddAcademic";
 
-            final String reqBody = "{\"UnivID\":\"" + selectedUniversity + "\", \"CollegeID\":\"" +selectedCollage  + "\", \"StreamID\":\"" + selectedStream + "\",\"SemesterID\":\"" +selectedSemester + "\",\"UserID\":\"" + 1234 + "\"}";
+            final String reqBody = "{\"UnivID\":\"" + selectedUniversity + "\", \"CollegeID\":\"" +selectedCollage  + "\", \"StreamID\":\""
+                    + selectedStream + "\",\"SemesterID\":\"" +selectedSemester + "\",\"UserID\":\"" + userProfile.UserID + "\"}";
             JSONObject jsRequest = new JSONObject(reqBody);
             //-------------------------------------------------------------------------------------------------
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());

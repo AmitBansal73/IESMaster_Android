@@ -11,15 +11,27 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.iesmaster.AcademicProfileActivity;
+import com.example.iesmaster.Common.Constants;
 import com.example.iesmaster.HomeActivity;
 import com.example.iesmaster.R;
+import com.example.iesmaster.model.AcademicProfile;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -33,10 +45,14 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
     Button LoginMannual,btnNext,btnSkip;
-    TextView txtUserName,txtPassword,btnRegister;
+    TextView txtUserName,txtPassword,btnRegister,txtMobile;
 
     LinearLayout profile_sec,Login_sec;
     Button signOut;
@@ -99,43 +115,161 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
                 else
                 {
-                    Profile myProfile = new Profile();
-                    myProfile.UserName = txtUserName.getText().toString();
-                    myProfile.UserPassword = txtPassword.getText().toString();
-                    myProfile.UserLogin = txtUserName.getText().toString();
-                    myProfile.MobileNumber = "";
-                    myProfile.ProfileImage = "";
-                    myProfile.UserID ="0";
-;                    boolean loginResult = Session.AddProfile(getApplicationContext(), myProfile);
-
-                    if(loginResult)
-                    {
-                        Intent profileActivity = new Intent(LoginActivity.this, AcademicProfileActivity.class);
-                        startActivity(profileActivity);
-                        LoginActivity.this.finish();
-                    }
-                    else
-                    {
-                        Toast.makeText(getApplicationContext(),"Error Saving Login info", Toast.LENGTH_LONG);
-                    }
-
+                    MannualLogin();
                 }
 
             }
         });
 
-
         txtUserName = findViewById(R.id.txtUserName);
         txtPassword = findViewById(R.id.txtPassword);
+        txtMobile = findViewById(R.id.txtMobile);
     }
+
+    public void MannualLogin(){
+
+        String Email= txtUserName.getText().toString();
+        String Mobile= txtMobile.getText().toString();
+        String Password= txtPassword.getText().toString();
+
+        try {
+            String url = Constants.Application_URL + "/api/User/Login";
+            String reqBody = "{\"Token\":\"  \", \"Email\":\"" +Email  + "\", \"Password\":\"" + Password + "\",\"MobileNumber\":\"" +Mobile + "\"}";
+
+            JSONObject jsRequest = new JSONObject(reqBody);
+            //-------------------------------------------------------------------------------------------------
+            RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+
+            JsonObjectRequest jsArrayRequest = new JsonObjectRequest(Request.Method.POST, url, jsRequest, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+
+                        if(response!=null) {
+
+                            Profile myProfile = new Profile();
+                            myProfile.UserName = response.getString("Name");
+                            myProfile.UserPassword = response.getString("Password");
+                            myProfile.UserLogin = response.getString("Email");
+                            myProfile.MobileNumber = response.getString("MobileNumber");
+                            myProfile.ProfileImage = "";
+                            myProfile.UserID = response.getString("UserID");
+                            myProfile.Address = response.getString("Address");
+
+                            Session.AddProfile(getApplicationContext(), myProfile);
+
+                            GetAcademicProfile(myProfile.UserID);
+                           /* Intent profileActivity = new Intent(LoginActivity.this, HomeActivity.class);
+                            startActivity(profileActivity);
+                            LoginActivity.this.finish();*/
+
+                          /*  if (loginResult) {
+                                Intent profileActivity = new Intent(LoginActivity.this, HomeActivity.class);
+                                startActivity(profileActivity);
+                                LoginActivity.this.finish();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Error Saving Login info", Toast.LENGTH_LONG);
+                            }  */
+                        }
+
+                    } catch (JSONException e) {
+                        int a = 1;
+                    }
+                }
+
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    String message = error.toString();
+
+                    // prgBar.setVisibility(View.GONE);
+                }
+            });
+            RetryPolicy rPolicy = new DefaultRetryPolicy(0, -1, 0);
+
+            jsArrayRequest.setRetryPolicy(rPolicy);
+            queue.add(jsArrayRequest);
+
+            //*******************************************************************************************************
+        } catch (JSONException js) {
+            Toast.makeText(getApplicationContext(), "Login Failed ,Contact Admin", Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+    private void GetAcademicProfile(String UserID){
+        try {
+            String url = Constants.Application_URL + "/api/User/GetAcademic/" + UserID;
+
+            RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+
+            JsonArrayRequest jsArrayRequest = new JsonArrayRequest(Request.Method.GET, url, new Response.Listener<JSONArray>() {
+
+                @Override
+                public void onResponse(JSONArray response) {
+                    try {
+                        Toast.makeText(getApplicationContext(), "Login Successfully. Getting Data", Toast.LENGTH_SHORT).show();
+                        if(response.length()>0) {
+
+                            JSONObject obj = response.getJSONObject(0);
+                            AcademicProfile myProfile = new AcademicProfile();
+                            myProfile.UniversityID = Integer.getInteger(obj.getString("UNIVID"));
+                            myProfile.UniversityName = obj.getString("UNIVERSITYNAME");
+                            myProfile.CollegeID = obj.getInt("CollegeID");
+                            myProfile.CollegeName = obj.getString("CollegeName");
+                            myProfile.StreamID =  obj.getInt("StreamID");
+                            myProfile.Stream = obj.getString("StreamName");
+                            myProfile.SemesterID = obj.getInt("SemesterID");
+                            myProfile.Semester = obj.getString("SemesterName");
+                            myProfile.UserID = obj.getString("UserID");
+
+                            Session.AddAcademicProfile(getApplicationContext(), myProfile);
+
+                            Intent profileActivity = new Intent(LoginActivity.this, HomeActivity.class);
+                            startActivity(profileActivity);
+                            LoginActivity.this.finish();
+
+                          /*  if (loginResult) {
+                                Intent profileActivity = new Intent(LoginActivity.this, HomeActivity.class);
+                                startActivity(profileActivity);
+                                LoginActivity.this.finish();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Error Saving Login info", Toast.LENGTH_LONG);
+                            }  */
+                        }
+
+                    } catch (JSONException e) {
+                        int a = 1;
+                    }
+                }
+
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    String message = error.toString();
+                    Intent profileActivity = new Intent(LoginActivity.this, AcademicProfileActivity.class);
+                    startActivity(profileActivity);
+                    LoginActivity.this.finish();
+                    // prgBar.setVisibility(View.GONE);
+                }
+            });
+            RetryPolicy rPolicy = new DefaultRetryPolicy(0, -1, 0);
+
+            jsArrayRequest.setRetryPolicy(rPolicy);
+            queue.add(jsArrayRequest);
+
+            //*******************************************************************************************************
+        } catch (Exception js) {
+            Toast.makeText(getApplicationContext(), "Login Failed ,Contact Admin", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
 
     @Override
     protected void onStart() {
         super.onStart();
-
     }
-
-
 
     @Override
     public void onClick(View v) {
@@ -144,7 +278,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.signIn:
                 SignIn();
                 break;
-
         }
     }
 

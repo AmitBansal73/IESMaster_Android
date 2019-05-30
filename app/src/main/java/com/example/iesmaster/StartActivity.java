@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 import com.example.iesmaster.Common.Session;
+import com.example.iesmaster.Register.LoginActivity;
 import com.example.iesmaster.Register.WelcomeActivity;
 import com.example.iesmaster.model.Profile;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -54,8 +55,9 @@ public class StartActivity extends AppCompatActivity {
             }
             else
             {
-              //  Intent intent = new Intent(StartActivity.this, HomeActivity.class);
-              //  startActivity(intent);
+              Intent intent = new Intent(StartActivity.this, HomeActivity.class);
+               startActivity(intent);
+                StartActivity.this.finish();
             }
         }
 
@@ -117,5 +119,6 @@ public class StartActivity extends AppCompatActivity {
     {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         updateUI(account);
+
     }
 }

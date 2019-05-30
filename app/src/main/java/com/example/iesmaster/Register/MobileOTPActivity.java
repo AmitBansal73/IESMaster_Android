@@ -162,7 +162,6 @@ public class MobileOTPActivity extends AppCompatActivity {
     public void Submit(View v)
     {
         String manualCode="";
-
         if(manualCode.matches(RANDOM_OTP)) {
             Intent intent = new Intent();
             intent.putExtra("isVerified", true);
@@ -170,7 +169,6 @@ public class MobileOTPActivity extends AppCompatActivity {
             this.finish();
         }
     }
-
 
    private void SendToServer()
     {
@@ -181,11 +179,6 @@ public class MobileOTPActivity extends AppCompatActivity {
 
     }
 
-
-
-
-
-
     public class GenericTextWatcher implements TextWatcher
     {
         private View view;
@@ -193,14 +186,12 @@ public class MobileOTPActivity extends AppCompatActivity {
         {
             this.view = view;
         }
-
         @Override
         public void afterTextChanged(Editable editable) {
             // TODO Auto-generated method stub
             String text = editable.toString();
             switch(view.getId())
             {
-
                 case R.id.txtValidation1:
                     if(text.length()==1)
                         txtValidation2.requestFocus();
@@ -233,13 +224,5 @@ public class MobileOTPActivity extends AppCompatActivity {
         public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
             // TODO Auto-generated method stub
         }
-    }
-
-    public void setOtp(String otp) {
-        if (otp.length() != 4) return;
-        txtValidation1.setText(String.valueOf(otp.charAt(0)));
-        txtValidation2.setText(String.valueOf(otp.charAt(1)));
-        txtValidation3.setText(String.valueOf(otp.charAt(2)));
-        txtValidation4.setText(String.valueOf(otp.charAt(3)));
     }
 }
