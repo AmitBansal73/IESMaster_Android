@@ -189,13 +189,14 @@ public class AcademicProfileActivity extends AppCompatActivity   {
 
     public void setUniversitySpinner()
     {
+        progressBar.setVisibility(View.VISIBLE);
         String url = Constants.Application_URL+ "/api/University/All";
         try{
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
             JsonArrayRequest jsArrayRequest = new JsonArrayRequest(Request.Method.GET, url, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
-
+                    progressBar.setVisibility(View.GONE);
                     try {
                         int x = response.length();
                         for (int i = 0; i <x; i++) {
@@ -203,11 +204,11 @@ public class AcademicProfileActivity extends AppCompatActivity   {
                             JSONObject jObj = response.getJSONObject(i);
 
                             String UniversityName = jObj.getString("UniversityName");
-                            int UniversityID = jObj.getInt("UnivID");
+                            int UniversityID = jObj.getInt("UniversityID");
                             universityHashMap.put(UniversityName, UniversityID);
                             universityList.add(UniversityName);
                         }
-                        progressBar.setVisibility(View.GONE);
+
                         adapterUniversity.notifyDataSetChanged();
 
                     } catch (JSONException e) {
@@ -231,6 +232,7 @@ public class AcademicProfileActivity extends AppCompatActivity   {
             queue.add(jsArrayRequest);
         }catch (Exception ex){
             int a=1;
+            progressBar.setVisibility(View.GONE);
         }
 
 
@@ -282,12 +284,14 @@ public class AcademicProfileActivity extends AppCompatActivity   {
 
     private void setCollegeSpinner(int id )
     {
+        progressBar.setVisibility(View.VISIBLE);
         String url = Constants.Application_URL+ "/api/College/University/" + id;
         try{
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
             JsonArrayRequest jsArrayRequest = new JsonArrayRequest(Request.Method.GET, url, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
+                    progressBar.setVisibility(View.GONE);
                     try {
                         int x = response.length();
                         collegeHashMap.clear();
@@ -323,6 +327,7 @@ public class AcademicProfileActivity extends AppCompatActivity   {
             queue.add(jsArrayRequest);
         }catch (Exception ex){
             int a=1;
+            progressBar.setVisibility(View.GONE);
         }
 
         adapterCollege = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, collegeList);
@@ -376,13 +381,14 @@ public class AcademicProfileActivity extends AppCompatActivity   {
 
     private void setStreamSpinner(int clgId)
     {
-
+        progressBar.setVisibility(View.VISIBLE);
         String url = Constants.Application_URL+ "/api/Stream/College/"+ clgId;
         try{
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
             JsonArrayRequest jsArrayRequest = new JsonArrayRequest(Request.Method.GET, url, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
+                    progressBar.setVisibility(View.GONE);
                     try {
                         int x = response.length();
                         collegeHashMap.clear();
@@ -417,6 +423,7 @@ public class AcademicProfileActivity extends AppCompatActivity   {
             queue.add(jsArrayRequest);
         }catch (Exception ex){
             int a=1;
+            progressBar.setVisibility(View.GONE);
         }
 
         adapterStream = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, streamList);
@@ -469,28 +476,24 @@ public class AcademicProfileActivity extends AppCompatActivity   {
 
     private void setSemesterSpinner()
     {
-
+        progressBar.setVisibility(View.VISIBLE);
         String url = Constants.Application_URL+ "/api/Semester/All";
         try{
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
             JsonArrayRequest jsArrayRequest = new JsonArrayRequest(Request.Method.GET, url, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
-
+                    progressBar.setVisibility(View.GONE);
                     try {
                         int x = response.length();
                         for (int i = 0; i <x; i++) {
-
                             JSONObject jObj = response.getJSONObject(i);
-
                             String SemesterName = jObj.getString("SemesterName");
                             int SemesterID = jObj.getInt("SemID");
                             semesterHashMap.put(SemesterName, SemesterID);
                             semesterList.add(SemesterName);
                         }
-                        progressBar.setVisibility(View.GONE);
                         adapterSemester.notifyDataSetChanged();
-
                     } catch (JSONException e) {
                         int a=1;
                     }
@@ -503,7 +506,6 @@ public class AcademicProfileActivity extends AppCompatActivity   {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     progressBar.setVisibility(View.GONE);
-
                 }
             });
             RetryPolicy rPolicy = new DefaultRetryPolicy(0, -1, 0);
@@ -511,9 +513,10 @@ public class AcademicProfileActivity extends AppCompatActivity   {
             queue.add(jsArrayRequest);
         }catch (Exception ex){
             int a=1;
+            progressBar.setVisibility(View.GONE);
         }
 
-        adapterSemester = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, semesterList);
+        adapterSemester = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, semesterList);
         adapterSemester.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerSemester.setAdapter(adapterSemester);
 
@@ -542,10 +545,11 @@ public class AcademicProfileActivity extends AppCompatActivity   {
 
 
     private void UpdateAcademicProfile() {
+        progressBar.setVisibility(View.VISIBLE);
         try {
             String url = Constants.Application_URL + "/api/User/AddAcademic";
 
-            final String reqBody = "{\"UnivID\":\"" + selectedUniversity + "\", \"CollegeID\":\"" +selectedCollage  + "\", \"StreamID\":\""
+            final String reqBody = "{\"UniversityID\":\"" + selectedUniversity + "\", \"CollegeID\":\"" +selectedCollage  + "\", \"StreamID\":\""
                     + selectedStream + "\",\"SemesterID\":\"" +selectedSemester + "\",\"UserID\":\"" + userProfile.UserID + "\"}";
             JSONObject jsRequest = new JSONObject(reqBody);
             //-------------------------------------------------------------------------------------------------
@@ -554,6 +558,7 @@ public class AcademicProfileActivity extends AppCompatActivity   {
             JsonObjectRequest jsArrayRequest = new JsonObjectRequest(Request.Method.POST, url, jsRequest, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
+                    progressBar.setVisibility(View.GONE);
                     try {
 
                         if(response.getString("Response").matches("Ok")) {
@@ -563,11 +568,11 @@ public class AcademicProfileActivity extends AppCompatActivity   {
                             Intent intent = new Intent(AcademicProfileActivity.this, HomeActivity.class);
                             startActivity(intent);
                             AcademicProfileActivity.this.finish();
-                            progressBar.setVisibility(View.GONE);
+
                         }else if(response.getString("Response").matches("Fail")) {
 
                             Toast.makeText(getApplicationContext(), "Failed... ", Toast.LENGTH_SHORT).show();
-                            progressBar.setVisibility(View.GONE);
+
                         }
 
                     } catch (JSONException e) {
@@ -580,7 +585,7 @@ public class AcademicProfileActivity extends AppCompatActivity   {
                 public void onErrorResponse(VolleyError error) {
                     String message = error.toString();
 
-                    // prgBar.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
                 }
             });
             RetryPolicy rPolicy = new DefaultRetryPolicy(0, -1, 0);
@@ -591,6 +596,7 @@ public class AcademicProfileActivity extends AppCompatActivity   {
             //*******************************************************************************************************
         } catch (JSONException js) {
             Toast.makeText(getApplicationContext(), "Could not Update Academic profile,Contact Admin", Toast.LENGTH_LONG).show();
+            progressBar.setVisibility(View.GONE);
         }
     }
 

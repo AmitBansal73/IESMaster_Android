@@ -32,6 +32,16 @@
           android:layout_margin="10dp"
           >
       </ListView>
+        <TextView
+            android:id="@+id/txtMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:textColor="@color/blue"
+            android:text="No Data"
+            android:visibility="gone"
+            />
         <Button
             android:id="@+id/btnNext"
             android:layout_width="match_parent"

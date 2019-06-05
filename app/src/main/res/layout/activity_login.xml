@@ -47,14 +47,7 @@
                 android:layout_marginTop="20dp"
                 android:textColor="@color/Black"
                 />
-            <EditText
-                android:id="@+id/txtMobile"
-                android:inputType="number"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Mobile Number"
-                android:layout_marginTop="5dp"
-                />
+
             <EditText
                 android:id="@+id/txtPassword"
                 android:inputType="textPassword"
@@ -64,7 +57,7 @@
                 android:layout_marginTop="5dp"
                 />
             <Button
-                android:id="@+id/LoginMannual"
+                android:id="@+id/btnLoginMannual"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/White"
@@ -72,11 +65,21 @@
                 android:background="@drawable/background_btn"
                 android:layout_marginTop="5dp"
                 />
+            <Button
+                android:id="@+id/btnMobile"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:textColor="@color/black"
+                android:text="Login using Mobile / OTP"
+                android:background="@drawable/button_oval"
+                android:layout_marginTop="15dp"
+
+                />
             <com.google.android.gms.common.SignInButton
-                android:id="@+id/signIn"
+                android:id="@+id/btnGoogleSignin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 >
             </com.google.android.gms.common.SignInButton>
             <TextView

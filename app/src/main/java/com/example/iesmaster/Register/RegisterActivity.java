@@ -39,6 +39,7 @@ import com.example.iesmaster.Common.Session;
 import com.example.iesmaster.Common.Utility;
 import com.example.iesmaster.HomeActivity;
 import com.example.iesmaster.R;
+import com.example.iesmaster.model.AcademicProfile;
 import com.example.iesmaster.model.Profile;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.credentials.Credential;
@@ -188,16 +189,22 @@ public class RegisterActivity extends AppCompatActivity {
         txtName = findViewById(R.id.txtName);
         txtPassword = findViewById(R.id.txtPassword);
 
-        myProfile = Session.GetProfile(getApplicationContext());
+      //  myProfile = Session.GetProfile(getApplicationContext());
+        myProfile = new Profile();
+        Intent intent = getIntent();
+         String loginType =  intent.getStringExtra("loginType");
+        myProfile.UserLogin = intent.getStringExtra("login");
+        myProfile.UserName = intent.getStringExtra("name");
 
-        if(myProfile.UserLogin!= null && !myProfile.UserLogin.matches(""))
+        if(loginType.matches("google"))
         {
             IsLogin = true;
             txtName.setText(myProfile.UserName);
             txtEmail.setText(myProfile.UserLogin);
+            txtPassword.setText("");
             txtName.setEnabled(false);
             txtEmail.setEnabled(false);
-            Glide.with(this).load(myProfile.ProfileImage).into(profileImage);
+           // Glide.with(this).load(myProfile.ProfileImage).into(profileImage);
         }else {
             IsLogin = false;
         }
@@ -214,30 +221,41 @@ public class RegisterActivity extends AppCompatActivity {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(IsLogin) {
-                    SaveProfile();
-                }
-                else
-                {
-                    UserRegistration();
-                }
+                UserRegistration();
             }
         });
 
     }
 
    public void UserRegistration(){
+       String Name= txtName.getText().toString();
+       String Email= txtEmail.getText().toString();
+       String Mobile = txtMobile.getText().toString();
+       myProfile.UserPassword= txtPassword.getText().toString();
+       String Address= txtAddress.getText().toString();
 
-        String Name= txtName.getText().toString();
-        String Email= txtEmail.getText().toString();
-        String Mobile= txtMobile.getText().toString();
-        String Password= txtPassword.getText().toString();
-        String Address= txtAddress.getText().toString();
+       if(Name.matches("") ||  Mobile.matches("")|| Email.matches("")|| Address.matches("") )
+       {
+           Toast.makeText(getApplicationContext(),"Password Can not be Empty",Toast.LENGTH_LONG).show();
+           return;
+       }
+       else
+       {
+           myProfile.UserName = Name;
+           myProfile.UserLogin = Email;
+           myProfile.MobileNumber = Mobile;
+           myProfile.Address = Address;
+       }
 
-        if(Mobile!=null && Email != null && Password!= null)
-        {
-            ServerRegister();
-        }
+       if(!IsLogin) {
+           if(txtPassword.getText().toString().matches(""))
+           {
+               Toast.makeText(getApplicationContext(),"Password Can not be Empty",Toast.LENGTH_LONG).show();
+               return;
+           }
+
+       }
+       ServerRegister();
 
     }
 
@@ -375,19 +393,14 @@ public class RegisterActivity extends AppCompatActivity {
 
     public void ServerRegister(){
 
-        String Name= txtName.getText().toString();
-        String Email= txtEmail.getText().toString();
-        String Mobile= txtMobile.getText().toString();
-        String Password= txtPassword.getText().toString();
-        String Address= txtAddress.getText().toString();
-
         Calendar cal = Calendar.getInstance();
         Date date = cal.getTime();
         String ActivationDate = Utility.CurrentDate();
         try {
             String url = Constants.Application_URL + "/api/User/Register";
-            final String reqBody = "{\"Token\":\" \", \"Email\":\"" +Email  + "\", \"Password\":\"" + Password + "\", \"ActivationDate\":\"" + ActivationDate+
-                    "\",\"Name\":\"" + Name + "\",\"MobileNumber\":\"" +Mobile + "\",\"Address\":\"" + Address + "\"}";
+            final String reqBody = "{\"Token\":\" \", \"Email\":\"" +myProfile.UserLogin  + "\", \"Password\":\"" + myProfile.UserPassword +
+                    "\", \"ActivationDate\":\"" + ActivationDate+
+                    "\",\"Name\":\"" + myProfile.UserName + "\",\"MobileNumber\":\"" +myProfile.MobileNumber + "\",\"Address\":\"" + myProfile.Address + "\"}";
 
             JSONObject jsRequest = new JSONObject(reqBody);
             //-------------------------------------------------------------------------------------------------
@@ -406,7 +419,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 userProfile.Address = response.getString("Address");
                                 Session.AddProfile(getApplicationContext(),userProfile);
 
-                                Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
+                                Intent intent = new Intent(RegisterActivity.this, AcademicProfileActivity.class);
                                 startActivity(intent);
                                 RegisterActivity.this.finish();
 

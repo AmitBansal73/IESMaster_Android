@@ -3,6 +3,7 @@ package com.example.iesmaster;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -45,8 +46,14 @@ import com.example.iesmaster.Test.YearsActivity;
 import com.example.iesmaster.model.AcademicProfile;
 import com.example.iesmaster.model.Profile;
 import com.example.iesmaster.model.Subject;
+import com.example.iesmaster.model.Test;
 import com.example.iesmaster.model.Topic;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -60,10 +67,10 @@ import java.util.Random;
 public class HomeActivity extends AppCompatActivity {
 
 
-    GridView gridViewSubject,gridViewUniversity;
+    GridView gridViewSubject,gridViewProfile;
     List<Subject> subList=new ArrayList<>();
     List<AcademicProfile> univList =new ArrayList<>();
-    TestSubject myAdapter;
+    SubjectAdapter subjectAdapter;
     ProfileAdpter profileAdpter;
     Button btnNext;
     TextView txtAddProfile,txtFavourites,txtNoFavourite,univName,txtStream,txtName,txtClgName;
@@ -72,12 +79,12 @@ public class HomeActivity extends AppCompatActivity {
     AcademicProfile academicProfile;
     View viewFavourite;
     MyGridView gridViewFavourite;
-    List<Topic> listFavourite;
-    ProgressBar progressBar;
+    List<Test> listFavourite;
+    ProgressBar progressBar,progressBarSubject;
     AcademicProfile selectedProfile;
     LinearLayout profileLayout;
     TextView txtErrorSubject;
-
+    GoogleSignInClient mGoogleSignInClient;
     int selectedUniversityID, selectedStreamID, selectedSemesterID, selectedSubjectID;
 
     int color_arr[] = {R.drawable.grid_univ, R.drawable.gradient, R.drawable.gradient_paper,R.drawable.gradient_years,R.drawable.gradient_3,
@@ -97,6 +104,14 @@ public class HomeActivity extends AppCompatActivity {
         actionBar.setTitle(" Home ");
         actionBar.show();
 
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        progressBarSubject = findViewById(R.id.progressBarSubject);
+
         myProfile = Session.GetProfile(getApplicationContext());
         selectedProfile = academicProfile = Session.GetAcademicProfile(getApplicationContext());
         univName = findViewById(R.id.univName);
@@ -105,7 +120,15 @@ public class HomeActivity extends AppCompatActivity {
         txtClgName = findViewById(R.id.txtClgName);
         txtName = findViewById(R.id.txtName);
         txtErrorSubject = findViewById(R.id.txtErrorSubject);
+        gridViewSubject = findViewById(R.id.gridViewSubject);
         profileLayout = findViewById(R.id.profileLayout);
+        gridViewFavourite = findViewById(R.id.gridViewFavourite);
+        gridViewProfile = findViewById(R.id.gridViewProfile);
+        viewFavourite = findViewById(R.id.viewFavourite);
+
+        txtFavourites = findViewById(R.id.txtFavourites);
+        txtNoFavourite = findViewById(R.id.txtNoFavourite);
+
         if(myProfile.UserLogin.matches(""))
         {
             Intent intent = new Intent(HomeActivity.this, WelcomeActivity.class);
@@ -116,9 +139,12 @@ public class HomeActivity extends AppCompatActivity {
         {
             if(academicProfile.UniversityID == 0)
             {
-                Intent intent = new Intent(HomeActivity.this, AcademicProfileActivity.class);
-                startActivity(intent);
-               // HomeActivity.this.finish();
+                txtName.setText(myProfile.UserName);
+                univName.setText("Set Your Academic Profile");
+                txtStream.setText("");
+                gridViewSubject.setVisibility(View.GONE);
+                txtErrorSubject.setVisibility(View.VISIBLE);
+                txtErrorSubject.setText("Select Profile to see subject!");
             }
             else
             {
@@ -128,76 +154,25 @@ public class HomeActivity extends AppCompatActivity {
                 Glide.with(this).load(myProfile.ProfileImage).into(profile_Image);
                 selectedUniversityID = academicProfile.UniversityID;
                 selectedStreamID =academicProfile.StreamID;
-                //selectedSemesterID = academicProfile.SemesterID;
-                GetSubjects(selectedUniversityID, selectedStreamID);
+                profileLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        GetSubjects(academicProfile.UniversityID, academicProfile.StreamID);
+                    }
+                });
             }
         }
-
-        profileLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                GetSubjects(academicProfile.UniversityID, academicProfile.StreamID);
-            }
-        });
-
         DataAccess da = new DataAccess(getApplicationContext());
         da.open();
         listFavourite = da.GetFavourite();
         univList = da.GetProfiles();
 
-
-      //  myAdapter = new TestSubject(this, R.layout.gridview_subjects,subList );
-      //  gridView.setAdapter(myAdapter);
-
-        btnNext = findViewById(R.id.btnNext);
-        btnNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, YearsActivity.class);
-                startActivity(intent);
-                HomeActivity.this.finish();
-            }
-        });
-
-
-
-        txtAddProfile = findViewById(R.id.txtAddProfile);
-
-        txtAddProfile.setText("Recommended : Add other semester to get more Test papers.");
-
-        txtAddProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent profileActivity = new Intent(HomeActivity.this, AdditionalProfileActivity.class );
-                profileActivity.putExtra("IsResult", true);
-                startActivityForResult(profileActivity,100);
-            }
-        });
-
-        gridViewUniversity = findViewById(R.id.gridViewUniversity);
         setProfileGrid();
+        SetFavouriteGrid();
 
-
-        gridViewSubject = findViewById(R.id.gridViewSubject);
-        setSubjectGrid();
-
-        txtFavourites = findViewById(R.id.txtFavourites);
-        txtNoFavourite = findViewById(R.id.txtNoFavourite);
-        txtFavourites.setText("My Favourite / Recent Tests");
-
-        viewFavourite = findViewById(R.id.viewFavourite);
-
-        if ( listFavourite != null && listFavourite.size()>0)
+        if(academicProfile.UniversityID!=0)
         {
-            viewFavourite.setVisibility(View.VISIBLE);
-            txtNoFavourite.setVisibility(View.GONE);
-            gridViewFavourite = findViewById(R.id.gridViewFavourite);
-            SetFavouriteGrid();
-        }
-        else
-        {
-            txtNoFavourite.setVisibility(View.VISIBLE);
-            viewFavourite.setVisibility(View.GONE);
+            GetSubjects(academicProfile.UniversityID,academicProfile.StreamID);
         }
 
     }
@@ -211,10 +186,6 @@ public class HomeActivity extends AppCompatActivity {
             boolean IsProfile = data.getBooleanExtra("IsProfile", false);
             if(IsProfile) {
                 selectedProfile = data.getParcelableExtra("Profile");
-
-                DataAccess dataAccess = new DataAccess(getApplicationContext());
-                dataAccess.open();
-                dataAccess.InsertProfile(selectedProfile);
                 univList.add(selectedProfile);
                 profileAdpter.notifyDataSetChanged();
             }
@@ -223,33 +194,48 @@ public class HomeActivity extends AppCompatActivity {
 
     private void setProfileGrid()
     {
+        txtAddProfile = findViewById(R.id.txtAddProfile);
+
+        //txtAddProfile.setText("Add other semester to get more Test papers.");
+
+        txtAddProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent profileActivity = new Intent(HomeActivity.this, AdditionalProfileActivity.class );
+                profileActivity.putExtra("IsResult", true);
+                startActivityForResult(profileActivity,100);
+            }
+        });
+
 
         profileAdpter=new ProfileAdpter(this, R.layout.grid_item_profile, univList);
-        gridViewUniversity.setAdapter(profileAdpter);
+        gridViewProfile.setAdapter(profileAdpter);
+       // profileAdpter.notifyDataSetChanged();
 
-        gridViewUniversity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        gridViewProfile.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                AcademicProfile tempProfile =  univList.get(position);
+                selectedProfile =  univList.get(position);
 
-                selectedUniversityID =tempProfile.UniversityID;
+                selectedUniversityID =selectedProfile.UniversityID;
 
-                selectedStreamID =tempProfile.StreamID;
-               // GetSubjects(selectedCollegeID, selectedStreamID);
-                GetSubjects(tempProfile.UniversityID, tempProfile.StreamID);
+                selectedStreamID =selectedProfile.StreamID;
+                GetSubjects(selectedUniversityID, selectedStreamID);
+
             }
         });
     }
 
     public void GetSubjects(int UniversityId, int StreamId ){
-
+        progressBarSubject.setVisibility(View.VISIBLE);
        // String url = Constants.Application_URL+ "/api/Paper/1006/1002";
-          String url = Constants.Application_URL+ "/api/Paper/University/"+ UniversityId+"/"+StreamId;
+          String url = Constants.Application_URL+ "/api/Paper/GetSubject/"+ UniversityId+"/"+StreamId;
         try{
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
             JsonArrayRequest jsArrayRequest = new JsonArrayRequest(Request.Method.GET, url, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
+                    progressBarSubject.setVisibility(View.GONE);
                     try {
                         int x = response.length();
                         subList.clear();
@@ -257,18 +243,20 @@ public class HomeActivity extends AppCompatActivity {
                             for (int i = 0; i < x; i++) {
                                 Subject subject = new Subject();
                                 JSONObject jObj = response.getJSONObject(i);
-                                subject.SubjectName = jObj.getString("subjectname");
-                                //subject.SubjectID = jObj.getInt("SubjectID");
+                                subject.SubjectName = jObj.getString("SubjectName");
+                                subject.SubjectID = jObj.getInt("SubjectId");
                                 subList.add(subject);
                             }
+                            gridViewSubject.setVisibility(View.VISIBLE);
+                            txtErrorSubject.setVisibility(View.GONE);
                             //progressBar.setVisibility(View.GONE);
-                            myAdapter.notifyDataSetChanged();
+                            setSubjectGrid();
                         }
                         else
                         {
-                            gridViewSubject.setVisibility(View.GONE);
+                            gridViewSubject.setVisibility(View.INVISIBLE);
                             txtErrorSubject.setVisibility(View.VISIBLE);
-                            txtErrorSubject.setText("No data Found");
+                            txtErrorSubject.setText("No Subject For selected profile!");
                         }
 
                     } catch (JSONException e) {
@@ -283,7 +271,7 @@ public class HomeActivity extends AppCompatActivity {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    //progressBar.setVisibility(View.GONE);
+                    progressBarSubject.setVisibility(View.GONE);
 
                 }
             });
@@ -292,6 +280,7 @@ public class HomeActivity extends AppCompatActivity {
             queue.add(jsArrayRequest);
         }catch (Exception ex){
             int a=1;
+            progressBarSubject.setVisibility(View.GONE);
         }
     }
 
@@ -300,20 +289,21 @@ public class HomeActivity extends AppCompatActivity {
     {
        // subList = mock_data.GetSubjects();
 
-        myAdapter=new TestSubject(this, R.layout.gridview_subjects, subList);
-        gridViewSubject.setAdapter(myAdapter);
+        subjectAdapter=new SubjectAdapter(this, R.layout.gridview_subjects, subList);
+        gridViewSubject.setAdapter(subjectAdapter);
 
         gridViewSubject.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Subject sub = (Subject) subList.get(position);
-                String selectedSubjectName = sub.SubjectName;
                 Intent intent = new Intent(HomeActivity.this,YearsActivity.class);
-                intent.putExtra("UniversityID", selectedProfile.UniversityID);
-                intent.putExtra("StreamID", selectedProfile.StreamID);
-               // intent.putExtra("SemesterID", selectedSemesterID);
-                intent.putExtra("SubjectName", selectedSubjectName);
+                intent.putExtra("UniversityID", selectedUniversityID);
+                intent.putExtra("UniversityName", selectedProfile .UniversityName);
+                intent.putExtra("StreamID", selectedStreamID);
+                intent.putExtra("StreamName", selectedProfile .Stream);
+                intent.putExtra("SubjectID", sub.SubjectID);
+                intent.putExtra("SubjectName", sub.SubjectName);
                 startActivity(intent);
                // HomeActivity.this.finish();
             }
@@ -321,6 +311,11 @@ public class HomeActivity extends AppCompatActivity {
     }
     
     private void SetFavouriteGrid(){
+
+
+        txtFavourites.setText("My Favourite / Recent Tests");
+
+
 
         FavouriteAdapter favouriteAdapter = new FavouriteAdapter(this, R.layout.grid_item_topic,listFavourite );
         gridViewFavourite.setAdapter(favouriteAdapter);
@@ -330,16 +325,30 @@ public class HomeActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(HomeActivity.this,QuestionsActivity.class);
                 startActivity(intent);
-               // HomeActivity.this.finish();
+                // HomeActivity.this.finish();
             }
         });
+
+        if ( listFavourite != null && listFavourite.size()>0)
+        {
+            viewFavourite.setVisibility(View.VISIBLE);
+            txtNoFavourite.setVisibility(View.GONE);
+
+         //   SetFavouriteGrid();
+        }
+        else
+        {
+            txtNoFavourite.setVisibility(View.VISIBLE);
+            viewFavourite.setVisibility(View.GONE);
+        }
+
     }
 
-    public class TestSubject extends ArrayAdapter {
+    public class SubjectAdapter extends ArrayAdapter {
 
-        List<Subject> subList = new ArrayList<>();
+        List<Subject> subList;
 
-            public TestSubject(Context context, int textViewResourceId, List<Subject> objects) {
+            public SubjectAdapter(Context context, int textViewResourceId, List<Subject> objects) {
             super(context, textViewResourceId, objects);
             subList = objects;
         }
@@ -355,11 +364,11 @@ public class HomeActivity extends AppCompatActivity {
                     if(convertView==null) {
                         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                         convertView = inflater.inflate(R.layout.gridview_subjects, null);
-                        TextView textView = convertView.findViewById(R.id.testName);
-                        Subject tempSubject = (Subject) subList.get(position);
-                        textView.setText(tempSubject.getsubName());
-                    }
 
+                    }
+                    TextView textView = convertView.findViewById(R.id.testName);
+                    Subject tempSubject = (Subject) subList.get(position);
+                    textView.setText(tempSubject.getsubName());
                     int rnd = new Random().nextInt(color_arr.length);
                     convertView.setBackgroundResource(color_arr[rnd]);
                 }
@@ -397,7 +406,7 @@ public class HomeActivity extends AppCompatActivity {
             TextView txtStream = convertView.findViewById(R.id.txtStream);
             TextView btnRemove = convertView.findViewById(R.id.btnRemove);
 
-            AcademicProfile tempProfile = (AcademicProfile) univList.get(position);
+            final AcademicProfile tempProfile = (AcademicProfile) univList.get(position);
             final int Index = position;
             textView.setText(tempProfile.UniversityName);
             String strStream = tempProfile.Stream + "," + tempProfile.Semester ;
@@ -406,6 +415,9 @@ public class HomeActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     univList.remove(Index);
+                    DataAccess da = new DataAccess(getApplicationContext());
+                    da.open();
+                    da.RemoveProfile(tempProfile);
                     profileAdpter.notifyDataSetChanged();
                 }
             });
@@ -423,7 +435,7 @@ public class HomeActivity extends AppCompatActivity {
         LayoutInflater inflat;
         ViewHolder holder;
 
-        public FavouriteAdapter(Context context, int resource, List<Topic> objects) {
+        public FavouriteAdapter(Context context, int resource, List<Test> objects) {
             super(context, resource, objects);
             inflat= LayoutInflater.from(context);
         }
@@ -450,20 +462,21 @@ public class HomeActivity extends AppCompatActivity {
                     convertView.setTag(holder);
                 }
                 holder = (ViewHolder) convertView.getTag();
-                Topic testRow = (Topic)getItem(position);
+                Test testRow = (Test)getItem(position);
                 // Log.d("Dish Name", row.complaint_type);
-                holder.text1.setText(testRow.TopicName);
-                holder.text2.setText(testRow.SubjectName);
+                holder.text1.setText(testRow.SubjectName);
+                holder.text2.setText(Integer.toString(testRow.year));
                 int rnd = new Random().nextInt(color_arr.length);
                 convertView.setBackgroundResource(color_arr[rnd]);
-                return convertView;
+
             }
             catch (Exception ex)
             {
                 int a=1;
-                Toast.makeText(getApplicationContext(),"Could not Load RentData", Toast.LENGTH_LONG).show();
-                return null;
+                Toast.makeText(getApplicationContext(),"Could not Load TestData", Toast.LENGTH_LONG).show();
+                //return null;
             }
+            return convertView;
         }
     }
     private class ViewHolder
@@ -532,10 +545,21 @@ public class HomeActivity extends AppCompatActivity {
             builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int which) {
-                            Session.LogOff(getApplicationContext());
-                            //Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
-                            //startActivity(intent);
-                            HomeActivity.this.finish();
+
+                            mGoogleSignInClient.signOut()
+                                    .addOnCompleteListener(HomeActivity.this, new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            DataAccess da = new DataAccess(getApplicationContext());
+                                            da.open();
+                                            da.ClearAll();
+                                            da.close();
+                                            Session.LogOff(getApplicationContext());
+                                            HomeActivity.this.finish();
+                                        }
+                                    });
+
+
                         }
                     });
 

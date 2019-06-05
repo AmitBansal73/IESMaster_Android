@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.iesmaster.Common.DataAccess;
@@ -27,6 +28,7 @@ public class TopicActivity extends AppCompatActivity {
     List<Topic> topicList=new ArrayList<>();
     GridView gridViewTopic;
     TopicAdapter myTopicAdaptor;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public class TopicActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setTitle("Topics of Building Material");
         actionBar.show();
+        progressBar = findViewById(R.id.progressBar);
 
         gridViewTopic = findViewById(R.id.gridViewTopic);
         topicList = mock_data.GetTopics();
@@ -59,7 +62,7 @@ public class TopicActivity extends AppCompatActivity {
                 Topic selectedTopic = topicList.get(position);
                 DataAccess dataAccess = new DataAccess(getApplicationContext());
                 dataAccess.open();
-                dataAccess.InsertFavourite(selectedTopic);
+                //dataAccess.InsertFavourite(selectedTopic);
 
                 Intent intent = new Intent(TopicActivity.this, TestPaperActivity.class);
                 startActivity(intent);

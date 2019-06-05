@@ -5,8 +5,8 @@ public class Constants {
     public final static int RESOLVE_HINT = 200;
 
     public final static int SMS_PERMISSION_CODE = 300;
-    public final static String SMS_SERVICE_PROVIDER_NUMBER = "9591033223";
-    public final static String SMS_MESSAGE_CONDITION = "Test";
+    public final static String SMS_SERVICE_PROVIDER_NUMBER = "AD-TLTEST";
+    public final static String SMS_MESSAGE_CONDITION = "IES Master";
 
     public static final int REQUEST_IMAGE_GET = 1;
     public static final int REQUEST_IMAGE_CROP = 2;

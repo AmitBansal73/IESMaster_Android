@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.iesmaster.model.AcademicProfile;
 import com.example.iesmaster.model.Profile;
+import com.example.iesmaster.model.Test;
 import com.example.iesmaster.model.Topic;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class DataAccess {
 
     private static final String TABLE_CREATE_FAVOURITE = "CREATE TABLE IF NOT EXISTS "
             + FAVOURITE_TABLE
-            + "( favourite_id INTEGER PRIMARY KEY AUTOINCREMENT, topic VARCHAR(20), subject VARCHAR(20));";
+            + "( favourite_id INTEGER PRIMARY KEY AUTOINCREMENT, paper_id INTEGER, year INTEGER, University VARCHAR(20), subject VARCHAR(20));";
 
 
     private static  final  int DATABASE_VERSION =2;
@@ -37,6 +38,7 @@ public class DataAccess {
         //region General Function
 
         public DatabaseHelper(Context context) {
+
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
         }
 
@@ -51,14 +53,39 @@ public class DataAccess {
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
               db.execSQL("DROP TABLE IF EXISTS " + PROFILE_TABLE);
-            // db.execSQL("DROP TABLE IF EXISTS " + PROJECT_TABLE);
+             db.execSQL("DROP TABLE IF EXISTS " + PROFILE_TABLE);
             // db.execSQL("DROP TABLE IF EXISTS " + SERVER_ACTIVITY_TABLE);
 
             onCreate(db);
 
         }
+
+
+
+
         // endregion
     }
+
+
+
+
+    public boolean ClearAll()
+    {
+        try {
+            myDatabase.execSQL("DROP TABLE IF EXISTS " + PROFILE_TABLE);
+            myDatabase.execSQL("DROP TABLE IF EXISTS " + FAVOURITE_TABLE);
+            this.mCtx.deleteDatabase(DATABASE_NAME);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            return false;
+        }
+    }
+    public void close() {
+        mDBHelper.close();
+    }
+
 
     public DataAccess(Context mCtx) {
         this.mCtx = mCtx;
@@ -143,6 +170,33 @@ public class DataAccess {
     }
 
 
+    public boolean RemoveProfile(AcademicProfile profile)
+    {
+        try{
+            String delete_query = "DELETE FROM " + PROFILE_TABLE + " WHERE university_id = " + profile.UniversityID +
+                                    " and stream_id = " + profile.StreamID;
+            myDatabase.execSQL(delete_query);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            return false;
+        }
+    }
+
+
+    public boolean IfProfileExist(AcademicProfile profile)
+    {
+        String selectQuery = "SELECT * FROM " + PROFILE_TABLE +" where university_id = " + profile.UniversityID +
+                              " and stream_id = " + profile.StreamID;
+
+        Cursor mCursor = myDatabase.rawQuery(selectQuery,null);
+        if(mCursor.getCount()>0)
+            return true;
+        else
+            return false;
+    }
+
 
     // endregion
 
@@ -150,14 +204,17 @@ public class DataAccess {
     //region Favourite Function
 
 
-    public long InsertFavourite( Topic favourite)
+    public long InsertFavourite( Test favourite)
     {
         try
         {
-            myDatabase.execSQL(TABLE_CREATE_PROFILE);
+            myDatabase.execSQL(TABLE_CREATE_FAVOURITE);
             ContentValues initialValues = new ContentValues();
-            initialValues.put("topic",favourite.TopicName);
+            initialValues.put("paper_id",favourite.paperID);
+            initialValues.put("year",favourite.year);
+            initialValues.put("University",favourite.Univesity);
             initialValues.put("subject",favourite.SubjectName);
+
             long result  = myDatabase.insert(FAVOURITE_TABLE, null,initialValues);
 
             return  result;
@@ -170,10 +227,10 @@ public class DataAccess {
     }
 
 
-    public List<Topic> GetFavourite()
+    public List<Test> GetFavourite()
     {
-        List<Topic> favouriteList = new ArrayList<>();
-        Topic favourite;
+        List<Test> favouriteList = new ArrayList<>();
+        Test favourite;
 
         try{
             String selectQuery = "SELECT * FROM " + FAVOURITE_TABLE +" order by favourite_id asc";
@@ -182,9 +239,10 @@ public class DataAccess {
             if(c!=null && c.getCount() > 0) {
                 if (c.moveToFirst()) {
                     do {
-                        favourite = new Topic();
-                        favourite.TopicId = c.getInt(c.getColumnIndex("favourite_id"));
-                        favourite.TopicName = c.getString(c.getColumnIndex("topic"));
+                        favourite = new Test();
+                        favourite.paperID = c.getInt(c.getColumnIndex("paper_id"));
+                        favourite.year = c.getInt(c.getColumnIndex("year"));
+                        favourite.Univesity = c.getString(c.getColumnIndex("University"));
                         favourite.SubjectName = c.getString(c.getColumnIndex("subject"));
                         favouriteList.add(favourite);
                     }
@@ -197,6 +255,17 @@ public class DataAccess {
             int a=1;
         }
         return favouriteList;
+    }
+
+    public boolean IfTestExist(Test test)
+    {
+        String selectQuery = "SELECT * FROM " + FAVOURITE_TABLE +" where paper_id = " + test.paperID ;
+
+        Cursor mCursor = myDatabase.rawQuery(selectQuery,null);
+        if(mCursor.getCount()>0)
+            return true;
+        else
+            return false;
     }
 
     // endregion

@@ -15,7 +15,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -26,6 +28,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.iesmaster.Common.Constants;
+import com.example.iesmaster.Common.DataAccess;
 import com.example.iesmaster.model.AcademicProfile;
 
 import org.json.JSONArray;
@@ -58,7 +61,7 @@ public class AdditionalProfileActivity extends AppCompatActivity {
     Button btnSave;
   int selectedUniversity,selectedStream,selectedSemester;
 
-
+    ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +75,7 @@ public class AdditionalProfileActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setTitle("Academic Profile");
         actionBar.show();
+        progressBar = findViewById(R.id.progressBar);
         closeKeyboard();
         Intent intent = getIntent();
         IsResult = intent.getBooleanExtra("IsResult", false);
@@ -96,11 +100,23 @@ public class AdditionalProfileActivity extends AppCompatActivity {
                 profile.Stream = txtStream.getText().toString();
                 profile.StreamID = selectedStream;
                 profile.Semester = spinnerSemester.getSelectedItem().toString();
-                Intent intent = new Intent();
-                intent.putExtra("IsProfile", true);
-                intent.putExtra("Profile", profile);
-                setResult(100, intent);
-                AdditionalProfileActivity.this.finish();//finishing activity
+
+
+                DataAccess dataAccess = new DataAccess(getApplicationContext());
+                dataAccess.open();
+                if(dataAccess.IfProfileExist(profile))
+                {
+                    Toast.makeText(getApplicationContext(), "Profile already added", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    dataAccess.InsertProfile(profile);
+
+                    Intent intent = new Intent();
+                    intent.putExtra("IsProfile", true);
+                    intent.putExtra("Profile", profile);
+                    setResult(100, intent);
+                    AdditionalProfileActivity.this.finish();//finishing activity
+                }
             }
         });
 
@@ -163,14 +179,14 @@ public class AdditionalProfileActivity extends AppCompatActivity {
 
 
     public void GetUniversityData() {
-
+        progressBar.setVisibility(View.VISIBLE);
         String url = Constants.Application_URL + "/api/Paper/College";
         try {
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
             JsonArrayRequest jsArrayRequest = new JsonArrayRequest(Request.Method.GET, url, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
-
+                    progressBar.setVisibility(View.GONE);
                     try {
                         int x = response.length();
                         for (int i = 0; i < x; i++) {
@@ -178,7 +194,7 @@ public class AdditionalProfileActivity extends AppCompatActivity {
                             JSONObject jObj = response.getJSONObject(i);
 
                             String UniversityName = jObj.getString("UniversityName");
-                            int UniversityID = jObj.getInt("UnivID");
+                            int UniversityID = jObj.getInt("UniversityID");
                             if (!universityHashMap.containsKey(UniversityName)) {
                                 universityHashMap.put(UniversityName, UniversityID);
                                 universityList.add(UniversityName);
@@ -197,7 +213,7 @@ public class AdditionalProfileActivity extends AppCompatActivity {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-
+                    progressBar.setVisibility(View.GONE);
 
                 }
             });
@@ -206,6 +222,7 @@ public class AdditionalProfileActivity extends AppCompatActivity {
             queue.add(jsArrayRequest);
         } catch (Exception ex) {
             int a = 1;
+            progressBar.setVisibility(View.GONE);
         }
 
     }
@@ -269,12 +286,14 @@ public class AdditionalProfileActivity extends AppCompatActivity {
 
     private void GetStreamData(int UnivID)
     {
+        progressBar.setVisibility(View.VISIBLE);
         String url = Constants.Application_URL+ "/api/Paper/University/"+ UnivID;
         try{
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
             JsonArrayRequest jsArrayRequest = new JsonArrayRequest(Request.Method.GET, url, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
+                    progressBar.setVisibility(View.GONE);
                     try {
                         int x = response.length();
 
@@ -299,7 +318,7 @@ public class AdditionalProfileActivity extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
 
-                    // progressBar.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
 
                 }
             });
@@ -308,6 +327,7 @@ public class AdditionalProfileActivity extends AppCompatActivity {
             queue.add(jsArrayRequest);
         }catch (Exception ex){
             int a=1;
+            progressBar.setVisibility(View.GONE);
         }
     }
 
@@ -315,14 +335,14 @@ public class AdditionalProfileActivity extends AppCompatActivity {
 
     private void setSemesterSpinner()
     {
-
+        progressBar.setVisibility(View.VISIBLE);
         String url = Constants.Application_URL+ "/api/Semester/All";
         try{
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
             JsonArrayRequest jsArrayRequest = new JsonArrayRequest(Request.Method.GET, url, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
-
+                    progressBar.setVisibility(View.GONE);
                     try {
                         int x = response.length();
                         for (int i = 0; i <x; i++) {
@@ -348,7 +368,7 @@ public class AdditionalProfileActivity extends AppCompatActivity {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                  //  progressBar.setVisibility(View.GONE);
+                   progressBar.setVisibility(View.GONE);
 
                 }
             });
@@ -357,9 +377,10 @@ public class AdditionalProfileActivity extends AppCompatActivity {
             queue.add(jsArrayRequest);
         }catch (Exception ex){
             int a=1;
+            progressBar.setVisibility(View.GONE);
         }
 
-        adapterSemester = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, semesterList);
+        adapterSemester = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, semesterList);
         adapterSemester.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerSemester.setAdapter(adapterSemester);
 

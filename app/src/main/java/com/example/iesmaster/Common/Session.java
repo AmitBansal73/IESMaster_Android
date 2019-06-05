@@ -59,7 +59,6 @@ public class Session {
         try {
             SharedPreferences prefs = context.getSharedPreferences(SESSION_NAME, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
-            editor.putString("UserID", myProfile.UserID);
             editor.putInt("UniversityID",myProfile.UniversityID);
             editor.putString("University", myProfile.UniversityName);
             editor.putInt("CollegeID", myProfile.CollegeID);
@@ -82,7 +81,6 @@ public class Session {
         AcademicProfile mProfile = new AcademicProfile();
         try {
             SharedPreferences prefs = context.getSharedPreferences(SESSION_NAME, Context.MODE_PRIVATE);
-            mProfile.UserID =  prefs.getString("UserID","");
             mProfile.UniversityID = prefs.getInt("UniversityID",0);
             mProfile.UniversityName =  prefs.getString("University","");
             mProfile.CollegeID =  prefs.getInt("CollegeID",0);

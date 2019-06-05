@@ -28,11 +28,13 @@
 
     <string name="slide_3_title">User Login</string>
     <string name="slide_3_desc"> Register </string>
+    <string name="add_profile">Recommended: Click to add more universities</string>
 
     <string name="play_again_desc">To see the welcome slider again, goto Settings -> apps -> welcome slider -> clear data</string>
     <string name="play_again">Play Again</string>
 
     <dimen name="txtSize8">8sp</dimen>
+    <dimen name="txtSize10">10sp</dimen>
     <string name="title_activity_home">HomeActivity</string>
 
 </resources>

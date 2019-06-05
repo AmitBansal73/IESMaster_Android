@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,7 +34,9 @@ import com.example.iesmaster.HomeActivity;
 import com.example.iesmaster.R;
 import com.example.iesmaster.model.AcademicProfile;
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 
@@ -41,9 +44,11 @@ import com.example.iesmaster.Common.Session;
 import com.example.iesmaster.model.Profile;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.Task;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,15 +56,18 @@ import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
-    Button LoginMannual,btnNext,btnSkip;
-    TextView txtUserName,txtPassword,btnRegister,txtMobile;
-
+    Button btnLoginMannual,btnNext,btnSkip;
+    TextView txtUserName,txtPassword,btnRegister;
+    Button btnMobile;
     LinearLayout profile_sec,Login_sec;
     Button signOut;
     TextView userName,txtEmail;
     ImageView profileImg;
-    SignInButton signIn;
+    SignInButton btnGoogleSignin;
     GoogleApiClient googleApiClient;
+
+    GoogleSignInClient mGoogleSignInClient;
+
     private static final int REQ_CODE = 9001;
     ProgressBar progressBar;
     @Override
@@ -79,8 +87,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         userName = findViewById(R.id.txtUserName);
         txtPassword = findViewById(R.id.txtPassword);
 
-        signIn = findViewById(R.id.signIn);
-        signIn.setOnClickListener(this);
+        btnGoogleSignin = findViewById(R.id.btnGoogleSignin);
+        btnGoogleSignin.setOnClickListener(this);
+        btnMobile = findViewById(R.id.btnMobile);
+        btnMobile.setOnClickListener(this);
 
         Login_sec = findViewById(R.id.Login_sec);
         Login_sec.setVisibility(View.VISIBLE);
@@ -90,22 +100,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .requestEmail()
                 .build();
 
-        googleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this,this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API,gso).build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+      //  googleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this,this)
+        //        .addApi(Auth.GOOGLE_SIGN_IN_API,gso).build();
 
 
         btnRegister= findViewById(R.id.btnRegister);
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent testActivity = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(testActivity);
+                Intent registerActivity = new Intent(LoginActivity.this, RegisterActivity.class);
+                registerActivity.putExtra("loginType", "new");
+                registerActivity.putExtra("login", "");
+                registerActivity.putExtra("name", "");
+                startActivity(registerActivity);
             }
         });
 
 
-        LoginMannual = findViewById(R.id.LoginMannual);
-        LoginMannual.setOnClickListener(new View.OnClickListener() {
+        btnLoginMannual = findViewById(R.id.btnLoginMannual);
+        btnLoginMannual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -123,18 +137,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         txtUserName = findViewById(R.id.txtUserName);
         txtPassword = findViewById(R.id.txtPassword);
-        txtMobile = findViewById(R.id.txtMobile);
+
     }
+
+
+
 
     public void MannualLogin(){
 
+
         String Email= txtUserName.getText().toString();
-        String Mobile= txtMobile.getText().toString();
         String Password= txtPassword.getText().toString();
+        txtUserName.setEnabled(false);
+        txtPassword.setEnabled(false);
+        btnLoginMannual.setEnabled(false);
+        progressBar.setVisibility(View.VISIBLE);
+
 
         try {
             String url = Constants.Application_URL + "/api/User/Login";
-            String reqBody = "{\"Token\":\"  \", \"Email\":\"" +Email  + "\", \"Password\":\"" + Password + "\",\"MobileNumber\":\"" +Mobile + "\"}";
+            String reqBody = "{\"Token\":\"  \", \"Email\":\"" +Email  + "\", \"Password\":\"" + Password + "\"}";
 
             JSONObject jsRequest = new JSONObject(reqBody);
             //-------------------------------------------------------------------------------------------------
@@ -143,6 +165,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             JsonObjectRequest jsArrayRequest = new JsonObjectRequest(Request.Method.POST, url, jsRequest, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
+                    progressBar.setVisibility(View.GONE);
                     try {
 
                         if(response!=null) {
@@ -174,6 +197,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                     } catch (JSONException e) {
                         int a = 1;
+                        txtUserName.setEnabled(true);
+                        txtPassword.setEnabled(true);
+                        btnLoginMannual.setEnabled(true);
+
                     }
                 }
 
@@ -181,8 +208,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     String message = error.toString();
-
-                    // prgBar.setVisibility(View.GONE);
+                    txtUserName.setEnabled(true);
+                    txtPassword.setEnabled(true);
+                    btnLoginMannual.setEnabled(true);
+                    progressBar.setVisibility(View.GONE);
                 }
             });
             RetryPolicy rPolicy = new DefaultRetryPolicy(0, -1, 0);
@@ -193,28 +222,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             //*******************************************************************************************************
         } catch (JSONException js) {
             Toast.makeText(getApplicationContext(), "Login Failed ,Contact Admin", Toast.LENGTH_LONG).show();
+            txtUserName.setEnabled(true);
+            txtPassword.setEnabled(true);
+            btnLoginMannual.setEnabled(true);
+            progressBar.setVisibility(View.GONE);
         }
     }
 
 
     private void GetAcademicProfile(String UserID){
         try {
+            progressBar.setVisibility(View.VISIBLE);
             String url = Constants.Application_URL + "/api/User/GetAcademic/" + UserID;
 
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
 
-            JsonArrayRequest jsArrayRequest = new JsonArrayRequest(Request.Method.GET, url, new Response.Listener<JSONArray>() {
+            JsonObjectRequest jsArrayRequest = new JsonObjectRequest(Request.Method.GET, url, new Response.Listener<JSONObject>() {
 
                 @Override
-                public void onResponse(JSONArray response) {
+                public void onResponse(JSONObject obj) {
+                    progressBar.setVisibility(View.GONE);
                     try {
                         Toast.makeText(getApplicationContext(), "Login Successfully. Getting Data", Toast.LENGTH_SHORT).show();
-                        if(response.length()>0) {
-
-                            JSONObject obj = response.getJSONObject(0);
+                        if(obj != null) {
                             AcademicProfile myProfile = new AcademicProfile();
-                            myProfile.UniversityID = Integer.getInteger(obj.getString("UNIVID"));
-                            myProfile.UniversityName = obj.getString("UNIVERSITYNAME");
+                            myProfile.UniversityID = obj.getInt("UniversityID");
+                            myProfile.UniversityName = obj.getString("UniversityName");
                             myProfile.CollegeID = obj.getInt("CollegeID");
                             myProfile.CollegeName = obj.getString("CollegeName");
                             myProfile.StreamID =  obj.getInt("StreamID");
@@ -237,6 +270,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 Toast.makeText(getApplicationContext(), "Error Saving Login info", Toast.LENGTH_LONG);
                             }  */
                         }
+                        else{
+                            Intent profileActivity = new Intent(LoginActivity.this, AcademicProfileActivity.class);
+                            startActivity(profileActivity);
+                            LoginActivity.this.finish();
+                        }
 
                     } catch (JSONException e) {
                         int a = 1;
@@ -246,11 +284,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    String message = error.toString();
+                    progressBar.setVisibility(View.GONE);
+                    Toast.makeText(getApplicationContext(), "Login Failed, Error retreiving Academic Profile ", Toast.LENGTH_LONG).show();
+                    /*String message = error.toString();
                     Intent profileActivity = new Intent(LoginActivity.this, AcademicProfileActivity.class);
                     startActivity(profileActivity);
                     LoginActivity.this.finish();
-                    // prgBar.setVisibility(View.GONE);
+                    prgBar.setVisibility(View.GONE);*/
                 }
             });
             RetryPolicy rPolicy = new DefaultRetryPolicy(0, -1, 0);
@@ -260,6 +300,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             //*******************************************************************************************************
         } catch (Exception js) {
+            progressBar.setVisibility(View.GONE);
             Toast.makeText(getApplicationContext(), "Login Failed ,Contact Admin", Toast.LENGTH_LONG).show();
         }
 
@@ -268,6 +309,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     protected void onStart() {
+      //  GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+       // UpdateUI(account);
         super.onStart();
     }
 
@@ -275,9 +318,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId())
         {
-            case R.id.signIn:
+            case R.id.btnGoogleSignin:
                 SignIn();
                 break;
+            case R.id.btnMobile:
+                Intent mobileIntent = new Intent(LoginActivity.this, MobileOTPActivity.class);
+                startActivity(mobileIntent);
+                break;
+
         }
     }
 
@@ -287,12 +335,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void SignIn(){
+
     progressBar.setVisibility(View.VISIBLE);
-        Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-        startActivityForResult(intent,REQ_CODE);
+
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, REQ_CODE);
+
+       // Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+       // startActivityForResult(intent,REQ_CODE);
     }
 
-    public void SignOut(){
+   /* public void SignOut(){
 
         Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
             @Override
@@ -302,11 +355,85 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
     }
+*/
+/*
+    public void UpdateUI(boolean isLogin){
+        if (isLogin){
+            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+            startActivity(intent);
+            LoginActivity.this.finish();
+          //  profile_sec.setVisibility(View.VISIBLE);
+           // Login_sec.setVisibility(View.GONE);
+        }else {
+            Toast.makeText(getApplicationContext(),"Error in Google Signin", Toast.LENGTH_LONG).show();
+            Login_sec.setVisibility(View.VISIBLE);
+        }
+    }
+*/
+
+    public void UpdateUI(GoogleSignInAccount account){
+
+        if(account== null)
+        {
+            Toast.makeText(getApplicationContext(),"Error in Google Signin", Toast.LENGTH_LONG).show();
+            Login_sec.setVisibility(View.VISIBLE);
+        }
+
+       else if (!account.isExpired()){
+
+            Profile myProfile = new Profile();
+            myProfile.UserName = account.getDisplayName();
+            myProfile.UserLogin = account.getEmail();
+            myProfile.ProfileImage = account.getPhotoUrl().toString();
+            myProfile.MobileNumber = "";
+            myProfile.UserID = "";
+            myProfile.UserPassword = "";
+
+            GetUserData( myProfile.UserLogin, myProfile.UserName);
+
+            /*
+            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+            startActivity(intent);
+            LoginActivity.this.finish();*/
+            //  profile_sec.setVisibility(View.VISIBLE);
+            // Login_sec.setVisibility(View.GONE);
+        }else {
+            Toast.makeText(getApplicationContext(),"Error in Google Signin", Toast.LENGTH_LONG).show();
+            Login_sec.setVisibility(View.VISIBLE);
+        }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode==REQ_CODE){
+           // GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+           // handleResult(result);
+
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
+        }
+    }
+
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+
+            // Signed in successfully, show authenticated UI.
+            UpdateUI(account);
+        } catch (ApiException e) {
+            // The ApiException status code indicates the detailed failure reason.
+            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+            //Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
+            UpdateUI(null);
+        }
+    }
 
     private void handleResult(GoogleSignInResult result){
         progressBar.setVisibility(View.GONE);
         if(result.isSuccess()){
-
             GoogleSignInAccount account = result.getSignInAccount();
             Profile myProfile = new Profile();
             myProfile.UserName = account.getDisplayName();
@@ -314,42 +441,105 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             myProfile.ProfileImage = account.getPhotoUrl().toString();
             myProfile.MobileNumber = "";
             myProfile.UserID = "";
-            myProfile.UserPassword = "Google";
-            Session.AddProfile(getApplicationContext(),myProfile);
-           // Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
-           // startActivity(intent);
-           // LoginActivity.this.finish();
-            UpdateUI(true);
+            myProfile.UserPassword = "";
+
+            GetUserData( myProfile.UserLogin, myProfile.UserName);
+         //   Session.AddProfile(getApplicationContext(),myProfile);
+
+          //  UpdateUI(true);
         }
         else {
-            UpdateUI(false);
+            UpdateUI(null);
         }
     }
 
-    public void UpdateUI(boolean isLogin){
 
-        if (isLogin){
 
-            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-            startActivity(intent);
-            LoginActivity.this.finish();
-          //  profile_sec.setVisibility(View.VISIBLE);
-           // Login_sec.setVisibility(View.GONE);
+    public void GetUserData(final String Email, final String Name){
+        try {
+            txtUserName.setEnabled(false);
+            txtPassword.setEnabled(false);
+            btnLoginMannual.setEnabled(false);
+            String url = Constants.Application_URL + "/api/User/Email";
+            String reqBody = "{\"Token\":\"  \", \"Email\":\"" +Email  + "\", \"Password\":\"\"}";
 
-        }else {
-            Login_sec.setVisibility(View.VISIBLE);
+            JSONObject jsRequest = new JSONObject(reqBody);
+            //-------------------------------------------------------------------------------------------------
+            RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+
+            JsonObjectRequest jsArrayRequest = new JsonObjectRequest(Request.Method.POST, url, jsRequest, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    progressBar.setVisibility(View.GONE);
+                    try {
+                        if(response!=null) {
+                          int id = response.getInt("UserID");
+                            if(id>0) {
+                                Profile myProfile = new Profile();
+                                myProfile.UserName = response.getString("Name");
+                                myProfile.UserPassword = response.getString("Password");
+                                myProfile.UserLogin = response.getString("Email");
+                                myProfile.MobileNumber = response.getString("MobileNumber");
+                                myProfile.ProfileImage = "";
+                                myProfile.UserID = response.getString("UserID");
+                                myProfile.Address = response.getString("Address");
+                                Session.AddProfile(getApplicationContext(), myProfile);
+                                GetAcademicProfile(myProfile.UserID);
+                            }
+                            else{
+                                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                                intent.putExtra("loginType", "google");
+                                intent.putExtra("login", Email);
+                                intent.putExtra("name", Name);
+                                startActivity(intent);
+                                LoginActivity.this.finish();
+                            }
+                        }
+                        else
+                        {
+                            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                            intent.putExtra("loginType", "google");
+                            intent.putExtra("login", Email);
+                            intent.putExtra("name", Name);
+
+                            startActivity(intent);
+                            LoginActivity.this.finish();
+                        }
+
+                    } catch (JSONException e) {
+                        int a = 1;
+                        txtUserName.setEnabled(true);
+                        txtPassword.setEnabled(true);
+                        btnLoginMannual.setEnabled(true);
+
+                    }
+                }
+
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    String message = error.toString();
+                    txtUserName.setEnabled(true);
+                    txtPassword.setEnabled(true);
+                    btnLoginMannual.setEnabled(true);
+                    progressBar.setVisibility(View.GONE);
+                }
+            });
+            RetryPolicy rPolicy = new DefaultRetryPolicy(0, -1, 0);
+
+            jsArrayRequest.setRetryPolicy(rPolicy);
+            queue.add(jsArrayRequest);
+
+            //*******************************************************************************************************
+        } catch (JSONException js) {
+            Toast.makeText(getApplicationContext(), "Login Failed ,Contact Admin", Toast.LENGTH_LONG).show();
+            txtUserName.setEnabled(true);
+            txtPassword.setEnabled(true);
+            btnLoginMannual.setEnabled(true);
+            progressBar.setVisibility(View.GONE);
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode==REQ_CODE){
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleResult(result);
-        }
-    }
 
     @Override
     public void onBackPressed() {

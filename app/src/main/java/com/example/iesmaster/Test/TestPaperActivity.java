@@ -27,6 +27,7 @@ import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.iesmaster.Common.Constants;
 import com.example.iesmaster.Common.DataAccess;
@@ -38,6 +39,7 @@ import com.example.iesmaster.model.AcademicProfile;
 import com.example.iesmaster.model.Profile;
 import com.example.iesmaster.model.Subject;
 import com.example.iesmaster.Questions.QuestionsActivity;
+import com.example.iesmaster.model.Test;
 import com.example.iesmaster.model.Topic;
 
 import org.json.JSONArray;
@@ -46,7 +48,7 @@ import org.json.JSONObject;
 
 
 public class TestPaperActivity extends AppCompatActivity {
-    List<Topic> arrayListTest=new ArrayList<>();
+    List<Test> arrayListTest=new ArrayList<>();
     ListView testListView;
     MyAdapterTest adapterTest;
     com.example.iesmaster.model.Subject subject;
@@ -54,9 +56,11 @@ public class TestPaperActivity extends AppCompatActivity {
     ProgressBar progressBar;
     Profile myProfile;
 
-    int UniversityID,StreamID,Year,unit;
+    int UniversityID,StreamID,Year,unit, SubjectID;
     String subjectName;
     String Semester;
+    TextView txtMessage;
+    int PaperID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +79,7 @@ public class TestPaperActivity extends AppCompatActivity {
         myProfile = Session.GetProfile(getApplicationContext());
         academicProfile = Session.GetAcademicProfile(getApplicationContext());
        // arrayListTest = mock_data.GetTopics();
-
+        txtMessage = findViewById(R.id.txtMessage);
         progressBar = findViewById(R.id.progressBar);
         testListView = findViewById(R.id.testListView);
         adapterTest =new MyAdapterTest(TestPaperActivity.this,0,arrayListTest);
@@ -85,6 +89,7 @@ public class TestPaperActivity extends AppCompatActivity {
         UniversityID = intent.getIntExtra("UniversityID",0);
         StreamID = intent.getIntExtra("StreamID", 0);
         Year = intent.getIntExtra("year", 0);
+        SubjectID = intent.getIntExtra("SubjectID", 0);
         subjectName = intent.getStringExtra("SubjectName");
         unit = intent.getIntExtra("unit", 0);
 
@@ -94,72 +99,86 @@ public class TestPaperActivity extends AppCompatActivity {
     public void GetTestPapers(){
         progressBar.setVisibility(View.VISIBLE);
        // String url = Constants.Application_URL+ "/api/Paper/1000/1001/1000/1000";
-        String url = Constants.Application_URL+ "/api/Paper/"+ UniversityID+"/"+StreamID+"/"+subjectName+"/"+Year+"/"+unit+"/1001";//+myProfile.UserID;
+        String url = Constants.Application_URL+ "/api/Paper/"+ UniversityID+"/"+StreamID+"/"+SubjectID+"/"+Year+"/"+unit+"/" + myProfile.UserID;//+myProfile.UserID;
         try{
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
             JsonArrayRequest jsArrayRequest = new JsonArrayRequest(Request.Method.GET, url, new Response.Listener<JSONArray>() {
                 @Override
-                public void onResponse(JSONArray response) {
-
+                public void onResponse(JSONArray jArray) {
+                    progressBar.setVisibility(View.GONE);
                     try {
-                        int x = response.length();
-                        for (int i = 0; i <x; i++) {
-                            Topic topic = new Topic();
-                            JSONObject jObj = response.getJSONObject(i);
+                        int x = jArray.length();
+                        if(x>0) {
+                            txtMessage.setVisibility(View.GONE);
+                            for (int i = 0; i < x; i++) {
 
-                            topic.SubjectName = jObj.getString("SubjectName");
-                            topic.TopicName = jObj.getString("StreamName");
-                            topic.Cost = jObj.getInt("Cost");
-                            Semester = jObj.getString("SemesterName");
-                            topic.University = jObj.getString("UniversityName");
-                            Year = jObj.getInt("Year");
-                            topic.Status = 1;
-                          /*   String  purchaseDate = jObj.getString("PurchaseDate");
-                            Date purchaseOn = Utility.StringToDate(purchaseDate);
-                            Date today = new Date();
-                           if(today.after(purchaseOn))
-                            {
-                                topic.Status = 2;
+                                Test tempTest = new Test();
+                                JSONObject jObj = jArray.getJSONObject(i);
+                                JSONObject paperObject = jObj.getJSONObject("test");
+                                tempTest.SubjectName = paperObject.getString("SubjectName");
+                                tempTest.Stream = paperObject.getString("StreamName");
+                                tempTest.Cost = paperObject.getInt("Cost");
+                                //Semester = jObj.getString("SemesterName");
+                                tempTest.Univesity = paperObject.getString("UniversityName");
+                                Year = paperObject.getInt("Year");
+                                PaperID = paperObject.getInt("PaperID");
+                                JSONObject orderObj = jObj.getJSONObject("order");
+
+                                String purchaseDate = orderObj.getString("PurchaseDate");
+                                Date purchaseOn = Utility.StringToDate(purchaseDate);
+                                Date today = new Date();
+                                if (today.compareTo(purchaseOn)>0) {
+                                    tempTest.Status = 1;
+                                } else {
+                                    tempTest.Status = 2;
+                                }
+                                arrayListTest.add(tempTest);
                             }
-                            else
-                            {
-                                topic.Status =1;
-                            }    */
-                            arrayListTest.add(topic);
+
+                            adapterTest.notifyDataSetChanged();
                         }
-                        progressBar.setVisibility(View.GONE);
-                        adapterTest.notifyDataSetChanged();
+                        else
+                        {
+                            txtMessage.setVisibility(View.VISIBLE);
+                            txtMessage.setText("No Test Available!");
+                        }
 
                     } catch (JSONException e) {
                         int a=1;
-                        progressBar.setVisibility(View.GONE);
+                        txtMessage.setVisibility(View.VISIBLE);
+                        txtMessage.setText("Error Reading Data!");
                     }
                     catch (Exception ex)
                     {
                         int a=1;
+                        txtMessage.setVisibility(View.VISIBLE);
+                        txtMessage.setText("Error Reading Data!");
                     }
 
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    //progressBar.setVisibility(View.GONE);
-
+                    progressBar.setVisibility(View.GONE);
+                    txtMessage.setVisibility(View.VISIBLE);
+                    txtMessage.setText("Error retreiving Data!");
                 }
             });
             RetryPolicy rPolicy = new DefaultRetryPolicy(0, -1, 0);
             jsArrayRequest.setRetryPolicy(rPolicy);
             queue.add(jsArrayRequest);
         }catch (Exception ex){
-            int a=1;
+            progressBar.setVisibility(View.GONE);
+            txtMessage.setVisibility(View.VISIBLE);
+            txtMessage.setText("Error retreiving Data!");
         }
     }
 
 
-    class MyAdapterTest extends ArrayAdapter<Topic>{
+    class MyAdapterTest extends ArrayAdapter<Test>{
         LayoutInflater inflat;
         ViewHolder holder;
-        public MyAdapterTest(Context context, int resource, List<Topic> objects) {
+        public MyAdapterTest(Context context, int resource, List<Test> objects) {
 
             super(context, resource);
             // TODO Auto-generated constructor stub
@@ -200,12 +219,12 @@ public class TestPaperActivity extends AppCompatActivity {
                 }
                 holder = (ViewHolder) convertView.getTag();
 
-               final Topic testRow = (Topic)getItem(position);
+               final Test testRow = (Test)getItem(position);
                 // Log.d("Dish Name", row.complaint_type);
                 holder.txtSubName.setText(testRow.SubjectName);
-                holder.text1.setText(testRow.TopicName);
+                holder.text1.setText(testRow.SubjectName);
                 holder.text2.setText(Semester);
-                holder.text3.setText(testRow.University);
+                holder.text3.setText(testRow.Univesity);
                 holder.text4.setText( Integer.toString(testRow.Cost));
                 holder.txtYear.setText(Integer.toString(Year));
                // holder.text4.setText( Integer.toString(testRow.TopicId));
@@ -218,10 +237,11 @@ public class TestPaperActivity extends AppCompatActivity {
                         public void onClick(View v) {
                             Intent intent = new Intent(TestPaperActivity.this, PaymentActivity.class);
                             intent.putExtra("Subject", testRow.SubjectName);
-                            intent.putExtra("TopicName", testRow.TopicName);
+                            intent.putExtra("TopicName", testRow.SubjectName);
                             intent.putExtra("Semester", Semester);
-                            intent.putExtra("University", testRow.University);
+                            intent.putExtra("University", testRow.Univesity);
                             intent.putExtra("Cost", testRow.Cost);
+                            intent.putExtra("PaperID", PaperID);
                             intent.putExtra("year",Year);
                             startActivity(intent);
                         }
@@ -237,12 +257,26 @@ public class TestPaperActivity extends AppCompatActivity {
                     holder.btnStart.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            try {
+                                DataAccess da = new DataAccess(getApplicationContext());
+                                da.open();
+                                if (!da.IfTestExist(testRow)) {
+                                    da.InsertFavourite(testRow);
+                                }
+                                Intent intent = new Intent(TestPaperActivity.this, QuestionsActivity.class);
 
-                            DataAccess da = new DataAccess(getApplicationContext());
-                            da.open();
-                            da.InsertFavourite(testRow);
-                            Intent intent = new Intent(TestPaperActivity.this, QuestionsActivity.class);
-                            startActivity(intent);
+                                intent.putExtra("TopicName", testRow.SubjectName);
+                                intent.putExtra("Semester", Semester);
+                                intent.putExtra("University", testRow.Univesity);
+                                intent.putExtra("Cost", testRow.Cost);
+                                intent.putExtra("year", Year);
+                                intent.putExtra("PaperID", PaperID);
+                                startActivity(intent);
+                            }
+                            catch (Exception ex)
+                            {
+                                Toast.makeText(getApplicationContext(), "Error on Start Click",Toast.LENGTH_LONG).show();
+                            }
                         }
                     });
                     holder.btnBuy.setVisibility(View.GONE);
@@ -268,13 +302,13 @@ public class TestPaperActivity extends AppCompatActivity {
             }
         }
         @Override
-        public Topic getItem(int position) {
+        public Test getItem(int position) {
             // TODO Auto-generated method stub
             return arrayListTest.get(position);
         }
 
         @Override
-        public int getPosition(Topic item) {
+        public int getPosition(Test item) {
             return super.getPosition(item);
         }
 

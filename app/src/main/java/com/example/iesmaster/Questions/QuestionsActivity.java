@@ -1,6 +1,7 @@
 package com.example.iesmaster.Questions;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,15 +12,32 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.iesmaster.Common.Constants;
 import com.example.iesmaster.model.Questions;
 import com.example.iesmaster.R;
+import com.example.iesmaster.model.Years;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class QuestionsActivity extends AppCompatActivity implements QuestionFragment.OnFragmentInteractionListener {
@@ -27,7 +45,9 @@ public class QuestionsActivity extends AppCompatActivity implements QuestionFrag
     FragmentStatePagerAdapter fragmentAdapter;
     List<Questions> listQuestion;
     private Object view;
-
+    ProgressBar progressBar;
+    TextView txtMessage;
+    int PaperID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,16 +62,21 @@ public class QuestionsActivity extends AppCompatActivity implements QuestionFrag
         actionBar.setTitle(" Questions ");
         actionBar.show();
         viewPager = findViewById(R.id.viewPager);
+        progressBar = findViewById(R.id.progressBar);
+        txtMessage = findViewById(R.id.txtMessage);
+        Intent intent = getIntent();
+        PaperID = intent.getIntExtra("PaperID",0);
 
         if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         }
-
-        GetQuestionData();
-        if(listQuestion.size()>0) {
+        listQuestion = new ArrayList<>();
+       // GetQuestionData();
+       // if(listQuestion.size()>0) {
             fragmentAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
             viewPager.setAdapter(fragmentAdapter);
-        }
+        //}
+        GetQuestions();
     }
 
 
@@ -95,6 +120,71 @@ public class QuestionsActivity extends AppCompatActivity implements QuestionFrag
         }
 
 
+    }
+
+
+    private void GetQuestions(){
+
+        progressBar.setVisibility(View.VISIBLE);
+        String url = Constants.Application_URL+ "/api/Question/"+PaperID;
+        //String url = Constants.Application_URL+ "/api/Paper/1006/1002/Compilers";
+        try{
+            RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+            JsonArrayRequest jsArrayRequest = new JsonArrayRequest(Request.Method.GET, url, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    progressBar.setVisibility(View.GONE);
+
+                    try {
+                        int x = response.length();
+                        if (x>0) {
+                            txtMessage.setVisibility(View.GONE);
+                            viewPager.setVisibility(View.VISIBLE);
+                            for (int i = 0; i < x; i++) {
+
+                                JSONObject jObj = response.getJSONObject(i);
+                                Questions Question = new Questions();
+                                Question.QuestionId = jObj.getInt("QuesID");
+                                Question.Questions = jObj.getString("Question");
+                                Question.Answers = jObj.getString("Solution");
+                                Question.DifficultyLevel  = jObj.getInt("DifficultyLevel");
+                                listQuestion.add(Question);
+                            }
+                            // progressBar.setVisibility(View.GONE);
+                            fragmentAdapter.notifyDataSetChanged();
+                        }else {
+                            viewPager.setVisibility(View.GONE);
+                            txtMessage.setVisibility(View.VISIBLE);
+                            txtMessage.setText("No Question Found");
+                        }
+                    } catch (JSONException e) {
+                        int a=1;
+                    }
+                    catch (Exception ex)
+                    {
+                        int a=1;
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    progressBar.setVisibility(View.GONE);
+                    viewPager.setVisibility(View.GONE);
+                    txtMessage.setVisibility(View.VISIBLE);
+                    txtMessage.setText("Error");
+
+                }
+            });
+            RetryPolicy rPolicy = new DefaultRetryPolicy(0, 2, 0);
+            jsArrayRequest.setRetryPolicy(rPolicy);
+            queue.add(jsArrayRequest);
+        }catch (Exception ex){
+            int a=1;
+            progressBar.setVisibility(View.GONE);
+            viewPager.setVisibility(View.GONE);
+            txtMessage.setVisibility(View.VISIBLE);
+            txtMessage.setText("Error");
+        }
     }
 
 

@@ -46,7 +46,7 @@ public class YearsActivity extends AppCompatActivity {
     ProgressBar progressBar;
 
     int UniverID,StreamID , SemesterID, SubjectID;
-    String subjectName;
+    String subjectName, UniversityName, StreamName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,8 +71,13 @@ public class YearsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         UniverID = intent.getIntExtra("UniversityID",0);
         StreamID = intent.getIntExtra("StreamID", 0);
-       // SemesterID = intent.getIntExtra("SemesterID", 0);
+        SubjectID = intent.getIntExtra("SubjectID", 0);
         subjectName = intent.getStringExtra("SubjectName");
+        UniversityName = intent.getStringExtra("UniversityName");
+        StreamName = intent.getStringExtra("StreamName");
+
+        txtCollage.setText(UniversityName +", " + StreamName);
+        txtStream.setText(subjectName);
 
         /*
                 yearList.add(new Subject("2008", R.drawable.a));
@@ -101,9 +106,11 @@ public class YearsActivity extends AppCompatActivity {
                 Intent intent = new Intent(YearsActivity.this, UnitActivity.class);
                 intent.putExtra("UniversityID", UniverID);
                 intent.putExtra("StreamID", StreamID);
-               // intent.putExtra("SemesterID", SemesterID);
+                intent.putExtra("SubjectID", SubjectID);
                 intent.putExtra("SubjectName", subjectName);
                 intent.putExtra("year", year);
+                intent.putExtra("UniversityName", UniversityName);
+                 intent.putExtra("StreamName", StreamName);
                 startActivity(intent);
                 //YearsActivity.this.finish();
             }
@@ -113,14 +120,15 @@ public class YearsActivity extends AppCompatActivity {
     }
 
     public void GetPapersYears(){
-        //progressBar.setVisibility(View.VISIBLE);
-        String url = Constants.Application_URL+ "/api/Paper/"+UniverID+"/"+StreamID+"/"+ subjectName;
+        progressBar.setVisibility(View.VISIBLE);
+        String url = Constants.Application_URL+ "/api/Paper/GetYear/"+UniverID+"/"+StreamID+"/"+ SubjectID;
          //String url = Constants.Application_URL+ "/api/Paper/1006/1002/Compilers";
         try{
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
             JsonArrayRequest jsArrayRequest = new JsonArrayRequest(Request.Method.GET, url, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
+                    progressBar.setVisibility(View.GONE);
 
                     try {
                         int x = response.length();
@@ -152,15 +160,16 @@ public class YearsActivity extends AppCompatActivity {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                   // progressBar.setVisibility(View.GONE);
+                   progressBar.setVisibility(View.GONE);
 
                 }
             });
-            RetryPolicy rPolicy = new DefaultRetryPolicy(0, -1, 0);
+            RetryPolicy rPolicy = new DefaultRetryPolicy(0, 2, 0);
             jsArrayRequest.setRetryPolicy(rPolicy);
             queue.add(jsArrayRequest);
         }catch (Exception ex){
             int a=1;
+            progressBar.setVisibility(View.GONE);
         }
     }
 

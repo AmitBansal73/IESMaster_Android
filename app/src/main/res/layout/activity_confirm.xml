@@ -15,4 +15,11 @@
         android:padding="5dp"
         />
 
+
+    <Button
+        android:id="@+id/btnClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go to Test Page"
+        />
 </android.support.design.widget.CoordinatorLayout>

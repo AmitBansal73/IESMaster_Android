@@ -3,6 +3,8 @@ package com.example.iesmaster.Payment;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -24,10 +26,20 @@ public class ConfirmActivity extends AppCompatActivity {
 
     Transaction transaction;
     TextView txtMessage;
+    Button btnClose;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm);
+        btnClose = findViewById(R.id.btnClose);
+
+        btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ConfirmActivity.this.finish();
+            }
+        });
+
         transaction = new Transaction();
         Intent intent = getIntent();
         transaction.PaperID = intent.getIntExtra("PaperID", 0);

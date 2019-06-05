@@ -60,12 +60,6 @@ public class StartActivity extends AppCompatActivity {
                 StartActivity.this.finish();
             }
         }
-
-       /* else if(account.isExpired())
-        {
-            Intent intent = new Intent(StartActivity.this, LoginActivity.class);
-            startActivity(intent);
-        } */
         else
         {
             Intent intent = new Intent(StartActivity.this, HomeActivity.class);

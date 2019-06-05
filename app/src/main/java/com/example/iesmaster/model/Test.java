@@ -1,7 +1,7 @@
 package com.example.iesmaster.model;
 
 public class Test {
-
+    public int paperID;
     public int StreamID;
     public String DifficulyLevel;
     public int Cost;

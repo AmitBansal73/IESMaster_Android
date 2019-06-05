@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +34,8 @@ public class PaymentActivity extends AppCompatActivity {
 
     Button btnPayNow;
     Transaction transaction;
-    TextView text1,text2,text3,text4,txtSubName,txtYear;
+    TextView text1,text2,text3,text4,txtSubName,txtYear,txtMessage;
+    ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +56,8 @@ public class PaymentActivity extends AppCompatActivity {
         text2 = findViewById(R.id.text2);
         text3 = findViewById(R.id.text3);
         text4 = findViewById(R.id.text4);
+        txtMessage = findViewById(R.id.txtMessage);
+        progressBar = findViewById(R.id.progressBar);
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
@@ -63,6 +67,8 @@ public class PaymentActivity extends AppCompatActivity {
         String TopicName2= bundle.getString("University");
         int TopicName3= bundle.getInt("Cost");
         int year = bundle.getInt("year");
+
+
         txtSubName.setText(SubjectName);
         text1.setText(TopicName);
         text2.setText(TopicName1);
@@ -84,7 +90,7 @@ public class PaymentActivity extends AppCompatActivity {
     private void GetCheckSum()
     {
         try {
-
+            progressBar.setVisibility(View.VISIBLE);
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
 
             String  url =  Constants.Application_URL+"/api/Paytm/GetChecksum" ;
@@ -96,7 +102,7 @@ public class PaymentActivity extends AppCompatActivity {
             JsonObjectRequest jsArrayRequest = new JsonObjectRequest(Request.Method.POST, url, jsRequest,new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject jObj) {
-
+                    progressBar.setVisibility(View.GONE);
                     try {
                         transaction= new Transaction();
                         transaction.UserID = 1001;
@@ -111,11 +117,13 @@ public class PaymentActivity extends AppCompatActivity {
                     catch (JSONException jEx) {
                         int a=1;
                         a++;
+                        txtMessage.setText("! Exception while reading data");
                     }
                     catch (Exception ex)
                     {
                         int a=1;
                         a++;
+                        txtMessage.setText("! Exception while reading data");
                     }
 
                 }
@@ -124,7 +132,8 @@ public class PaymentActivity extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     int a=1;
-                    a++;
+                    progressBar.setVisibility(View.GONE);
+                    txtMessage.setText("! Volley Exception");
                 }
             });
             RetryPolicy rPolicy = new DefaultRetryPolicy(0,-1,0);
@@ -134,6 +143,10 @@ public class PaymentActivity extends AppCompatActivity {
         } catch (Exception js) {
             int a=1;
             a++;
+            progressBar.setVisibility(View.GONE);
+            txtMessage.setText("! Network Exception");
+
+
         } finally {
 
         }
@@ -178,6 +191,7 @@ public class PaymentActivity extends AppCompatActivity {
                     confirm.putExtra("Paid",transaction.Paid);
                     confirm.putExtra("CheckSum",transaction.checksum);
                     startActivity(confirm);
+                    PaymentActivity.this.finish();
                 }
 
                 public void networkNotAvailable() {
