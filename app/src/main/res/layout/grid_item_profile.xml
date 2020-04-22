@@ -18,7 +18,7 @@
     <TextView
         android:id="@+id/univName"
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
+        android:layout_height="40dp"
         android:text="Name"
         android:textSize="16sp"
         android:padding="2dp"
@@ -36,7 +36,7 @@
         android:layout_marginLeft="15dp"
         android:textColor="#DDffffff"
         android:textSize="13sp"
-        android:maxLines="2"
+        android:maxLines="3"
         android:minLines="2"
         android:layout_below="@id/univName"
         />

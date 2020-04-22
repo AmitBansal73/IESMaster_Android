@@ -19,7 +19,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.iesmaster.Common.Constants;
+import com.example.iesmaster.Common.Session;
 import com.example.iesmaster.R;
+import com.example.iesmaster.model.Profile;
+import com.example.iesmaster.model.Test;
 import com.example.iesmaster.model.Transaction;
 import com.paytm.pgsdk.PaytmOrder;
 import com.paytm.pgsdk.PaytmPGService;
@@ -28,14 +31,19 @@ import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.NumberFormat;
+import java.util.Currency;
 import java.util.HashMap;
 
 public class PaymentActivity extends AppCompatActivity {
 
     Button btnPayNow;
-    Transaction transaction;
-    TextView text1,text2,text3,text4,txtSubName,txtYear,txtMessage;
+    Transaction currentTransaction;
+    TextView txtSubject,txtUniversity,txtCost,txtYear,txtMessage;
     ProgressBar progressBar;
+    NumberFormat currFormat;
+    Profile myProfile;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,45 +57,49 @@ public class PaymentActivity extends AppCompatActivity {
         actionBar.setTitle(" Payment");
         actionBar.show();
 
+        myProfile = Session.GetProfile(getApplicationContext());
+
         btnPayNow = findViewById(R.id.btnPayNow);
-        txtSubName = findViewById(R.id.txtSubName);
+        txtSubject = findViewById(R.id.txtSubject);
         txtYear  = findViewById(R.id.txtYear);
-        text1 = findViewById(R.id.text1);
-        text2 = findViewById(R.id.text2);
-        text3 = findViewById(R.id.text3);
-        text4 = findViewById(R.id.text4);
+        txtUniversity = findViewById(R.id.txtUniversity);
+        txtCost = findViewById(R.id.txtCost);
+
         txtMessage = findViewById(R.id.txtMessage);
         progressBar = findViewById(R.id.progressBar);
 
+        currFormat = NumberFormat.getCurrencyInstance();
+        currFormat.setCurrency(Currency.getInstance("INR"));
+
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        String SubjectName= bundle.getString("Subject");
-        String TopicName= bundle.getString("TopicName");
-        String TopicName1= bundle.getString("Semester");
-        String TopicName2= bundle.getString("University");
-        int TopicName3= bundle.getInt("Cost");
-        int year = bundle.getInt("year");
+        final Test selectedTest = new Test();
+        selectedTest.SubjectName= bundle.getString("Subject");
+        //selectedTest.TopicName= bundle.getString("TopicName");
+        selectedTest.Semester= bundle.getString("Semester");
+        selectedTest.Univesity= bundle.getString("University");
+        selectedTest.Cost  = bundle.getInt("Cost");
+        selectedTest.year = bundle.getInt("year");
+        selectedTest.paperID = bundle.getInt("PaperID");
 
 
-        txtSubName.setText(SubjectName);
-        text1.setText(TopicName);
-        text2.setText(TopicName1);
-        text3.setText(TopicName2);
-        text4.setText(Integer.toString(TopicName3));
-        txtYear.setText(Integer.toString(year));
+        txtSubject.setText(selectedTest.SubjectName);
+        txtUniversity.setText(selectedTest.Univesity);
+        txtCost.setText(currFormat.format(selectedTest.Cost));
+        txtYear.setText(Integer.toString(selectedTest.year));
         btnPayNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                transaction = new Transaction();
-                transaction.UserID = 1001;
-                transaction.PaperID = 1001;
-                transaction.Paid = 10;
-                GetCheckSum();
+                currentTransaction = new Transaction();
+                currentTransaction.UserID = Integer.parseInt(myProfile.UserID);
+                currentTransaction.PaperID = selectedTest.paperID;
+                currentTransaction.Paid = selectedTest.Cost;
+                GetCheckSum(currentTransaction);
             }
         });
     }
 
-    private void GetCheckSum()
+    private void GetCheckSum(final Transaction transaction)
     {
         try {
             progressBar.setVisibility(View.VISIBLE);
@@ -104,14 +116,14 @@ public class PaymentActivity extends AppCompatActivity {
                 public void onResponse(JSONObject jObj) {
                     progressBar.setVisibility(View.GONE);
                     try {
-                        transaction= new Transaction();
-                        transaction.UserID = 1001;
-                        transaction.PaperID = 1001;
-                        transaction.Paid = 10;
-                        transaction.checksum = jObj.getString("CheckSum");
-                        transaction.OrderID = jObj.getInt("OrderID");
+                        currentTransaction= new Transaction();
+                        currentTransaction.UserID = transaction.UserID;
+                        currentTransaction.PaperID = transaction.PaperID;
+                        currentTransaction.Paid = transaction.Paid;
+                        currentTransaction.checksum = jObj.getString("CheckSum");
+                        currentTransaction.OrderID = jObj.getInt("OrderID");
 
-                        MakePayment(transaction);
+                        MakePayment(currentTransaction);
                     }
 
                     catch (JSONException jEx) {

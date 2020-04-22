@@ -27,6 +27,7 @@
                 android:layout_height="wrap_content"
                 android:text="Physics "
                 android:textColor="@color/Black"
+                android:textSize="16sp"
                 />
             <TextView
                 android:id="@+id/txtYear"
@@ -35,6 +36,7 @@
                 android:layout_height="wrap_content"
                 android:text="2018"
                 android:textColor="@color/Black"
+                android:textSize="16sp"
                 />
         </LinearLayout>
         <LinearLayout
@@ -64,6 +66,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="5dp"
+            android:visibility="gone"
             >
             <TextView
                 android:id="@+id/label2"
@@ -120,37 +123,31 @@
             <TextView
                 android:id="@+id/text4"
                 android:layout_width="0dp"
-                android:layout_weight="0.5"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="text 4"
                 />
-            <Button
-                android:id="@+id/btnBuy"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:text="Buy Now"
-                android:textColor="@color/White"
-                android:background="@drawable/btn_back"
-                />
-            <Button
-                android:id="@+id/btnStart"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:text="Start"
-                android:textColor="@color/White"
-                android:background="@drawable/btn_back"
-                android:visibility="gone"
-                />
+
         </LinearLayout>
-        <LinearLayout
-            android:id="@+id/viewScore"
+        <Button
+            android:id="@+id/btnBuy"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/txtScore"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
+            android:layout_height="40dp"
+            android:text="Buy Now"
+            android:textColor="@color/White"
+            android:background="@drawable/btn_back"
+            android:layout_margin="10dp"
+            />
+        <Button
+            android:id="@+id/btnStart"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="Start"
+            android:textColor="@color/White"
+            android:background="@drawable/btn_back"
+            android:visibility="gone"
+            android:layout_margin="10dp"
+            />
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

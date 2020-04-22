@@ -16,7 +16,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.Date;
 import java.util.List;
 
@@ -61,7 +63,7 @@ public class TestPaperActivity extends AppCompatActivity {
     String Semester;
     TextView txtMessage;
     int PaperID;
-
+    NumberFormat currFormat;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +76,8 @@ public class TestPaperActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setTitle(" Select Test ");
         actionBar.show();
+        currFormat = NumberFormat.getCurrencyInstance();
+        currFormat.setCurrency(Currency.getInstance("INR"));
 
         subject = new Subject();
         myProfile = Session.GetProfile(getApplicationContext());
@@ -120,14 +124,15 @@ public class TestPaperActivity extends AppCompatActivity {
                                 tempTest.Cost = paperObject.getInt("Cost");
                                 //Semester = jObj.getString("SemesterName");
                                 tempTest.Univesity = paperObject.getString("UniversityName");
-                                Year = paperObject.getInt("Year");
-                                PaperID = paperObject.getInt("PaperID");
+                                tempTest.year = paperObject.getInt("Year");
+                                tempTest.paperID = paperObject.getInt("PaperID");
                                 JSONObject orderObj = jObj.getJSONObject("order");
 
                                 String purchaseDate = orderObj.getString("PurchaseDate");
                                 Date purchaseOn = Utility.StringToDate(purchaseDate);
                                 Date today = new Date();
-                                if (today.compareTo(purchaseOn)>0) {
+                                int dateDiff = today.compareTo(purchaseOn);
+                                if ( dateDiff < 0) {
                                     tempTest.Status = 1;
                                 } else {
                                     tempTest.Status = 2;
@@ -204,7 +209,7 @@ public class TestPaperActivity extends AppCompatActivity {
                     holder.txtYear = convertView.findViewById(R.id.txtYear);
 
                     holder.label1 = convertView.findViewById(R.id.label1);
-                    holder.label1.setText("Stream: ");
+                    holder.label1.setText("Subject: ");
                     holder.label2 = convertView.findViewById(R.id.label2);
                     holder.label2.setText("Topic Name:");
                     holder.label3 = convertView.findViewById(R.id.label3);
@@ -213,7 +218,7 @@ public class TestPaperActivity extends AppCompatActivity {
                     holder.label4.setText("Cost: ");
                     holder.btnBuy = convertView.findViewById(R.id.btnBuy);
                     holder.btnStart = convertView.findViewById(R.id.btnStart);
-                     holder.viewScore = convertView.findViewById(R.id.viewScore);
+                   //  holder.viewScore = convertView.findViewById(R.id.viewScore);
 
                     convertView.setTag(holder);
                 }
@@ -225,7 +230,7 @@ public class TestPaperActivity extends AppCompatActivity {
                 holder.text1.setText(testRow.SubjectName);
                 holder.text2.setText(Semester);
                 holder.text3.setText(testRow.Univesity);
-                holder.text4.setText( Integer.toString(testRow.Cost));
+                holder.text4.setText( currFormat.format(testRow.Cost));
                 holder.txtYear.setText(Integer.toString(Year));
                // holder.text4.setText( Integer.toString(testRow.TopicId));
                 if(testRow.Status==1)
@@ -237,12 +242,12 @@ public class TestPaperActivity extends AppCompatActivity {
                         public void onClick(View v) {
                             Intent intent = new Intent(TestPaperActivity.this, PaymentActivity.class);
                             intent.putExtra("Subject", testRow.SubjectName);
-                            intent.putExtra("TopicName", testRow.SubjectName);
+                            //intent.putExtra("TopicName", testRow.SubjectName);
                             intent.putExtra("Semester", Semester);
                             intent.putExtra("University", testRow.Univesity);
                             intent.putExtra("Cost", testRow.Cost);
-                            intent.putExtra("PaperID", PaperID);
-                            intent.putExtra("year",Year);
+                            intent.putExtra("PaperID", testRow.paperID);
+                            intent.putExtra("year",testRow.year);
                             startActivity(intent);
                         }
                     });
@@ -265,12 +270,12 @@ public class TestPaperActivity extends AppCompatActivity {
                                 }
                                 Intent intent = new Intent(TestPaperActivity.this, QuestionsActivity.class);
 
-                                intent.putExtra("TopicName", testRow.SubjectName);
-                                intent.putExtra("Semester", Semester);
+                                //intent.putExtra("TopicName", testRow.SubjectName);
+                               // intent.putExtra("Semester", Semester);
                                 intent.putExtra("University", testRow.Univesity);
                                 intent.putExtra("Cost", testRow.Cost);
-                                intent.putExtra("year", Year);
-                                intent.putExtra("PaperID", PaperID);
+                                intent.putExtra("year", testRow.year);
+                                intent.putExtra("PaperID", testRow.paperID);
                                 startActivity(intent);
                             }
                             catch (Exception ex)

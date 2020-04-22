@@ -37,12 +37,14 @@
             android:padding="8dp"
             >
             <TextView
-                android:id="@+id/txtSubName"
+                android:id="@+id/lblYear"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="Physics "
+                android:text="Year"
                 android:textColor="@color/Black"
+                android:textSize="14sp"
+                android:textStyle="bold"
                 />
             <TextView
                 android:id="@+id/txtYear"
@@ -51,6 +53,8 @@
                 android:layout_height="wrap_content"
                 android:text="2018"
                 android:textColor="@color/Black"
+                android:textSize="14sp"
+
                 />
         </LinearLayout>
         <LinearLayout
@@ -60,19 +64,23 @@
             android:padding="5dp"
             >
             <TextView
-                android:id="@+id/label1"
+                android:id="@+id/lblSubject"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="Stream: "
+                android:text="Subject:"
                 android:textColor="@color/Black"
+                android:textSize="14sp"
+                android:textStyle="bold"
                 />
             <TextView
-                android:id="@+id/text1"
+                android:id="@+id/txtSubject"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="text 1"
+                android:text="Fluid Mechanics"
+                android:textSize="14sp"
+                android:textColor="@color/Black"
                 />
         </LinearLayout>
         <LinearLayout
@@ -80,6 +88,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="5dp"
+            android:visibility="gone"
             >
             <TextView
                 android:id="@+id/label2"
@@ -104,19 +113,23 @@
             android:padding="5dp"
             >
             <TextView
-                android:id="@+id/label3"
+                android:id="@+id/lblUniversity"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="University: "
                 android:textColor="@color/Black"
+                android:textSize="14sp"
+                android:textStyle="bold"
                 />
             <TextView
-                android:id="@+id/text3"
+                android:id="@+id/txtUniversity"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="text 3"
+                android:textSize="14sp"
+                android:textColor="@color/Black"
                 />
         </LinearLayout>
         <LinearLayout
@@ -126,19 +139,23 @@
             android:padding="5dp"
             >
             <TextView
-                android:id="@+id/label4"
+                android:id="@+id/lblCost"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="Cost(INR): "
                 android:textColor="@color/Black"
+                android:textSize="14sp"
+                android:textStyle="bold"
                 />
             <TextView
-                android:id="@+id/text4"
+                android:id="@+id/txtCost"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="text 4"
+                android:textSize="14sp"
+                android:textColor="@color/Black"
                 />
         </LinearLayout>
         <Button

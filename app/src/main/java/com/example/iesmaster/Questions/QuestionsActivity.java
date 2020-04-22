@@ -119,7 +119,6 @@ public class QuestionsActivity extends AppCompatActivity implements QuestionFrag
             return listQuestion.size();
         }
 
-
     }
 
 
@@ -134,14 +133,12 @@ public class QuestionsActivity extends AppCompatActivity implements QuestionFrag
                 @Override
                 public void onResponse(JSONArray response) {
                     progressBar.setVisibility(View.GONE);
-
                     try {
                         int x = response.length();
                         if (x>0) {
                             txtMessage.setVisibility(View.GONE);
                             viewPager.setVisibility(View.VISIBLE);
                             for (int i = 0; i < x; i++) {
-
                                 JSONObject jObj = response.getJSONObject(i);
                                 Questions Question = new Questions();
                                 Question.QuestionId = jObj.getInt("QuesID");
@@ -177,6 +174,7 @@ public class QuestionsActivity extends AppCompatActivity implements QuestionFrag
             });
             RetryPolicy rPolicy = new DefaultRetryPolicy(0, 2, 0);
             jsArrayRequest.setRetryPolicy(rPolicy);
+            queue.getCache().clear();
             queue.add(jsArrayRequest);
         }catch (Exception ex){
             int a=1;
@@ -243,32 +241,37 @@ public class QuestionsActivity extends AppCompatActivity implements QuestionFrag
     @Override
     public void onBackPressed() {
 
+            if(listQuestion.size()>0) {
+                // setup the alert builder
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                //builder.setTitle("Alert");
+                builder.setMessage("Exit from this Page");
 
-            // setup the alert builder
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            //builder.setTitle("Alert");
-            builder.setMessage("Exit from this Page");
+                // add the buttons
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Intent intent = new Intent(QuestionsActivity.this, UnitActivity.class);
+                        //startActivity(intent);
+                        QuestionsActivity.this.finish();
+                    }
+                });
 
-            // add the buttons
-            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    //Intent intent = new Intent(QuestionsActivity.this, UnitActivity.class);
-                    //startActivity(intent);
-                    QuestionsActivity.this.finish();
-                }
-            });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
 
-            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-
-            // create and show the alert dialog
-            AlertDialog dialog = builder.create();
-            dialog.show();
+                // create and show the alert dialog
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+            else
+            {
+                QuestionsActivity.this.finish();
+            }
 
     }
 }

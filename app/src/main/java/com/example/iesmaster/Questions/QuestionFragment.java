@@ -60,7 +60,7 @@ public class QuestionFragment extends Fragment {
         txtMarks = fragmentView.findViewById(R.id.txtMarks);
         questionImage = fragmentView.findViewById(R.id.questionImage);
         //Answer = fragmentView.findViewById(R.id.Answer);
-        lblQuestion.setText("Question " + Integer.toString(QNo) );
+        lblQuestion.setText("Question " + Integer.toString(QNo) + " of " + Integer.toString(size) );
 
         katexQuestion = fragmentView.findViewById(R.id.katexQuestion);
 

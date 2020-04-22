@@ -323,7 +323,12 @@ public class HomeActivity extends AppCompatActivity {
         gridViewFavourite.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Test favTest = listFavourite.get(position);
                 Intent intent = new Intent(HomeActivity.this,QuestionsActivity.class);
+                intent.putExtra("University", favTest.Univesity);
+                intent.putExtra("Cost", favTest.Cost);
+                intent.putExtra("year", favTest.year);
+                intent.putExtra("PaperID", favTest.paperID);
                 startActivity(intent);
                 // HomeActivity.this.finish();
             }
